@@ -178,6 +178,193 @@ silence over mispronunciation.
   the file was deleted on disk but the manifest still references it,
   the next pass will detect the missing file and regenerate.
 
+## Enabling the player in production
+
+The Astro `<AudioPlayer>` component is gated behind a build-time feature
+flag so the toolchain can be staged without exposing a half-built player
+to readers. The flag:
+
+```
+PUBLIC_AUDIO_ENABLED=true
+```
+
+Off by default — when unset (or any value other than `true`), every
+section page renders **without** the audio block. No play button, no
+browser-TTS fallback, nothing. The page looks like it did before the
+audio feature was added.
+
+The `PUBLIC_` prefix is mandatory: Astro/Vite only exposes
+`PUBLIC_*` env vars to the build. We read the flag inside
+`src/components/AudioPlayer.astro`, and Astro skips rendering the
+component (markup and inline script alike) when the flag is off.
+
+### Local development
+
+Create `site/.env.local` (already ignored by git):
+
+```bash
+echo 'PUBLIC_AUDIO_ENABLED=true' >> site/.env.local
+```
+
+Restart `npm run dev` or rebuild for the change to take effect.
+`.env.example` (committed) is the canonical reference.
+
+### Vercel (production)
+
+Settings → Environment Variables → add `PUBLIC_AUDIO_ENABLED=true` for
+the Production and Preview scopes, then trigger a redeploy. The flag is
+read at build time, not runtime — toggling it without a new build has no
+effect.
+
+### What "off" means
+
+Verified with `curl … | grep -i 'audio-player\|listen'`:
+
+| State                     | `chapters/1/1/` markup               | `chapters/4/1/` markup                                   | JS payload         |
+|---------------------------|--------------------------------------|----------------------------------------------------------|--------------------|
+| flag unset / `false`      | no `audio-player`, no `Listen`       | no `audio-player`, no `Listen`                           | nothing extra      |
+| flag `true`, §1.1 has MP3 | real player, `AI-narrated by Kokoro` | fallback player, `Listen (browser TTS — quality varies)` | one bundled module |
+
+## Running on a remote GPU machine
+
+Kokoro inference on an Apple-Silicon MPS device takes ~0.5×–0.7× real
+time. On an NVIDIA CUDA GPU it's substantially faster — a full 22-section
+batch that takes ~2.5 hours on M-series MPS finishes in roughly 25–45
+minutes on an A100 / RTX 4090 / RTX 3090. If you have CUDA hardware on
+another box, this is the recommended way to run the batch.
+
+### System requirements
+
+| Component     | Version                                                                            |
+|---------------|------------------------------------------------------------------------------------|
+| OS            | Ubuntu 22.04 / 24.04 LTS (or any modern Linux with a recent libc)                  |
+| Python        | 3.10–3.12 (Kokoro 0.9.4's pypi wheel pins `<3.13`)                                 |
+| CUDA          | 12.1 or newer (matched against the PyTorch wheel)                                  |
+| NVIDIA driver | Whatever the chosen CUDA version requires                                          |
+| ffmpeg        | Any recent build on PATH (`apt install ffmpeg`)                                    |
+| espeak-ng     | System install for misaki's G2P backend (`apt install espeak-ng libespeak-ng-dev`) |
+
+Verify in advance:
+
+```bash
+nvidia-smi          # GPU + driver visible
+python3 --version   # >= 3.10, < 3.13
+ffmpeg -version     # any
+espeak-ng --version # any
+```
+
+### 1. Get the workspace onto the GPU machine
+
+Only `site/` is needed — the Astro mirror at `site/src/content/book/` is
+the input to the generator, and it already contains every drafted
+section. From your local machine:
+
+```bash
+# Replace HOST and the destination path to taste.
+rsync -av --exclude=node_modules --exclude=dist --exclude=.astro \
+      --exclude='scripts/audio/.venv' --exclude='scripts/audio/logs' \
+      --exclude='scripts/audio/.audio-manifest.json' \
+      "/Users/pavan.kumar.kandapagari/Documents/Claude/Projects/Book on Action Models/site/" \
+      HOST:/path/to/site/
+```
+
+If you'd rather clone the git repo on the GPU box: `git clone …`, then
+make sure the `site/src/content/book/` mirror is up to date by running
+`bash ../tools/sync-book-to-site.sh` from inside `site/` (the parent
+flow disabled the automatic `prebuild` sync, so this is now a manual
+step).
+
+### 2. Set up the venv on the GPU machine
+
+```bash
+cd /path/to/site/scripts/audio
+sudo apt install -y python3.12 python3.12-venv ffmpeg espeak-ng libespeak-ng-dev
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip wheel setuptools
+
+# Install PyTorch with CUDA 12.1 wheels FIRST, then the rest.
+# Adjust the cu121 tag if your CUDA version differs (cu118, cu124, …).
+pip install torch --index-url https://download.pytorch.org/whl/cu121
+
+# Now install the rest from requirements.txt.
+pip install -r requirements.txt
+
+# Sanity check: PyTorch must see the GPU.
+python -c "import torch; print('cuda:', torch.cuda.is_available(),
+                                'devices:', torch.cuda.device_count(),
+                                'name:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else '-')"
+```
+
+If `torch.cuda.is_available()` is `False`, the CUDA wheel didn't match
+the system driver. Pick the correct `cu*` index URL from
+<https://pytorch.org/get-started/locally/> and reinstall torch.
+
+### 3. Run the batch
+
+`generate.py` already supports `--device cuda`. The default
+device-selection logic picks CUDA over CPU when available, so a bare
+invocation is enough:
+
+```bash
+cd /path/to/site
+bash scripts/audio/run.sh                # incremental: only changed sections
+bash scripts/audio/run.sh --device cuda  # force CUDA explicitly
+bash scripts/audio/run.sh --force        # clean rebuild of every section
+```
+
+You can also override which interpreter the script bootstraps the venv
+with:
+
+```bash
+PYTHON_BIN=/usr/bin/python3.12 bash scripts/audio/run.sh
+```
+
+The first invocation downloads the Kokoro weights (~330 MB) into
+`~/.cache/huggingface/`. Subsequent invocations are offline-capable.
+
+### Estimated wall time per section
+
+| GPU                     | Per section (~12 min audio) | Full 22-section batch |
+|-------------------------|-----------------------------|-----------------------|
+| RTX 3090                | 60–90 s                     | 25–35 min             |
+| RTX 4090                | 40–70 s                     | 18–28 min             |
+| A100 40GB / 80GB        | 35–60 s                     | 15–25 min             |
+| Apple M4 MPS (baseline) | 5–10 min                    | 2–3 h                 |
+
+(Numbers are rough; chunked synthesis dominates, and Kokoro's
+per-chunk cost is roughly linear in characters.)
+
+### 4. Bring the audio back
+
+The MP3s + manifest are the only outputs. Two ways:
+
+```bash
+# Option A: rsync back to your local machine.
+rsync -av HOST:/path/to/site/public/audio/ \
+          "/Users/pavan.kumar.kandapagari/Documents/Claude/Projects/Book on Action Models/site/public/audio/"
+```
+
+```bash
+# Option B: commit + push from the GPU machine.
+cd /path/to/site
+git add public/audio/
+git commit -m "audio: generate batch on GPU machine"
+git push
+```
+
+Either way, audio files belong in the repo — `site/.gitignore` excludes
+the venv and the build-cache manifest, **not** `public/audio/`. The
+public manifest at `site/public/audio/manifest.json` is the single
+source of truth the Astro UI reads.
+
+### 5. Flip the flag and redeploy
+
+Once the MP3s are in the repo, set `PUBLIC_AUDIO_ENABLED=true` in your
+Vercel project (or `site/.env.local` for local testing) and rebuild.
+The player will appear on every section that has a manifest entry, and
+fall back to the browser-TTS button on sections that don't.
+
 ## Limitations
 
 * Code blocks are not narrated — replaced with "Code block omitted from
