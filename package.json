@@ -8,7 +8,6 @@
   "scripts": {
     "sync:book": "bash ../tools/sync-book-to-site.sh",
     "predev": "npm run sync:book",
-    "prebuild": "npm run sync:book",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
