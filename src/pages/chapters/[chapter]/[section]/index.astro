@@ -10,6 +10,7 @@ import {
   sectionRouteParams,
 } from '../../../../lib/progress';
 import { linkifyRef, splitOnH2 } from '../../../../lib/refs';
+import { excerpt } from '../../../../lib/seo';
 
 export async function getStaticPaths() {
   const entries = await getCollection('chapters');
@@ -58,10 +59,31 @@ const inlineSidenotes = sidenotes.slice(0, chunks.length);
 const trailingSidenotes = sidenotes.slice(chunks.length);
 
 const title = `§${data.section} ${data.title} — Action Models for Robot Learning`;
-const description = `${data.title}. Section ${data.section} of "Action Models for Robot Learning" by Pavan Kumar Kandapagari.`;
+const bodyExcerpt = excerpt(chunks[0] ?? '');
+const description = bodyExcerpt
+  ? bodyExcerpt
+  : `${data.title}. Section ${data.section} of "Action Models for Robot Learning" by Pavan Kumar Kandapagari.`;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const bookUrl = Astro.site?.toString() ?? '';
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: `${data.title}`,
+  url: canonicalUrl,
+  inLanguage: 'en',
+  author: { '@type': 'Person', name: 'Pavan Kumar Kandapagari' },
+  isPartOf: {
+    '@type': 'Book',
+    name: 'Action Models for Robot Learning',
+    url: bookUrl,
+  },
+  description,
+  ...(draftedDate ? { datePublished: draftedDate, dateModified: draftedDate } : {}),
+};
 ---
 
-<SiteLayout title={title} description={description} currentPath="section">
+<SiteLayout title={title} description={description} currentPath="section" jsonLd={articleJsonLd}>
   <main class="section-page" data-pagefind-body>
     <article class="body">
       <div class="eyebrow">Chapter {data.chapter} · {chapterTitle}</div>

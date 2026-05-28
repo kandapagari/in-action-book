@@ -34,12 +34,38 @@ function chapterHasAnyDraft(chapter: { sections: { status: string }[] }): boolea
 function firstDraftedInChapter(chapter: { sections: { section: string; status: string }[] }) {
   return chapter.sections.find((s) => s.status === 'drafted' || s.status === 'revised');
 }
+
+const siteUrl = Astro.site?.toString() ?? '';
+const bookJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Book',
+  name: 'Action Models for Robot Learning',
+  alternateName: 'Action Models for Robot Learning: an open-access textbook',
+  author: {
+    '@type': 'Person',
+    name: 'Pavan Kumar Kandapagari',
+  },
+  inLanguage: 'en',
+  url: siteUrl,
+  description:
+    'An open-access textbook on action models and vision-language-action policies for robot learning. Covers RT-1, RT-2, OpenVLA, π₀, Helix, and GR00T N1, organised around four families of action models: symbolic planners, geometric and inverse-dynamics controllers, value-based policies, and learned policies from demonstration.',
+  about: [
+    'Action models',
+    'Vision-language-action models',
+    'Robot learning',
+    'Imitation learning',
+    'Reinforcement learning for robotics',
+    'Robot manipulation',
+    'Foundation models for robotics',
+  ],
+};
 ---
 
 <SiteLayout
   title="Action Models for Robot Learning"
   description="An open-access textbook on action models and vision-language-action policies for robotics, by Pavan Kumar Kandapagari."
   currentPath="home"
+  jsonLd={bookJsonLd}
 >
   <section class="landing-hero">
     <h1>Action Models for Robot Learning</h1>
