@@ -1,0 +1,149 @@
+---
+import SiteLayout from '../../../../layouts/SiteLayout.astro';
+import AudioPlayer from '../../../../components/AudioPlayer.astro';
+import { getCollection, render } from 'astro:content';
+import { experimental_AstroContainer as AstroContainer } from 'astro/container';
+import {
+  loadProgress,
+  formatLongDate,
+  dateForSection,
+  sectionRouteParams,
+} from '../../../../lib/progress';
+import { linkifyRef, splitOnH2 } from '../../../../lib/refs';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('chapters');
+  return entries.map((entry) => {
+    const params = sectionRouteParams(entry.data.section);
+    return {
+      params: { chapter: params.chapter, section: params.section },
+      props: { entry },
+    };
+  });
+}
+
+type Props = { entry: Awaited<ReturnType<typeof getCollection<'chapters'>>>[number] };
+const { entry } = Astro.props as Props;
+const { data } = entry;
+
+const progress = loadProgress();
+const chapterEntry = progress.parts
+  .flatMap((p) => p.chapters)
+  .find((c) => c.chapter === data.chapter);
+const chapterTitle = chapterEntry?.title ?? '';
+
+const draftedEntries = await getCollection('chapters');
+const haveContent = new Set(draftedEntries.map((e) => e.data.section));
+const orderedDrafted = progress.parts
+  .flatMap((p) => p.chapters.flatMap((c) => c.sections))
+  .filter((s) => (s.status === 'drafted' || s.status === 'revised') && haveContent.has(s.section));
+const navIndex = orderedDrafted.findIndex((s) => s.section === data.section);
+const prev = navIndex > 0 ? orderedDrafted[navIndex - 1] : null;
+const next = navIndex >= 0 && navIndex < orderedDrafted.length - 1 ? orderedDrafted[navIndex + 1] : null;
+
+const draftedDate = dateForSection(data.section);
+
+const { Content } = await render(entry);
+const container = await AstroContainer.create();
+const renderedHtml = await container.renderToString(Content);
+const chunks = splitOnH2(renderedHtml);
+
+// Distribute key_refs as sidenotes: place one after each chunk, in order.
+// Any extras stack after the last chunk so we never drop a reference.
+const sidenotes = data.key_refs.map((ref, i) => ({
+  num: i + 1,
+  html: linkifyRef(ref),
+}));
+const inlineSidenotes = sidenotes.slice(0, chunks.length);
+const trailingSidenotes = sidenotes.slice(chunks.length);
+
+const title = `§${data.section} ${data.title} — Action Models for Robot Learning`;
+const description = `${data.title}. Section ${data.section} of "Action Models for Robot Learning" by Pavan Kumar Kandapagari.`;
+---
+
+<SiteLayout title={title} description={description} currentPath="section">
+  <main class="section-page" data-pagefind-body>
+    <article class="body">
+      <div class="eyebrow">Chapter {data.chapter} · {chapterTitle}</div>
+      <h1><span class="sec-num">§{data.section}</span> {data.title}</h1>
+      <div class="section-meta">
+        {draftedDate && (
+          <Fragment>
+            <span>Drafted {formatLongDate(draftedDate)}</span>
+            <span class="dot">·</span>
+          </Fragment>
+        )}
+        <span>~{data.target_words.toLocaleString()} target words</span>
+        <span class="dot">·</span>
+        <span>Prereqs: {data.prereqs}</span>
+      </div>
+      <AudioPlayer chapter={data.chapter} section={data.section} />
+      <Fragment set:html={chunks[0] ?? ''} />
+    </article>
+
+    {inlineSidenotes[0] && (
+      <aside class="sidenote" id={`sn-${inlineSidenotes[0].num}`}>
+        <span class="num">{inlineSidenotes[0].num}</span>
+        <Fragment set:html={inlineSidenotes[0].html} />
+      </aside>
+    )}
+
+    {chunks.slice(1).map((chunk, i) => {
+      const sn = inlineSidenotes[i + 1];
+      return (
+        <Fragment>
+          <section class="body" set:html={chunk} />
+          {sn && (
+            <aside class="sidenote" id={`sn-${sn.num}`}>
+              <span class="num">{sn.num}</span>
+              <Fragment set:html={sn.html} />
+            </aside>
+          )}
+        </Fragment>
+      );
+    })}
+
+    {trailingSidenotes.map((sn) => (
+      <aside class="sidenote" id={`sn-${sn.num}`}>
+        <span class="num">{sn.num}</span>
+        <Fragment set:html={sn.html} />
+      </aside>
+    ))}
+
+    <nav class="section-nav">
+      {prev ? (
+        <a class="prev" href={`/chapters/${sectionRouteParams(prev.section).chapter}/${sectionRouteParams(prev.section).section}/`}>
+          <span class="label">← Previous</span>
+          <span class="title">§{prev.section} {prev.title}</span>
+        </a>
+      ) : (
+        <a class="prev" href="/">
+          <span class="label">← Home</span>
+          <span class="title">Action Models for Robot Learning</span>
+        </a>
+      )}
+      {next ? (
+        <a class="next" href={`/chapters/${sectionRouteParams(next.section).chapter}/${sectionRouteParams(next.section).section}/`}>
+          <span class="label">Next →</span>
+          <span class="title">§{next.section} {next.title}</span>
+        </a>
+      ) : (
+        <a class="next" href="/contents/">
+          <span class="label">Contents →</span>
+          <span class="title">Table of contents</span>
+        </a>
+      )}
+    </nav>
+
+    {data.key_refs.length > 0 && (
+      <section class="references">
+        <h2>References</h2>
+        <ol>
+          {data.key_refs.map((ref) => (
+            <li set:html={linkifyRef(ref)} />
+          ))}
+        </ol>
+      </section>
+    )}
+  </main>
+</SiteLayout>

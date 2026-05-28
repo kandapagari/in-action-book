@@ -1,0 +1,116 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { getCollection } from 'astro:content';
+import { loadProgress, sectionRouteParams, type SectionStatus } from '../lib/progress';
+
+const progress = loadProgress();
+const draftedEntries = await getCollection('chapters');
+const haveContent = new Set(draftedEntries.map((e) => e.data.section));
+
+const STATUS_LABEL: Record<SectionStatus, string> = {
+  pending: 'PENDING',
+  'in-progress': 'IN PROGRESS',
+  drafted: 'DRAFTED',
+  revised: 'REVISED',
+};
+
+function statusClass(s: SectionStatus): string {
+  if (s === 'revised') return 'revised';
+  if (s === 'drafted') return 'drafted';
+  return 'pending';
+}
+---
+
+<SiteLayout
+  title="Table of contents — Action Models for Robot Learning"
+  description="Full table of contents for Action Models for Robot Learning by Pavan Kumar Kandapagari. All 18 chapters, drafted openly; pending sections are visibly pending."
+  currentPath="contents"
+>
+  <main class="toc-page">
+    <h1>Table of contents</h1>
+    <p class="lede">
+      All {progress.totalChapters} chapters, drafted openly &mdash; pending sections are visibly pending,
+      never hidden behind a fake &ldquo;coming soon.&rdquo;
+    </p>
+
+    <div class="progress-meter">
+      <div>
+        DRAFTED
+        <span class="num">{progress.draftedSections} / {progress.totalSections}</span>
+        sections
+      </div>
+      <div>
+        CHAPTERS COMPLETE
+        <span class="num">{progress.chaptersComplete} / {progress.totalChapters}</span>
+      </div>
+      <div>
+        PARTS
+        <span class="num">{progress.totalParts}</span>
+      </div>
+    </div>
+
+    {progress.parts.map((part) => (
+      <section class="part-block">
+        <p class="part-heading">PART {part.ordinal}</p>
+        <p class="part-title">{part.title}</p>
+
+        {part.chapters.map((ch) => {
+          const firstDraft = ch.sections.find(
+            (s) => s.status === 'drafted' || s.status === 'revised',
+          );
+          const chapterHref = firstDraft
+            ? `/chapters/${sectionRouteParams(firstDraft.section).chapter}/${sectionRouteParams(firstDraft.section).section}/`
+            : null;
+          return (
+            <div class="chapter">
+              <div class="ch-num">{ch.chapter}</div>
+              <div>
+                <h2 class="ch-title">
+                  {chapterHref ? <a href={chapterHref}>{ch.title}</a> : ch.title}
+                </h2>
+                <ol>
+                  {ch.sections.map((s) => {
+                    const isDrafted = s.status === 'drafted' || s.status === 'revised';
+                    const params = sectionRouteParams(s.section);
+                    const href = `/chapters/${params.chapter}/${params.section}/`;
+                    const canLink = isDrafted && haveContent.has(s.section);
+                    return (
+                      <li class={isDrafted ? '' : 'pending'}>
+                        <span class="sec-n">{s.section}</span>
+                        {canLink ? (
+                          <a href={href}>{s.title}</a>
+                        ) : (
+                          <span class="sec-title">{s.title}</span>
+                        )}
+                        <span class={`status ${statusClass(s.status)}`}>
+                          {STATUS_LABEL[s.status]}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </div>
+            </div>
+          );
+        })}
+      </section>
+    ))}
+
+    <section class="part-block">
+      <p class="part-heading">APPENDICES</p>
+      {progress.appendices.map((a) => {
+        const cls = statusClass(a.status);
+        return (
+          <div class="chapter">
+            <div class="ch-num">{a.letter}</div>
+            <div>
+              <h2 class="ch-title">
+                {a.title} <span class={`status ${cls}`}>{STATUS_LABEL[a.status]}</span>
+              </h2>
+            </div>
+          </div>
+        );
+      })}
+    </section>
+  </main>
+</SiteLayout>

@@ -1,0 +1,28 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+
+<SiteLayout
+  title="Search — Action Models for Robot Learning"
+  description="Full-text search across every drafted section."
+  currentPath="search"
+>
+  <main class="toc-page">
+    <h1>Search</h1>
+    <p class="lede">Full-text search across every drafted section.</p>
+    <div id="search" data-pagefind-ui></div>
+  </main>
+
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <script src="/pagefind/pagefind-ui.js" is:inline></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', function () {
+      if (typeof PagefindUI === 'undefined') return;
+      new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        resetStyles: false,
+      });
+    });
+  </script>
+</SiteLayout>

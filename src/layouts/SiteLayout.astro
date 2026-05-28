@@ -1,0 +1,131 @@
+---
+import '../styles/global.css';
+import 'katex/dist/katex.min.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  currentPath?: 'home' | 'contents' | 'about' | 'contact' | 'section' | 'search' | 'other';
+}
+
+const {
+  title,
+  description = 'An open-access textbook on action models and vision-language-action policies for robotics, by Pavan Kumar Kandapagari.',
+  currentPath = 'other',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'light' || t === 'dark') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.toString()} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#fffff8" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#14110d" media="(prefers-color-scheme: dark)" />
+
+    <link rel="alternate" type="application/rss+xml" title="Action Models for Robot Learning" href="/rss.xml" />
+
+    <meta property="og:type" content="book" />
+    <meta property="og:title" content="Action Models for Robot Learning" />
+    <meta property="og:description" content="An open-access textbook on action models and vision-language-action policies for robot learning." />
+    <meta property="og:url" content={canonical.toString()} />
+    <meta property="og:image" content={new URL('/og-image.png', Astro.site).toString()} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Action Models for Robot Learning" />
+    <meta name="twitter:description" content="An open-access textbook on action models and vision-language-action policies for robot learning." />
+    <meta name="twitter:url" content={canonical.toString()} />
+    <meta name="twitter:image" content={new URL('/og-image.png', Astro.site).toString()} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <a href="/"><em>Action Models for Robot Learning</em></a>
+      </div>
+      <nav>
+        <a href="/" class={currentPath === 'home' ? 'is-current' : ''}>Home</a>
+        <a href="/contents/" class={currentPath === 'contents' ? 'is-current' : ''}>Contents</a>
+        <a href="/about/" class={currentPath === 'about' ? 'is-current' : ''}>About</a>
+        <a href="/contact/" class={currentPath === 'contact' ? 'is-current' : ''}>Contact</a>
+        <a href="/search/" class={currentPath === 'search' ? 'is-current' : ''}>Search</a>
+        <button
+          type="button"
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle color theme"
+          title="Cycle: Auto → Light → Dark"
+        >
+          <span class="icon" aria-hidden="true">◐</span>
+          <span class="label">Auto</span>
+        </button>
+      </nav>
+    </header>
+
+    <slot />
+
+    <footer class="site-footer">
+      <div>Action Models for Robot Learning · drafted openly by Pavan Kumar Kandapagari</div>
+      <div>
+        <a href="/rss.xml">RSS</a> · <a href="/contents/">Contents</a> ·
+        <a href="/about/">About</a>
+      </div>
+    </footer>
+
+    <script is:inline>
+      (function () {
+        var btn = document.getElementById('themeToggle');
+        if (!btn) return;
+        var label = btn.querySelector('.label');
+        var icon = btn.querySelector('.icon');
+        var iconMap = { auto: '◐', light: '☀', dark: '☾' };
+        var labelMap = { auto: 'Auto', light: 'Light', dark: 'Dark' };
+        var order = ['auto', 'light', 'dark'];
+
+        function read() {
+          try {
+            var t = localStorage.getItem('theme');
+            return t === 'light' || t === 'dark' ? t : 'auto';
+          } catch (e) { return 'auto'; }
+        }
+        function apply(t) {
+          if (t === 'auto') {
+            document.documentElement.removeAttribute('data-theme');
+            try { localStorage.removeItem('theme'); } catch (e) {}
+          } else {
+            document.documentElement.setAttribute('data-theme', t);
+            try { localStorage.setItem('theme', t); } catch (e) {}
+          }
+          icon.textContent = iconMap[t];
+          label.textContent = labelMap[t];
+        }
+        apply(read());
+        btn.addEventListener('click', function () {
+          var current = read();
+          var next = order[(order.indexOf(current) + 1) % order.length];
+          apply(next);
+        });
+      })();
+    </script>
+  </body>
+</html>

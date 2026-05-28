@@ -1,0 +1,123 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { getCollection } from 'astro:content';
+import {
+  loadProgress,
+  formatShortDate,
+  sectionRouteParams,
+} from '../lib/progress';
+
+const progress = loadProgress();
+
+const draftedEntries = await getCollection('chapters');
+const draftedSections = new Set(draftedEntries.map((e) => e.data.section));
+
+const recent = [...progress.sessionLog]
+  .reverse()
+  .filter((e) => draftedSections.has(e.section))
+  .filter((e, i, arr) => arr.findIndex((x) => x.section === e.section) === i)
+  .slice(0, 3);
+
+const firstDrafted = progress.parts
+  .flatMap((p) => p.chapters)
+  .flatMap((c) => c.sections)
+  .find((s) => s.status === 'drafted' || s.status === 'revised');
+
+const startReadingHref = firstDrafted
+  ? `/chapters/${sectionRouteParams(firstDrafted.section).chapter}/${sectionRouteParams(firstDrafted.section).section}/`
+  : '/contents/';
+
+function chapterHasAnyDraft(chapter: { sections: { status: string }[] }): boolean {
+  return chapter.sections.some((s) => s.status === 'drafted' || s.status === 'revised');
+}
+
+function firstDraftedInChapter(chapter: { sections: { section: string; status: string }[] }) {
+  return chapter.sections.find((s) => s.status === 'drafted' || s.status === 'revised');
+}
+---
+
+<SiteLayout
+  title="Action Models for Robot Learning"
+  description="An open-access textbook on action models and vision-language-action policies for robotics, by Pavan Kumar Kandapagari."
+  currentPath="home"
+>
+  <section class="landing-hero">
+    <h1>Action Models for Robot Learning</h1>
+    <p class="byline">by Pavan Kumar Kandapagari · open-access draft, updated continuously</p>
+    <p class="blurb">
+      A textbook on the policies that turn perception and language into robot behavior. The book traces the
+      lineage that produced today's vision-language-action systems &mdash; RT-1, RT-2, OpenVLA, &pi;<sub>0</sub>,
+      Helix, and GR00T N1 &mdash; and organizes the field around four families of action models: symbolic
+      planners, geometric and inverse-dynamics controllers, value-based policies learned from reward, and
+      learned policies trained from demonstration. We build the modern recipe from first principles, one
+      section at a time, and end with what it actually takes to fine-tune and deploy a VLA on a real robot.
+    </p>
+    <a class="cta" href={startReadingHref}>Start reading → Chapter 1</a>
+    <a class="cta-secondary" href="/contents/">Browse the table of contents →</a>
+  </section>
+
+  <section class="whats-new">
+    <h2>Recently drafted</h2>
+    <ul>
+      {recent.map((e) => {
+        const params = sectionRouteParams(e.section);
+        const href = `/chapters/${params.chapter}/${params.section}/`;
+        return (
+          <li>
+            <span class="date">{formatShortDate(e.date)}</span>
+            <span class="title">
+              <span class="sec-num">§{e.section}</span>
+              <a href={href}>{e.title}</a>
+            </span>
+            <span class="meta">~{e.words.toLocaleString()} words</span>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+
+  <section class="toc-condensed">
+    <h2>The book at a glance</h2>
+    <div class="parts">
+      {progress.parts.map((part) => (
+        <div class="part">
+          <h3>Part {part.partNumber} — {part.title}</h3>
+          <ol>
+            {part.chapters.map((ch) => {
+              const draft = firstDraftedInChapter(ch);
+              const hasDraft = !!draft;
+              return hasDraft ? (
+                <li>
+                  <span class="n">{ch.chapter}</span>
+                  <a
+                    href={`/chapters/${sectionRouteParams(draft!.section).chapter}/${sectionRouteParams(draft!.section).section}/`}
+                  >
+                    {ch.title}
+                  </a>
+                </li>
+              ) : (
+                <li class="pending">
+                  <span class="n">{ch.chapter}</span>
+                  <span>{ch.title}</span>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <h2>About this book</h2>
+    <p>
+      This is a textbook for engineers and researchers entering the vision-language-action and
+      robot-learning field in 2026, written from first principles and built up &mdash; chapter by
+      chapter &mdash; to the frontier systems shipping today: RT-2, OpenVLA, &pi;<sub>0</sub>, Helix,
+      and GR00T N1. It is being drafted openly, one section at a time; every new section appears on
+      this site the day it is written, and the table of contents shows clearly what is finished and
+      what is still pending. The intent is a single, coherent path from the basics of robot control
+      to fine-tuning your own VLA &mdash; no paywalls, no waiting for the manuscript to be done.
+    </p>
+  </section>
+</SiteLayout>

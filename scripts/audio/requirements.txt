@@ -1,0 +1,16 @@
+# Pinned dependencies for the audio narration toolchain.
+# Install into site/scripts/audio/.venv via run.sh (do not install globally).
+#
+# Python: 3.13.x (3.10 minimum, <3.14 — required by kokoro).
+# System: ffmpeg must be available on PATH for pydub MP3 encoding.
+
+kokoro>=0.9.4,<1.0
+soundfile>=0.13,<1.0
+numpy>=2.0,<3.0
+pyyaml>=6.0,<7.0
+markdown-it-py>=3.0,<4.0
+pydub>=0.25.1,<1.0
+# Apple Silicon: torch>=2.4 ships MPS wheels for arm64-darwin out of the box.
+# kokoro pulls torch as a transitive dep; we pin the lower bound to guarantee
+# MPS support.
+torch>=2.4,<3.0
