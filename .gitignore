@@ -8,12 +8,13 @@ dist/
 # source at ../book/ is the only thing worth committing.
 src/content/book/
 
-# Audio narration toolchain — venv and build-cache manifest are local
-# state, recreated on demand. The MP3s and the public manifest.json
-# under public/audio/ ARE committed (committed audio rides along with
-# the deploy, no LFS needed at current size).
+# Audio narration toolchain — venv, build-cache manifest, and batch logs
+# are local state, recreated on demand. The MP3s and the public
+# manifest.json under public/audio/ ARE committed (committed audio rides
+# along with the deploy, no LFS needed at current size).
 scripts/audio/.venv/
 scripts/audio/.audio-manifest.json
+scripts/audio/logs/
 
 # dependencies
 node_modules/
