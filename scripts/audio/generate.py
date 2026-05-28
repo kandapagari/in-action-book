@@ -273,18 +273,99 @@ def get_pipeline(device: str, lang_code: str = "a"):
     return pipeline
 
 
-def synthesize(text: str, voice: str, pipeline) -> np.ndarray:
-    """Run Kokoro on a single text chunk; return float32 mono PCM at 24 kHz."""
+def trim_silence(
+    samples: np.ndarray,
+    sample_rate: int = KOKORO_SAMPLE_RATE,
+    threshold_db: float = -45.0,
+    keep_ms: int = 20,
+) -> np.ndarray:
+    """Strip leading and trailing near-silence, preserving ``keep_ms`` of breath.
+
+    Removes Kokoro's pre-roll and post-roll silence at sentence boundaries.
+    Threshold and ``keep_ms`` are tuned so consonants are never clipped.
+    """
+    if samples.size == 0:
+        return samples
+    threshold = 10 ** (threshold_db / 20)
+    above = np.abs(samples) > threshold
+    if not above.any():
+        return samples[:0]
+    first = int(np.argmax(above))
+    last = len(samples) - int(np.argmax(above[::-1]))
+    keep = int(keep_ms * sample_rate / 1000)
+    first = max(0, first - keep)
+    last = min(len(samples), last + keep)
+    return samples[first:last]
+
+
+def join_with_pause(
+    chunks: list[np.ndarray],
+    sample_rate: int = KOKORO_SAMPLE_RATE,
+    pause_ms: int = 80,
+) -> np.ndarray:
+    """Concatenate chunks separated by a fixed silent pad.
+
+    Used for joining Kokoro's *internal* sentence chunks after each one has
+    been trimmed. 80 ms reads as a natural inter-sentence breath — long
+    enough not to feel rushed, short enough not to feel like a hesitation.
+    """
+    if len(chunks) == 1:
+        return chunks[0]
+    pause = np.zeros(int(pause_ms * sample_rate / 1000), dtype=np.float32)
+    out: list[np.ndarray] = [chunks[0]]
+    for c in chunks[1:]:
+        out.extend((pause, c))
+    return np.concatenate(out)
+
+
+def crossfade_concat(
+    chunks: list[np.ndarray],
+    sample_rate: int = KOKORO_SAMPLE_RATE,
+    fade_ms: int = 25,
+) -> np.ndarray:
+    """Concatenate chunks with a short linear crossfade between them.
+
+    Used for joining *outer* chunks (the paragraph-group splits from
+    ``split_into_chunks``). Each outer chunk is a fresh ``pipeline(text)``
+    invocation and brings its own pre-/post-roll envelope; a 25 ms
+    crossfade hides the seam without smearing consonants.
+    """
+    if len(chunks) == 1:
+        return chunks[0]
+    fade_n = int(fade_ms * sample_rate / 1000)
+    fade_out = np.linspace(1.0, 0.0, fade_n, dtype=np.float32)
+    fade_in = np.linspace(0.0, 1.0, fade_n, dtype=np.float32)
+    out = chunks[0]
+    for nxt in chunks[1:]:
+        if len(out) < fade_n or len(nxt) < fade_n:
+            out = np.concatenate([out, nxt])
+            continue
+        tail = out[-fade_n:] * fade_out
+        head = nxt[:fade_n] * fade_in
+        out = np.concatenate([out[:-fade_n], tail + head, nxt[fade_n:]])
+    return out
+
+
+def synthesize(text: str, voice: str, pipeline, trim: bool = True) -> np.ndarray:
+    """Run Kokoro on a single text chunk; return float32 mono PCM at 24 kHz.
+
+    KPipeline yields ``(graphemes, phonemes, audio)`` per internal sentence
+    chunk. We trim each one's silence and join with an 80 ms breath so the
+    final audio sounds like continuous speech rather than disconnected
+    sentences.
+    """
     audio_chunks: list[np.ndarray] = []
-    # KPipeline returns a generator of (graphemes, phonemes, audio) tuples
-    # — one per internal sentence chunk.
     for _, _, audio in pipeline(text, voice=voice):
         if hasattr(audio, "cpu"):
             audio = audio.cpu().numpy()
-        audio_chunks.append(np.asarray(audio, dtype=np.float32))
+        arr = np.asarray(audio, dtype=np.float32)
+        if trim:
+            arr = trim_silence(arr)
+        if arr.size:
+            audio_chunks.append(arr)
     if not audio_chunks:
         raise RuntimeError("kokoro returned no audio chunks")
-    return np.concatenate(audio_chunks)
+    return join_with_pause(audio_chunks)
 
 
 def encode_mp3(samples: np.ndarray, sample_rate: int, out_path: Path, bitrate: str = "64k") -> None:
@@ -335,6 +416,21 @@ def parse_args() -> argparse.Namespace:
         "--bitrate",
         default="64k",
         help="MP3 bitrate for pydub/ffmpeg (default: 64k).",
+    )
+    p.add_argument(
+        "--chunk-chars",
+        type=int,
+        default=4000,
+        help=(
+            "Max chars per Kokoro pipeline invocation (default: 4000). "
+            "Bigger = fewer outer-chunk seams; bigger needs more VRAM. "
+            "Was 1500 in the CPU/MPS era; an RTX 4090 / 5090 handles 6000+."
+        ),
+    )
+    p.add_argument(
+        "--no-trim-silence",
+        action="store_true",
+        help="Skip silence trimming at internal-chunk boundaries (default: trim).",
     )
     p.add_argument(
         "--dry-run",
@@ -412,13 +508,15 @@ def main() -> int:
 
         chunk_start = time.time()
         try:
-            chunks = split_into_chunks(prep.text, max_chars=1500)
+            chunks = split_into_chunks(prep.text, max_chars=args.chunk_chars)
             audio_chunks: list[np.ndarray] = []
             for ci, chunk in enumerate(chunks, 1):
-                audio_chunks.append(synthesize(chunk, args.voice, pipeline))
+                audio_chunks.append(
+                    synthesize(chunk, args.voice, pipeline, trim=not args.no_trim_silence)
+                )
                 if len(chunks) > 1:
                     print(f"      chunk {ci}/{len(chunks)} ({len(chunk)} chars) done", flush=True)
-            samples = np.concatenate(audio_chunks)
+            samples = crossfade_concat(audio_chunks)
             duration = float(len(samples) / KOKORO_SAMPLE_RATE)
             encode_mp3(samples, KOKORO_SAMPLE_RATE, out_path, bitrate=args.bitrate)
         except Exception as exc:  # noqa: BLE001 — surface and continue

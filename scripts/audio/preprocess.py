@@ -326,7 +326,7 @@ def preprocess_markdown(body: str) -> PreprocessResult:
     )
 
 
-def split_into_chunks(text: str, max_chars: int = 1500) -> list[str]:
+def split_into_chunks(text: str, max_chars: int = 4000) -> list[str]:
     """Split spoken text into chunks Kokoro can handle in a single pass.
 
     Kokoro's quality degrades on very long inputs (>~2000 chars) and the
