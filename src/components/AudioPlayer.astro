@@ -47,6 +47,13 @@ function formatDuration(sec: number): string {
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
 
+// Feature flag. The audio player is gated behind PUBLIC_AUDIO_ENABLED so
+// the user can pre-stage the toolchain and Astro UI without exposing a
+// half-built player to readers. Off by default; flip to "true" in
+// site/.env.local (local) or the Vercel dashboard (production) once the
+// MP3s have been generated.
+const audioEnabled = import.meta.env.PUBLIC_AUDIO_ENABLED === 'true';
+
 const { chapter, section } = Astro.props as Props;
 
 const manifest = audioManifest as AudioManifest;
@@ -59,6 +66,8 @@ const voice = entry?.voice ?? manifest.voice_default ?? 'af_heart';
 
 const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
 ---
+
+{audioEnabled && (
 
 <div
   class="audio-player"
@@ -370,3 +379,4 @@ const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
     }
   });
 </script>
+)}

@@ -13,9 +13,23 @@
       "title": "Why \"action\" is the hard part of robotics",
       "voice": "af_heart",
       "word_count": 2005
+    },
+    "1.2": {
+      "chapter": 1,
+      "char_count": 12515,
+      "content_hash": "9ea7a93dd76d8ea2a9d218bd57e53d732943c1178fd508d432e16d24bdeb3869",
+      "duration_seconds": 891.1,
+      "file": "/audio/chapter-1/section-1_2.mp3",
+      "file_size_bytes": 7129581,
+      "generated_at": "2026-05-28T16:19:58+00:00",
+      "path": "/Users/pavan.kumar.kandapagari/Documents/Claude/Projects/Book on Action Models/site/public/audio/chapter-1/section-1_2.mp3",
+      "section": "1.2",
+      "title": "Anatomy of an action model: inputs, outputs, training signal",
+      "voice": "af_heart",
+      "word_count": 2112
     }
   },
-  "generated_at": "2026-05-28T16:06:14+00:00",
+  "generated_at": "2026-05-28T16:26:52+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }

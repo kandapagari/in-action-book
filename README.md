@@ -59,10 +59,18 @@ source.
 
 ## Audio narration
 
-Every drafted section has a "Listen to this section" player at the top of
-its page. Audio is generated locally (no cloud TTS) by
+Every drafted section has an optional "Listen to this section" player at
+the top of its page. Audio is generated locally (no cloud TTS) by
 [Kokoro 82M](https://github.com/hexgrad/kokoro), encoded as 64 kbps mono
 MP3, and committed under `public/audio/chapter-{N}/section-{N_N}.mp3`.
+
+The player is gated behind a build-time feature flag
+(`PUBLIC_AUDIO_ENABLED=true`) so the toolchain can be staged without
+exposing a half-built player. When the flag is unset (the default), the
+player does not render — section pages look like they did before the
+audio feature was added. See
+[`scripts/audio/README.md`](./scripts/audio/README.md) for the toggle
+and the deeper guide to running the generation batch on a remote GPU.
 
 The Astro UI prefers the pre-generated MP3 and silently falls back to the
 browser's Web Speech API (`SpeechSynthesisUtterance`) when the file is
