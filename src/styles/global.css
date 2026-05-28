@@ -1,0 +1,1079 @@
+/* =============================================================
+   Action Models for Robot Learning — site mockup
+   A Tufte-style design system. Pure CSS, no framework.
+   ============================================================= */
+
+/* --- ET Book webfont (Edward Tufte's serif, free) --------------
+   Loaded from jsdelivr; fallbacks cover offline / blocked CDN. */
+@font-face {
+  font-family: "et-book";
+  src: url("https://cdn.jsdelivr.net/gh/edwardtufte/et-book@gh-pages/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "et-book";
+  src: url("https://cdn.jsdelivr.net/gh/edwardtufte/et-book@gh-pages/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "et-book";
+  src: url("https://cdn.jsdelivr.net/gh/edwardtufte/et-book@gh-pages/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "et-book-roman-old-style";
+  src: url("https://cdn.jsdelivr.net/gh/edwardtufte/et-book@gh-pages/et-book/et-book-roman-old-style-figures/et-book-roman-old-style-figures.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Design tokens ------------------------------------------- */
+:root {
+  /* Palette — paper / ink / muted / accent */
+  --paper:        #fffff8;       /* Tufte cream */
+  --ink:          #111111;
+  --ink-soft:     #2a2a28;
+  --muted:        #5b5b58;
+  --muted-light:  #8a8a86;
+  --rule:         #d8d6cf;
+  --accent:       #a02c2c;       /* deep brick — links, citations */
+  --accent-soft:  #c66565;
+  --tint:         #f4f1e6;       /* pull-quotes, code background */
+
+  /* Status colors */
+  --status-drafted: #2a6f3f;
+  --status-pending: #a8a59a;
+
+  /* Type */
+  --font-serif: "et-book", "Iowan Old Style", "Palatino Linotype",
+                Palatino, "Book Antiqua", Georgia, serif;
+  --font-sans:  -apple-system, BlinkMacSystemFont, "Segoe UI",
+                "Helvetica Neue", Arial, sans-serif;
+  --font-mono:  "JetBrains Mono", "SF Mono", "SFMono-Regular",
+                Menlo, Consolas, monospace;
+
+  /* Scale — 1.125 (major second), 21px body */
+  --fs-base:    21px;
+  --fs-small:   16px;
+  --fs-tiny:    14px;
+  --fs-h1:      2.488rem;        /* ~52px */
+  --fs-h2:      1.728rem;        /* ~36px */
+  --fs-h3:      1.296rem;        /* ~27px */
+  --fs-display: 3.157rem;        /* ~66px — landing only */
+
+  --lh-body:    1.65;
+  --lh-tight:   1.25;
+
+  /* Layout */
+  --measure:        38rem;       /* ~65ch */
+  --margin-side:    18rem;       /* sidenote gutter */
+  --max-page:       86rem;
+  --gutter:         3rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper:       #14110d;
+    --ink:         #e8e6df;
+    --ink-soft:    #d8d6cf;
+    --muted:       #a8a59a;
+    --muted-light: #6b6b66;
+    --rule:        #2c2c2a;
+    --accent:      #e07a7a;
+    --accent-soft: #b85555;
+    --tint:        #1e1b15;
+
+    --status-drafted: #6ec18c;
+    --status-pending: #5b5b58;
+  }
+}
+
+/* User-selected theme overrides — placed AFTER the OS media query so
+   source order beats the media query without needing !important. */
+:root[data-theme="light"] {
+  --paper:        #fffff8;
+  --ink:          #111111;
+  --ink-soft:     #2a2a28;
+  --muted:        #5b5b58;
+  --muted-light:  #8a8a86;
+  --rule:         #d8d6cf;
+  --accent:       #a02c2c;
+  --accent-soft:  #c66565;
+  --tint:         #f4f1e6;
+
+  --status-drafted: #2a6f3f;
+  --status-pending: #a8a59a;
+}
+:root[data-theme="dark"] {
+  --paper:       #14110d;
+  --ink:         #e8e6df;
+  --ink-soft:    #d8d6cf;
+  --muted:       #a8a59a;
+  --muted-light: #6b6b66;
+  --rule:        #2c2c2a;
+  --accent:      #e07a7a;
+  --accent-soft: #b85555;
+  --tint:        #1e1b15;
+
+  --status-drafted: #6ec18c;
+  --status-pending: #5b5b58;
+}
+
+/* --- Reset & base -------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  font-size: var(--fs-base);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: var(--lh-body);
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection { background: var(--accent); color: var(--paper); }
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 100% 1px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: opacity .15s ease;
+}
+a:hover { opacity: .7; }
+
+h1, h2, h3, h4 {
+  font-weight: 400;
+  line-height: var(--lh-tight);
+  margin: 2em 0 .6em;
+  color: var(--ink);
+}
+h1 { font-size: var(--fs-h1); margin-top: 0; }
+h2 { font-size: var(--fs-h2); font-style: italic; }
+h3 { font-size: var(--fs-h3); font-style: italic; }
+
+p { margin: 0 0 1.2em; }
+em { font-style: italic; }
+strong { font-weight: 700; }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 3rem 0;
+}
+
+/* --- Site chrome --------------------------------------------- */
+.site-header {
+  max-width: var(--max-page);
+  margin: 0 auto;
+  padding: 2rem var(--gutter) 1.5rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+.site-header .brand {
+  font-family: var(--font-serif);
+  font-size: var(--fs-small);
+  font-style: italic;
+  letter-spacing: .01em;
+  color: var(--ink);
+}
+.site-header .brand a { color: inherit; background: none; }
+.site-header nav {
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.site-header nav a {
+  color: var(--muted);
+  background: none;
+  margin-left: 1.5rem;
+}
+.site-header nav a:hover { color: var(--accent); opacity: 1; }
+.site-header nav a.is-current { color: var(--ink); }
+
+.site-footer {
+  max-width: var(--max-page);
+  margin: 6rem auto 3rem;
+  padding: 2rem var(--gutter) 0;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.site-footer a { color: var(--muted); }
+
+/* --- Page layout primitives ---------------------------------- */
+.page {
+  max-width: var(--max-page);
+  margin: 0 auto;
+  padding: 3rem var(--gutter) 0;
+}
+
+/* Section page: body column + right margin for sidenotes */
+.section-page {
+  display: grid;
+  grid-template-columns: minmax(0, var(--measure)) var(--margin-side);
+  column-gap: 3rem;
+  max-width: calc(var(--measure) + var(--margin-side) + 3rem + var(--gutter) * 2);
+  margin: 0 auto;
+  padding: 3rem var(--gutter) 0;
+}
+
+.section-page .body > * {
+  grid-column: 1;
+}
+
+/* --- Eyebrow / kicker ---------------------------------------- */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin: 0 0 .8rem;
+}
+
+/* --- Landing page -------------------------------------------- */
+.landing-hero {
+  max-width: 48rem;
+  margin: 6rem auto 5rem;
+  padding: 0 var(--gutter);
+}
+.landing-hero h1 {
+  font-size: var(--fs-display);
+  line-height: 1.1;
+  margin: 0 0 1rem;
+  letter-spacing: -.01em;
+}
+.landing-hero .byline {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin: 0 0 2rem;
+}
+.landing-hero .blurb {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0 0 2.5rem;
+}
+.landing-hero .cta {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  letter-spacing: .04em;
+  padding: .6rem 1.4rem;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  background: transparent;
+}
+.landing-hero .cta:hover { background: var(--ink); color: var(--paper); opacity: 1; }
+.landing-hero .cta-secondary {
+  margin-left: 1rem;
+  color: var(--muted);
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+}
+
+/* "What's new" strip */
+.whats-new {
+  max-width: 64rem;
+  margin: 0 auto 5rem;
+  padding: 0 var(--gutter);
+}
+.whats-new h2 {
+  font-size: var(--fs-small);
+  font-family: var(--font-sans);
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin: 0 0 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: .8rem;
+}
+.whats-new ul { list-style: none; padding: 0; margin: 0; }
+.whats-new li {
+  display: grid;
+  grid-template-columns: 6rem 1fr auto;
+  gap: 1.5rem;
+  align-items: baseline;
+  padding: .9rem 0;
+  border-bottom: 1px dotted var(--rule);
+}
+.whats-new li:last-child { border-bottom: none; }
+.whats-new .date {
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  color: var(--muted);
+  letter-spacing: .02em;
+}
+.whats-new .title { font-size: 1rem; }
+.whats-new .title a { color: var(--ink); background: none; }
+.whats-new .title a:hover { color: var(--accent); }
+.whats-new .title .sec-num {
+  color: var(--muted);
+  margin-right: .4rem;
+  font-variant-numeric: oldstyle-nums;
+}
+.whats-new .meta {
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  color: var(--muted-light);
+}
+
+/* Condensed TOC on the landing page */
+.toc-condensed {
+  max-width: 64rem;
+  margin: 0 auto 5rem;
+  padding: 0 var(--gutter);
+}
+.toc-condensed h2 {
+  font-size: var(--fs-small);
+  font-family: var(--font-sans);
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin: 0 0 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: .8rem;
+}
+.toc-condensed .parts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 2.5rem;
+}
+.toc-condensed .part h3 {
+  font-size: var(--fs-tiny);
+  font-family: var(--font-sans);
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+  margin: 0 0 .8rem;
+}
+.toc-condensed .part ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: chap;
+}
+.toc-condensed .part li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: .5rem;
+  margin: .3rem 0;
+  font-size: var(--fs-small);
+  line-height: 1.35;
+}
+.toc-condensed .part li .n {
+  color: var(--muted);
+  font-variant-numeric: oldstyle-nums;
+  text-align: right;
+}
+.toc-condensed .part li a {
+  color: var(--ink);
+  background: none;
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.toc-condensed .part li a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+.toc-condensed .part li.pending {
+  color: var(--muted-light);
+}
+.toc-condensed .part li.pending a { color: var(--muted-light); }
+
+/* About strip on landing */
+.about {
+  max-width: 48rem;
+  margin: 0 auto 5rem;
+  padding: 0 var(--gutter);
+  font-size: 1rem;
+  color: var(--ink-soft);
+}
+.about h2 {
+  font-size: var(--fs-small);
+  font-family: var(--font-sans);
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin: 0 0 1.5rem;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: .8rem;
+}
+
+/* --- Full TOC page ------------------------------------------- */
+.toc-page {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 3rem var(--gutter) 0;
+}
+.toc-page h1 {
+  font-size: var(--fs-h1);
+  margin-bottom: .3rem;
+}
+.toc-page .lede {
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 3rem;
+  font-size: 1.1rem;
+}
+.toc-page .progress-meter {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  padding: 1.2rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  color: var(--muted);
+  letter-spacing: .02em;
+}
+.toc-page .progress-meter .num {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  color: var(--ink);
+  display: block;
+  font-variant-numeric: oldstyle-nums;
+}
+.toc-page .part-block { margin: 3rem 0; }
+.toc-page .part-block .part-heading {
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--muted);
+  margin: 0 0 .4rem;
+}
+.toc-page .part-block .part-title {
+  font-style: italic;
+  font-size: 1.4rem;
+  margin: 0 0 1.5rem;
+  color: var(--ink);
+}
+.toc-page .chapter {
+  margin: 2.2rem 0;
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  gap: 1.5rem;
+}
+.toc-page .chapter .ch-num {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--muted);
+  font-variant-numeric: oldstyle-nums;
+  text-align: right;
+  padding-top: .2rem;
+}
+.toc-page .chapter .ch-title {
+  font-size: 1.2rem;
+  margin: 0 0 .6rem;
+  color: var(--ink);
+}
+.toc-page .chapter .ch-title a {
+  color: inherit;
+  background: none;
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.toc-page .chapter .ch-title a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+.toc-page .chapter ol {
+  list-style: none;
+  padding: 0;
+  margin: .4rem 0 0;
+}
+.toc-page .chapter li {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding: .25rem 0;
+  font-size: var(--fs-small);
+  border-bottom: 1px dotted transparent;
+}
+.toc-page .chapter li .sec-n {
+  color: var(--muted);
+  font-variant-numeric: oldstyle-nums;
+  text-align: right;
+}
+.toc-page .chapter li a {
+  color: var(--ink);
+  background: none;
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.toc-page .chapter li a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+.toc-page .chapter li.pending a,
+.toc-page .chapter li.pending .sec-n,
+.toc-page .chapter li.pending .sec-title { color: var(--muted-light); }
+
+/* Status badge */
+.status {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  vertical-align: 2px;
+}
+.status.drafted { color: var(--status-drafted); border: 1px solid var(--status-drafted); }
+.status.pending { color: var(--status-pending); border: 1px solid var(--status-pending); }
+.status.revised {
+  color: var(--paper);
+  background: var(--status-drafted);
+  border: 1px solid var(--status-drafted);
+}
+
+/* --- Section page (the chapter reader) ----------------------- */
+.section-page article.body {
+  min-width: 0;
+}
+.section-page article.body > h1 {
+  font-size: var(--fs-h1);
+  margin: 0 0 .4rem;
+  line-height: 1.1;
+}
+.section-page article.body > h1 .sec-num {
+  color: var(--muted);
+  font-variant-numeric: oldstyle-nums;
+  margin-right: .6rem;
+  font-style: italic;
+}
+.section-page .section-meta {
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  color: var(--muted);
+  letter-spacing: .02em;
+  margin: 0 0 2.5rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+}
+.section-page .section-meta .dot { color: var(--muted-light); }
+
+/* Drop cap on first paragraph */
+.section-page article.body > p:first-of-type::first-letter {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-size: 4.4rem;
+  line-height: .85;
+  float: left;
+  margin: .15rem .35rem 0 -.05rem;
+  color: var(--ink);
+  font-variant-numeric: oldstyle-nums;
+}
+
+.section-page article.body h2 {
+  font-size: var(--fs-h2);
+  margin-top: 2.4em;
+  font-style: italic;
+}
+.section-page article.body h3 {
+  font-size: var(--fs-h3);
+  margin-top: 1.8em;
+  font-style: italic;
+}
+
+/* Sidenotes (Tufte) — pure CSS, no JS ------------------------- */
+.sidenote, .marginnote {
+  grid-column: 2;
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  line-height: 1.45;
+  color: var(--muted);
+  margin: .2rem 0 1.4rem;
+  position: relative;
+}
+.sidenote .num {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--accent);
+  margin-right: .4em;
+}
+.sidenote-ref {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--accent);
+  font-size: .8em;
+  vertical-align: super;
+  line-height: 0;
+  padding: 0 1px;
+  text-decoration: none;
+  background: none;
+}
+
+/* Mobile fallback: collapse sidenotes inline */
+@media (max-width: 900px) {
+  .section-page {
+    grid-template-columns: 1fr;
+    max-width: var(--measure);
+  }
+  .sidenote, .marginnote {
+    grid-column: 1;
+    display: block;
+    border-left: 2px solid var(--rule);
+    padding: .4rem 0 .4rem 1rem;
+    margin: 1rem 0;
+  }
+}
+
+/* --- Inline citation links ----------------------------------- */
+.cite {
+  color: var(--accent);
+  font-style: italic;
+  background: none;
+}
+
+/* --- Pull quote ---------------------------------------------- */
+.pull-quote {
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  border-left: 3px solid var(--accent);
+  padding: .2rem 0 .2rem 1.3rem;
+  margin: 2rem 0;
+  color: var(--ink-soft);
+}
+
+/* --- Math ----------------------------------------------------- */
+.math-block {
+  font-family: "Latin Modern Math", "Cambria Math", "STIX Two Math", var(--font-serif);
+  font-size: 1.05rem;
+  text-align: center;
+  margin: 1.6rem 0;
+  padding: .4rem 0;
+  color: var(--ink);
+  overflow-x: auto;
+}
+.math-inline {
+  font-family: "Latin Modern Math", "Cambria Math", "STIX Two Math", var(--font-serif);
+  font-style: italic;
+  white-space: nowrap;
+}
+
+/* --- Code ---------------------------------------------------- */
+code, pre {
+  font-family: var(--font-mono);
+  font-feature-settings: "calt" 0;
+}
+p code, li code {
+  font-size: .9em;
+  background: var(--tint);
+  padding: 1px 5px;
+  border-radius: 2px;
+  color: var(--ink);
+}
+pre {
+  background: var(--tint);
+  padding: 1rem 1.2rem;
+  border-radius: 3px;
+  border-left: 3px solid var(--rule);
+  overflow-x: auto;
+  font-size: .82rem;
+  line-height: 1.55;
+  margin: 1.6rem 0;
+}
+pre code { background: none; padding: 0; }
+
+/* Lightweight syntax accents (mockup-only, no highlighter) */
+.tok-kw   { color: #8b3a3a; }
+.tok-str  { color: #5b6f3a; }
+.tok-num  { color: #6a4e8a; }
+.tok-com  { color: var(--muted); font-style: italic; }
+.tok-fn   { color: #2a5e6a; }
+.tok-mod  { color: #6a4e8a; }
+@media (prefers-color-scheme: dark) {
+  .tok-kw   { color: #e07a7a; }
+  .tok-str  { color: #b5c98a; }
+  .tok-num  { color: #c5a3e0; }
+  .tok-com  { color: var(--muted-light); }
+  .tok-fn   { color: #8acdd9; }
+  .tok-mod  { color: #c5a3e0; }
+}
+/* Forced-dark on a light-OS system needs the same dark code colors. */
+:root[data-theme="dark"] .tok-kw   { color: #e07a7a; }
+:root[data-theme="dark"] .tok-str  { color: #b5c98a; }
+:root[data-theme="dark"] .tok-num  { color: #c5a3e0; }
+:root[data-theme="dark"] .tok-com  { color: var(--muted-light); }
+:root[data-theme="dark"] .tok-fn   { color: #8acdd9; }
+:root[data-theme="dark"] .tok-mod  { color: #c5a3e0; }
+
+/* --- Prev / next nav ----------------------------------------- */
+.section-nav {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 5rem 0 0;
+  padding-top: 2rem;
+  border-top: 1px solid var(--rule);
+}
+.section-nav a {
+  display: block;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-serif);
+}
+.section-nav a:hover { color: var(--accent); opacity: 1; }
+.section-nav .label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted-light);
+  display: block;
+  margin-bottom: .3rem;
+}
+.section-nav .next { text-align: right; }
+.section-nav .title {
+  font-style: italic;
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+
+/* --- References list ----------------------------------------- */
+.references {
+  grid-column: 1 / -1;
+  margin: 4rem 0 0;
+}
+.references h2 {
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: .6rem;
+  margin-bottom: 1.2rem;
+}
+.references ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: ref;
+}
+.references li {
+  counter-increment: ref;
+  padding: .5rem 0 .5rem 2.4rem;
+  position: relative;
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+.references li::before {
+  content: "[" counter(ref) "]";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-style: italic;
+}
+.references li a { color: var(--accent); }
+
+/* --- Utility ------------------------------------------------- */
+.text-muted { color: var(--muted); }
+.text-sans  { font-family: var(--font-sans); }
+.text-small { font-size: var(--fs-small); }
+.text-center { text-align: center; }
+
+/* Small-screen niceties */
+@media (max-width: 700px) {
+  :root { --fs-base: 19px; --gutter: 1.4rem; }
+  .landing-hero h1 { font-size: 2.4rem; }
+  .site-header { flex-direction: column; align-items: flex-start; gap: .6rem; }
+  .site-header nav a { margin-left: 0; margin-right: 1.2rem; }
+  .toc-page .chapter { grid-template-columns: 2.4rem 1fr; gap: 1rem; }
+  .toc-page .chapter .ch-num { font-size: 1.1rem; }
+}
+
+/* --- Shiki dual-theme (Astro-emitted code blocks) ----------- */
+/* Shiki is configured with themes.light = github-light and
+   themes.dark = github-dark, emitting --shiki-light / --shiki-dark
+   CSS variables on each token. We pin the foreground here and let
+   the mockup's --tint provide the background, so code blocks share
+   the page paper palette in both themes. */
+pre.astro-code,
+pre.astro-code > code {
+  background: var(--tint) !important;
+}
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light);
+}
+@media (prefers-color-scheme: dark) {
+  .astro-code,
+  .astro-code span {
+    color: var(--shiki-dark);
+  }
+}
+:root[data-theme="light"] .astro-code,
+:root[data-theme="light"] .astro-code span {
+  color: var(--shiki-light) !important;
+}
+:root[data-theme="dark"] .astro-code,
+:root[data-theme="dark"] .astro-code span {
+  color: var(--shiki-dark) !important;
+}
+
+/* --- KaTeX block alignment ---------------------------------- */
+/* Override KaTeX defaults so display math matches mockup .math-block. */
+.katex-display {
+  margin: 1.6rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.katex-display > .katex {
+  font-size: 1.05em;
+  color: var(--ink);
+}
+.katex { color: var(--ink); }
+
+/* --- Audio player ------------------------------------------- */
+/* Compact inline strip at the top of every section page. When playing,
+   the inline block hosts a placeholder and a slim bottom-of-viewport bar
+   takes over (`.audio-player.is-sticky` toggle is set by the script).
+   No third-party CSS — colors and typography flow from the existing
+   palette/typography tokens. */
+.audio-player {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .9rem;
+  margin: 0 0 2.4rem;
+  padding: .6rem .9rem;
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  color: var(--muted);
+  background: var(--tint);
+  border-left: 2px solid var(--rule);
+  border-radius: 2px;
+  letter-spacing: .01em;
+}
+.audio-player__play {
+  flex: 0 0 auto;
+  width: 1.9rem;
+  height: 1.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: .85rem;
+  line-height: 1;
+  transition: border-color .15s ease, color .15s ease;
+}
+.audio-player__play:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.audio-player__icon { display: inline-block; line-height: 1; }
+.audio-player__bar {
+  flex: 1 1 14rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  min-width: 0;
+}
+.audio-player__scrub {
+  flex: 1 1 auto;
+  min-width: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: var(--rule);
+  border-radius: 1px;
+  cursor: pointer;
+  margin: 0;
+}
+.audio-player__scrub:disabled { cursor: not-allowed; opacity: .5; }
+.audio-player__scrub::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  transition: transform .12s ease;
+}
+.audio-player__scrub::-webkit-slider-thumb:hover { transform: scale(1.25); }
+.audio-player__scrub::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+}
+.audio-player__time {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums oldstyle-nums;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.audio-player__sep { margin: 0 .2em; color: var(--muted-light); }
+.audio-player__speed {
+  flex: 0 0 auto;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: var(--paper);
+  color: var(--muted);
+  padding: 2px 8px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease;
+  font-variant-numeric: tabular-nums oldstyle-nums;
+}
+.audio-player__speed:hover { color: var(--accent); border-color: var(--accent); }
+.audio-player__disclosure {
+  flex: 0 0 auto;
+  font-style: italic;
+  color: var(--muted-light);
+  font-size: 11px;
+  letter-spacing: .02em;
+}
+.audio-player__disclosure a {
+  color: var(--muted);
+  background: none;
+}
+.audio-player__disclosure a:hover { color: var(--accent); }
+
+/* Sticky bottom-of-viewport mode (set by JS when playing). The inline
+   block keeps its space so the section layout doesn't reflow when the
+   player goes sticky. */
+.audio-player.is-sticky {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  border-left: none;
+  border-top: 1px solid var(--rule);
+  border-radius: 0;
+  z-index: 20;
+  background: var(--paper);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, .04);
+}
+@media (prefers-color-scheme: dark) {
+  .audio-player.is-sticky {
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, .35);
+  }
+}
+:root[data-theme="dark"] .audio-player.is-sticky {
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, .35);
+}
+
+@media (max-width: 700px) {
+  .audio-player { padding: .5rem .7rem; gap: .6rem; }
+  .audio-player__bar { flex-basis: 100%; order: 3; }
+  .audio-player__disclosure { order: 4; flex-basis: 100%; }
+  .audio-player.is-sticky .audio-player__disclosure { display: none; }
+}
+
+/* --- Pagefind search modal trim ----------------------------- */
+.pagefind-ui {
+  --pagefind-ui-primary: var(--accent);
+  --pagefind-ui-text: var(--ink);
+  --pagefind-ui-background: var(--paper);
+  --pagefind-ui-border: var(--rule);
+  --pagefind-ui-tag: var(--tint);
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 2px;
+  --pagefind-ui-font: var(--font-sans);
+}
+
+/* --- Theme toggle (Auto / Light / Dark) ---------------------- */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  margin-left: 1.5rem;
+  padding: 2px 8px 3px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease;
+}
+.theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.theme-toggle .icon {
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+/* --- Justified body prose with auto-hyphenation -------------- */
+.section-page .body p,
+.landing-hero .blurb,
+.about p {
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hanging-punctuation: first last;
+}

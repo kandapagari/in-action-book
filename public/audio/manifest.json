@@ -1,0 +1,21 @@
+{
+  "entries": {
+    "1.1": {
+      "chapter": 1,
+      "char_count": 12049,
+      "content_hash": "67c5429e8ec1d3c8d7e448a152189b403e10290e8c81a6b814c5fdcbb1ce6367",
+      "duration_seconds": 824.02,
+      "file": "/audio/chapter-1/section-1_1.mp3",
+      "file_size_bytes": 6592941,
+      "generated_at": "2026-05-28T16:06:14+00:00",
+      "path": "/Users/pavan.kumar.kandapagari/Documents/Claude/Projects/Book on Action Models/site/public/audio/chapter-1/section-1_1.mp3",
+      "section": "1.1",
+      "title": "Why \"action\" is the hard part of robotics",
+      "voice": "af_heart",
+      "word_count": 2005
+    }
+  },
+  "generated_at": "2026-05-28T16:06:14+00:00",
+  "schema_version": 1,
+  "voice_default": "af_heart"
+}

@@ -1,0 +1,354 @@
+---
+// Listen-to-this-section player.
+//
+// Renders a compact, Tufte-restrained inline player at the top of each
+// section. When the user hits play, the inline block becomes a placeholder
+// and a slim bottom-of-viewport bar takes over so they can scroll while
+// listening.
+//
+// Audio source priority:
+//   1. Pre-generated MP3 from Kokoro at /audio/chapter-{N}/section-{N_N}.mp3.
+//      (Listed in /audio/manifest.json, imported below at build time.)
+//   2. If no MP3 exists for this section, OR the MP3 fails to load at
+//      runtime, fall back to the browser's Web Speech API.
+//
+// Disclosure: "AI-narrated by Kokoro" is rendered once, inline, in the
+// player block. It is not a recurring banner.
+
+import audioManifest from '../../public/audio/manifest.json';
+
+export interface Props {
+  chapter: number;
+  section: string;
+}
+
+type ManifestEntry = {
+  section: string;
+  chapter: number;
+  title: string;
+  file: string;
+  duration_seconds: number;
+  file_size_bytes: number;
+  voice: string;
+  generated_at: string;
+};
+
+type AudioManifest = {
+  schema_version: number;
+  voice_default: string;
+  generated_at: string;
+  entries: Record<string, ManifestEntry>;
+};
+
+function formatDuration(sec: number): string {
+  if (!Number.isFinite(sec) || sec <= 0) return '--:--';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+const { chapter, section } = Astro.props as Props;
+
+const manifest = audioManifest as AudioManifest;
+const entry = manifest.entries[section] ?? null;
+
+const hasAudio = Boolean(entry);
+const audioSrc = entry?.file ?? '';
+const durationSec = entry?.duration_seconds ?? 0;
+const voice = entry?.voice ?? manifest.voice_default ?? 'af_heart';
+
+const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
+---
+
+<div
+  class="audio-player"
+  id={playerId}
+  data-section={section}
+  data-chapter={chapter}
+  data-audio-src={audioSrc}
+  data-has-audio={hasAudio ? '1' : '0'}
+  data-duration={String(durationSec)}
+  data-voice={voice}
+>
+  <button
+    type="button"
+    class="audio-player__play"
+    aria-label="Play"
+    data-role="toggle"
+  >
+    <span class="audio-player__icon" data-role="icon" aria-hidden="true">▶</span>
+  </button>
+
+  <div class="audio-player__bar" data-role="bar">
+    <input
+      type="range"
+      class="audio-player__scrub"
+      min="0"
+      max="100"
+      value="0"
+      step="0.1"
+      data-role="scrub"
+      aria-label="Seek"
+    />
+    <div class="audio-player__time">
+      <span data-role="current">0:00</span>
+      <span class="audio-player__sep">/</span>
+      <span data-role="total">{formatDuration(durationSec)}</span>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    class="audio-player__speed"
+    data-role="speed"
+    aria-label="Playback speed"
+  >1×</button>
+
+  <span class="audio-player__disclosure" data-role="disclosure">
+    {hasAudio ? (
+      <Fragment>AI-narrated by <a href="https://github.com/hexgrad/kokoro" target="_blank" rel="noopener">Kokoro</a></Fragment>
+    ) : (
+      <Fragment>Listen (browser TTS — quality varies)</Fragment>
+    )}
+  </span>
+
+  {hasAudio && (
+    <audio
+      preload="none"
+      data-role="audio"
+      src={audioSrc}
+    ></audio>
+  )}
+</div>
+
+<script>
+  type Mode = 'audio' | 'tts';
+
+  type PlayerState = {
+    mode: Mode;
+    audio: HTMLAudioElement | null;
+    speed: number;
+    isPlaying: boolean;
+    isSticky: boolean;
+    ttsText: string;
+  };
+
+  const SPEEDS = [1, 1.25, 1.5, 0.85];
+
+  function fmt(sec: number): string {
+    if (!Number.isFinite(sec) || sec < 0) return '0:00';
+    const m = Math.floor(sec / 60);
+    const s = Math.floor(sec % 60);
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  }
+
+  function extractTtsText(): string {
+    // Web Speech API fallback: read the rendered section body from the DOM.
+    // The section template emits <article class="body"> for the first chunk
+    // and additional <section class="body"> blocks between sidenotes.
+    const bodies = document.querySelectorAll('main.section-page .body');
+    if (bodies.length === 0) return document.title || '';
+    const parts: string[] = [];
+    bodies.forEach((el) => {
+      const clone = el.cloneNode(true) as HTMLElement;
+      clone
+        .querySelectorAll('pre, code, .katex-display, .katex, .audio-player')
+        .forEach((node) => node.remove());
+      const text = clone.textContent || '';
+      parts.push(text);
+    });
+    return parts.join('\n\n').replace(/\s+/g, ' ').trim();
+  }
+
+  function wirePlayer(root: HTMLElement): void {
+    const hasAudio = root.dataset.hasAudio === '1';
+    const audioEl = root.querySelector('audio[data-role="audio"]') as HTMLAudioElement | null;
+    const scrub = root.querySelector('[data-role="scrub"]') as HTMLInputElement;
+    const cur = root.querySelector('[data-role="current"]') as HTMLElement;
+    const tot = root.querySelector('[data-role="total"]') as HTMLElement;
+    const toggle = root.querySelector('[data-role="toggle"]') as HTMLButtonElement;
+    const icon = root.querySelector('[data-role="icon"]') as HTMLElement;
+    const speedBtn = root.querySelector('[data-role="speed"]') as HTMLButtonElement;
+    const disclosure = root.querySelector('[data-role="disclosure"]') as HTMLElement;
+
+    const state: PlayerState = {
+      mode: hasAudio ? 'audio' : 'tts',
+      audio: audioEl,
+      speed: 1,
+      isPlaying: false,
+      isSticky: false,
+      ttsText: '',
+    };
+
+    function updateIcon(): void {
+      icon.textContent = state.isPlaying ? '❚❚' : '▶';
+      toggle.setAttribute('aria-label', state.isPlaying ? 'Pause' : 'Play');
+    }
+
+    function setSticky(on: boolean): void {
+      if (state.isSticky === on) return;
+      state.isSticky = on;
+      root.classList.toggle('is-sticky', on);
+    }
+
+    function applySpeed(): void {
+      speedBtn.textContent = `${state.speed}×`;
+      if (state.mode === 'audio' && state.audio) {
+        state.audio.playbackRate = state.speed;
+      }
+      if (state.mode === 'tts' && state.isPlaying) {
+        restartTts();
+      }
+    }
+
+    function restartTts(): void {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(state.ttsText);
+      u.rate = state.speed;
+      u.onend = () => {
+        state.isPlaying = false;
+        setSticky(false);
+        updateIcon();
+      };
+      u.onerror = (e) => {
+        // Some browsers fire "interrupted" when we cancel — ignore that,
+        // log anything else.
+        if ((e as SpeechSynthesisErrorEvent).error !== 'interrupted') {
+          console.warn('audio-player: speechSynthesis error', e);
+        }
+      };
+      window.speechSynthesis.speak(u);
+    }
+
+    function startTts(): void {
+      if (!('speechSynthesis' in window)) {
+        alert(
+          'Listen mode unavailable: your browser does not support speech synthesis ' +
+          'and no pre-recorded audio exists for this section.',
+        );
+        return;
+      }
+      if (!state.ttsText) {
+        state.ttsText = extractTtsText();
+      }
+      restartTts();
+      state.isPlaying = true;
+      setSticky(true);
+      updateIcon();
+    }
+
+    function playAudio(): void {
+      if (!state.audio) return;
+      state.audio.playbackRate = state.speed;
+      const p = state.audio.play();
+      if (p && typeof p.catch === 'function') {
+        p.catch(() => {
+          state.mode = 'tts';
+          if (disclosure) {
+            disclosure.textContent = 'Listen (browser TTS — quality varies)';
+          }
+          startTts();
+        });
+      }
+    }
+
+    function play(): void {
+      if (state.mode === 'audio' && state.audio) {
+        playAudio();
+      } else {
+        startTts();
+      }
+    }
+
+    function pause(): void {
+      if (state.mode === 'audio' && state.audio) {
+        state.audio.pause();
+      } else if (state.mode === 'tts') {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
+        state.isPlaying = false;
+        setSticky(false);
+        updateIcon();
+      }
+    }
+
+    toggle.addEventListener('click', () => {
+      if (state.isPlaying) {
+        pause();
+      } else {
+        play();
+      }
+    });
+
+    speedBtn.addEventListener('click', () => {
+      const idx = SPEEDS.indexOf(state.speed);
+      state.speed = SPEEDS[(idx + 1) % SPEEDS.length];
+      applySpeed();
+    });
+
+    if (state.audio) {
+      state.audio.addEventListener('play', () => {
+        state.isPlaying = true;
+        setSticky(true);
+        updateIcon();
+      });
+      state.audio.addEventListener('pause', () => {
+        state.isPlaying = false;
+        if (state.audio && state.audio.ended) {
+          setSticky(false);
+        }
+        updateIcon();
+      });
+      state.audio.addEventListener('ended', () => {
+        state.isPlaying = false;
+        setSticky(false);
+        updateIcon();
+        scrub.value = '0';
+      });
+      state.audio.addEventListener('loadedmetadata', () => {
+        if (state.audio) {
+          tot.textContent = fmt(state.audio.duration);
+        }
+      });
+      state.audio.addEventListener('timeupdate', () => {
+        if (!state.audio || !state.audio.duration) return;
+        const pct = (state.audio.currentTime / state.audio.duration) * 100;
+        scrub.value = String(pct);
+        cur.textContent = fmt(state.audio.currentTime);
+      });
+      state.audio.addEventListener('error', () => {
+        console.info('audio-player: MP3 failed to load, falling back to browser TTS');
+        if (disclosure) {
+          disclosure.textContent = 'Listen (browser TTS — quality varies)';
+        }
+        state.mode = 'tts';
+        if (state.isPlaying) {
+          startTts();
+        }
+      });
+      scrub.addEventListener('input', () => {
+        if (!state.audio || !state.audio.duration) return;
+        const pct = Number(scrub.value);
+        state.audio.currentTime = (pct / 100) * state.audio.duration;
+      });
+    } else {
+      // No <audio> element on the page — disable the scrubber.
+      scrub.disabled = true;
+    }
+
+    applySpeed();
+    updateIcon();
+  }
+
+  document.querySelectorAll('.audio-player').forEach((node) => {
+    wirePlayer(node as HTMLElement);
+  });
+
+  window.addEventListener('beforeunload', () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  });
+</script>
