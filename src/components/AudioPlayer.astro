@@ -171,6 +171,16 @@ const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
     const speedBtn = root.querySelector('[data-role="speed"]') as HTMLButtonElement;
     const disclosure = root.querySelector('[data-role="disclosure"]') as HTMLElement;
 
+    // When the player goes sticky (position:fixed) it leaves normal flow,
+    // which would shift the rest of the section up. Insert an
+    // equal-height placeholder right before the player to keep the
+    // layout stable.
+    const placeholder = document.createElement('div');
+    placeholder.className = 'audio-player-placeholder';
+    placeholder.setAttribute('aria-hidden', 'true');
+    placeholder.style.display = 'none';
+    root.parentNode?.insertBefore(placeholder, root);
+
     const state: PlayerState = {
       mode: hasAudio ? 'audio' : 'tts',
       audio: audioEl,
@@ -188,6 +198,14 @@ const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
     function setSticky(on: boolean): void {
       if (state.isSticky === on) return;
       state.isSticky = on;
+      if (on) {
+        // Capture height NOW (after layout) so the placeholder matches
+        // any fluid sizing changes (font-size, viewport width).
+        placeholder.style.height = `${root.offsetHeight}px`;
+        placeholder.style.display = 'block';
+      } else {
+        placeholder.style.display = 'none';
+      }
       root.classList.toggle('is-sticky', on);
     }
 

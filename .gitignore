@@ -3,10 +3,10 @@ dist/
 # generated types
 .astro/
 
-# Generated book mirror — one-way copy of ../book/ produced by
-# tools/sync-book-to-site.sh on every npm run dev / build. The authoring
-# source at ../book/ is the only thing worth committing.
-src/content/book/
+# Note: src/content/book/ is the local mirror of ../book/ (workspace root,
+# outside this git repo). The author runs `npm run sync:book` locally before
+# pushing — the mirror IS committed so Vercel builds the committed content
+# without needing access to ../book/ or ../tools/.
 
 # Audio narration toolchain — venv, build-cache manifest, and batch logs
 # are local state, recreated on demand. The MP3s and the public

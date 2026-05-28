@@ -998,9 +998,13 @@ pre.astro-code > code {
 }
 .audio-player__disclosure a:hover { color: var(--accent); }
 
+/* In-flow placeholder kept by JS while the player is sticky, so the
+   surrounding text doesn't jump up when the player goes fixed. */
+.audio-player-placeholder { /* sized by JS, display toggled by JS */ }
+
 /* Sticky bottom-of-viewport mode (set by JS when playing). The inline
-   block keeps its space so the section layout doesn't reflow when the
-   player goes sticky. */
+   block keeps its space via the placeholder above so the section layout
+   doesn't reflow when the player goes sticky. */
 .audio-player.is-sticky {
   position: fixed;
   bottom: 0;
