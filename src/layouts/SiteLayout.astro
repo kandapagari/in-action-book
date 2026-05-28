@@ -7,15 +7,20 @@ export interface Props {
   title: string;
   description?: string;
   currentPath?: 'home' | 'contents' | 'about' | 'contact' | 'section' | 'search' | 'other';
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  noindex?: boolean;
 }
 
 const {
   title,
   description = 'An open-access textbook on action models and vision-language-action policies for robotics, by Pavan Kumar Kandapagari.',
   currentPath = 'other',
+  jsonLd,
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION as string | undefined;
 ---
 
 <!doctype html>
@@ -35,6 +40,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    {googleSiteVerification && (
+      <meta name="google-site-verification" content={googleSiteVerification} />
+    )}
     <link rel="canonical" href={canonical.toString()} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -58,6 +67,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="twitter:description" content="An open-access textbook on action models and vision-language-action policies for robot learning." />
     <meta name="twitter:url" content={canonical.toString()} />
     <meta name="twitter:image" content={new URL('/og-image.png', Astro.site).toString()} />
+
+    {jsonLd && (
+      <script
+        type="application/ld+json"
+        is:inline
+        set:html={JSON.stringify(jsonLd)}
+      />
+    )}
   </head>
   <body>
     <header class="site-header">
