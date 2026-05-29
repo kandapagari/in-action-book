@@ -67,7 +67,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 #### Chapter 4. Classical action models: planning and inverse dynamics
 
 - [x] 4.1 Symbolic actions: STRIPS, PDDL, and action schemas
-- [ ] 4.2 Geometric actions: inverse kinematics and motion planning
+- [x] 4.2 Geometric actions: inverse kinematics and motion planning
 - [ ] 4.3 Inverse dynamics and computed-torque control
 - [ ] 4.4 Where classical methods are still load-bearing in modern robots
 - [ ] 4.5 Summary
@@ -254,3 +254,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-05-26 — drafted §3.6 Summary (~1866 words)
 - 2026-05-27 — drafted §3.x Hands-on exercise + chapter references (~2225 words)
 - 2026-05-27 — drafted §4.1 Symbolic actions: STRIPS, PDDL, and action schemas (~2038 words)
+- 2026-05-29 — drafted §4.2 Geometric actions: inverse kinematics and motion planning (~1770 words)
