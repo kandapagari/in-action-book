@@ -307,9 +307,23 @@
       "title": "Symbolic actions: STRIPS, PDDL, and action schemas",
       "voice": "af_heart",
       "word_count": 1837
+    },
+    "4.2": {
+      "chapter": 4,
+      "char_count": 11115,
+      "content_hash": "b7f68090b3a7594ed30f1f648b717c5b9b63e675b0bd7e7b6bea9626f33cb087",
+      "duration_seconds": 698.37,
+      "file": "/audio/chapter-4/section-4_2.mp3",
+      "file_size_bytes": 5587629,
+      "generated_at": "2026-05-29T15:42:03+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-4/section-4_2.mp3",
+      "section": "4.2",
+      "title": "Geometric actions: inverse kinematics and motion planning",
+      "voice": "af_heart",
+      "word_count": 1785
     }
   },
-  "generated_at": "2026-05-28T17:12:09+00:00",
+  "generated_at": "2026-05-29T15:42:03+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
