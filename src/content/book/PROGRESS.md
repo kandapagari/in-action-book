@@ -68,8 +68,8 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 - [x] 4.1 Symbolic actions: STRIPS, PDDL, and action schemas
 - [x] 4.2 Geometric actions: inverse kinematics and motion planning
-- [ ] 4.3 Inverse dynamics and computed-torque control
-- [ ] 4.4 Where classical methods are still load-bearing in modern robots
+- [x] 4.3 Inverse dynamics and computed-torque control
+- [x] 4.4 Where classical methods are still load-bearing in modern robots
 - [ ] 4.5 Summary
 - [ ] 4.x Hands-on exercise + chapter references
 
@@ -255,3 +255,5 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-05-27 — drafted §3.x Hands-on exercise + chapter references (~2225 words)
 - 2026-05-27 — drafted §4.1 Symbolic actions: STRIPS, PDDL, and action schemas (~2038 words)
 - 2026-05-29 — drafted §4.2 Geometric actions: inverse kinematics and motion planning (~1770 words)
+- 2026-05-30 — drafted §4.3 Inverse dynamics and computed-torque control (~2148 words)
+- 2026-05-31 — drafted §4.4 Where classical methods are still load-bearing in modern robots (~2052 words)
