@@ -321,9 +321,37 @@
       "title": "Geometric actions: inverse kinematics and motion planning",
       "voice": "af_heart",
       "word_count": 1785
+    },
+    "4.3": {
+      "chapter": 4,
+      "char_count": 11570,
+      "content_hash": "e49fbe3e815a662d32a6920c5e2c25f8c9a45214824a39e99e809d4e56f9d0cb",
+      "duration_seconds": 716.08,
+      "file": "/audio/chapter-4/section-4_3.mp3",
+      "file_size_bytes": 5729325,
+      "generated_at": "2026-05-31T19:29:53+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-4/section-4_3.mp3",
+      "section": "4.3",
+      "title": "Inverse dynamics and computed-torque control",
+      "voice": "af_heart",
+      "word_count": 1895
+    },
+    "4.4": {
+      "chapter": 4,
+      "char_count": 11525,
+      "content_hash": "25f3ee647cee367eae6f00d283ca39bb645bcca4db0ede588c23f856688eb9f3",
+      "duration_seconds": 674.78,
+      "file": "/audio/chapter-4/section-4_4.mp3",
+      "file_size_bytes": 5398893,
+      "generated_at": "2026-05-31T19:29:59+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-4/section-4_4.mp3",
+      "section": "4.4",
+      "title": "Where classical methods are still load-bearing in modern robots",
+      "voice": "af_heart",
+      "word_count": 1863
     }
   },
-  "generated_at": "2026-05-29T15:42:03+00:00",
+  "generated_at": "2026-05-31T19:29:59+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
