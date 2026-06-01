@@ -58,6 +58,8 @@ const sidenotes = data.key_refs.map((ref, i) => ({
 const inlineSidenotes = sidenotes.slice(0, chunks.length);
 const trailingSidenotes = sidenotes.slice(chunks.length);
 
+const routeParams = sectionRouteParams(data.section);
+
 const title = `§${data.section} ${data.title} — Action Models for Robot Learning`;
 const bodyExcerpt = excerpt(chunks[0] ?? '');
 const description = bodyExcerpt
@@ -131,6 +133,16 @@ const articleJsonLd = {
         <Fragment set:html={sn.html} />
       </aside>
     ))}
+
+    <p class="view-count-line section-view-count">
+      This section has been read
+      <span
+        data-view-count="section"
+        data-chapter={routeParams.chapter}
+        data-section={routeParams.section}
+      >—</span>
+      times.
+    </p>
 
     <nav class="section-nav">
       {prev ? (

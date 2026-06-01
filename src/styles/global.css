@@ -1071,6 +1071,34 @@ pre.astro-code > code {
   letter-spacing: 0;
 }
 
+/* --- View counter ------------------------------------------- */
+/* Single shared class for the two view-count lines (footer + per-section).
+   Sans-serif + muted to match the footer chrome and the section meta line;
+   italic to read as marginalia next to the prose. The `--note` is the
+   tiny privacy methodology aside that explains what the count actually
+   measures. No icons, no badges, no animation. */
+.view-count-line {
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  font-style: italic;
+  color: var(--muted);
+  font-variant-numeric: oldstyle-nums;
+}
+.view-count-line [data-view-count] {
+  font-style: normal;
+  color: var(--ink);
+  font-variant-numeric: oldstyle-nums tabular-nums;
+}
+.view-count-line .view-count-note {
+  font-style: italic;
+  color: var(--muted-light);
+}
+.section-view-count {
+  margin: 3.5rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px dotted var(--rule);
+}
+
 /* --- Justified body prose with auto-hyphenation -------------- */
 .section-page .body p,
 .landing-hero .blurb,
