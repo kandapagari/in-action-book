@@ -70,7 +70,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 4.2 Geometric actions: inverse kinematics and motion planning
 - [x] 4.3 Inverse dynamics and computed-torque control
 - [x] 4.4 Where classical methods are still load-bearing in modern robots
-- [ ] 4.5 Summary
+- [x] 4.5 Summary
 - [ ] 4.x Hands-on exercise + chapter references
 
 #### Chapter 5. Learning from rewards: MDPs and reinforcement learning
@@ -257,3 +257,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-05-29 — drafted §4.2 Geometric actions: inverse kinematics and motion planning (~1770 words)
 - 2026-05-30 — drafted §4.3 Inverse dynamics and computed-torque control (~2148 words)
 - 2026-05-31 — drafted §4.4 Where classical methods are still load-bearing in modern robots (~2052 words)
+- 2026-06-01 — drafted §4.5 Summary (~2030 words)
