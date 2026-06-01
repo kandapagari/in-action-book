@@ -142,6 +142,24 @@ response when no Redis credentials are set, and the UI keeps an em-dash
 placeholder. See [`DEPLOY.md`](./DEPLOY.md) → "View counter — Upstash
 Redis setup" for one-time configuration.
 
+## Cite this book
+
+A [`CITATION.cff`](./CITATION.cff) at the repo root drives GitHub's
+"Cite this repository" button (BibTeX + APA). The same reference is also
+on the site at [`/cite/`](https://action-models-book.vercel.app/cite/).
+It is a living open-access draft — cite it with the date you accessed it.
+
+```bibtex
+@book{kandapagari2026actionmodels,
+  author    = {Kandapagari, Pavan Kumar},
+  title     = {Action Models for Robot Learning},
+  year      = {2026},
+  publisher = {Self-published},
+  url       = {https://action-models-book.vercel.app},
+  note      = {Open-access living draft}
+}
+```
+
 ## Deploy
 
 See [`DEPLOY.md`](./DEPLOY.md).
