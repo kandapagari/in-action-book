@@ -349,9 +349,23 @@
       "title": "Where classical methods are still load-bearing in modern robots",
       "voice": "af_heart",
       "word_count": 1863
+    },
+    "4.5": {
+      "chapter": 4,
+      "char_count": 11345,
+      "content_hash": "a8eeb9cee128370616dbc54a92f04261a614098760fa594a4b2f5d01cfe578a7",
+      "duration_seconds": 690.13,
+      "file": "/audio/chapter-4/section-4_5.mp3",
+      "file_size_bytes": 5521773,
+      "generated_at": "2026-06-01T08:01:28+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-4/section-4_5.mp3",
+      "section": "4.5",
+      "title": "Summary",
+      "voice": "af_heart",
+      "word_count": 1905
     }
   },
-  "generated_at": "2026-05-31T19:29:59+00:00",
+  "generated_at": "2026-06-01T08:01:28+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
