@@ -1,9 +1,13 @@
 # Deploying to Vercel
 
-The site is static — `npm run build` produces `dist/` and Vercel serves it as
-plain HTML. There is no SSR and no Vercel adapter is registered; the install
-keeps `@astrojs/vercel` as a dependency in case we add image optimization or
-ISR later.
+The site is mostly static — `npm run build` prerenders every page to plain
+HTML — but a single pair of endpoints under `/api/views/*` runs server-side
+as Vercel serverless functions. They back the self-hosted view counter
+(footer total + per-section count). See "View counter — Upstash Redis
+setup" below for the one-time storage configuration. The Vercel adapter
+(`@astrojs/vercel`) is registered in `astro.config.mjs`; chapter pages,
+landing, contents, about, contact, search, RSS, and the sitemap remain
+fully static.
 
 ## One-time setup (dashboard)
 
@@ -74,3 +78,63 @@ back to the book. To make Google actually index it:
 
 Initial indexing typically takes a few days to a few weeks for a new
 property. Use **URL Inspection** to request indexing of specific pages.
+
+## View counter — Upstash Redis setup
+
+The footer line ("Read N times since launch") and the per-section line
+("This section has been read N times.") read from two Astro API routes:
+`/api/views/site` and `/api/views/section/{chapter}/{section}`. Both store
+state in an Upstash Redis store attached to the project. Only integer
+counts are stored — no IPs, cookies, user-agents, timestamps, or
+geolocation. Counts start at zero on the first deploy.
+
+> Note: Vercel KV no longer exists as a first-party product. It was
+> always Upstash Redis under the hood, and Vercel now surfaces Upstash
+> directly through the marketplace. The code uses the `@upstash/redis`
+> client and reads `KV_REST_API_URL` / `KV_REST_API_TOKEN` (falling back
+> to `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` if those are
+> what your store injects). The Upstash integration sets the
+> `KV_REST_API_*` pair automatically. Leave the integration's **Custom
+> Prefix** field empty — a prefix renames the variables and the code
+> won't find them.
+
+1. Vercel dashboard → your project → **Storage → Create Database →
+   Upstash** ("Serverless DB (Redis, Vector, Queue, Search)"). Create a
+   **Redis** database.
+2. Pick a region near most readers.
+3. When prompted, **connect it to this project** (leave the Custom Prefix
+   empty). This auto-injects `KV_REST_API_URL`, `KV_REST_API_TOKEN` (plus
+   `KV_REST_API_READ_ONLY_TOKEN`, `KV_URL`, and `REDIS_URL`, which the
+   counter does not use) into the project's environment variables for the
+   selected scopes — no manual editing required.
+4. Trigger a redeploy (any push to the default branch, or
+   `vercel --prod`). The counter starts ticking from zero on the first
+   deploy that sees the new env vars.
+5. **To reset the counter** (e.g. after testing): open the Upstash data
+   browser (from the store's page in the Vercel dashboard, or the Upstash
+   console) and run `DEL views:site` for the total, or
+   `DEL views:section:{chapter}:{section}` for one section (e.g.
+   `DEL views:section:1:1`). To wipe every per-section key at once, use a
+   prefix scan / flush on `views:`.
+
+### Local development
+
+`npm run dev` works without Redis credentials. When the env vars are
+absent the API routes return `{ count: null, error: "kv_unavailable" }`
+with HTTP 200, the UI keeps its em-dash placeholder, and nothing is
+logged as an error. To exercise the real counter locally, run
+`vercel env pull` from the `site/` directory after linking the project —
+that populates `.env.local` with the live `KV_REST_API_URL` and
+`KV_REST_API_TOKEN`. Wipe `.env.local` again to go back to the
+unavailable-graceful-degrade path.
+
+### Honesty / methodology
+
+The numbers are **page loads**, not unique humans. A refresh inside the
+same browser tab is deduped via `sessionStorage` and counts once. Common
+crawlers and social-preview fetchers (Googlebot, Bingbot, Twitterbot,
+LinkedInBot, facebookexternalhit, generic `bot`/`crawler`/`spider`
+substrings, etc.) are skipped server-side — they still get the current
+count back, but the counter does not advance. `HEAD` requests are 204'd
+without touching Redis. There is no IP-based rate limiting because that
+would require storing IPs, which we explicitly do not do.

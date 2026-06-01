@@ -103,7 +103,13 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION a
     <slot />
 
     <footer class="site-footer">
-      <div>Action Models for Robot Learning · drafted openly by Pavan Kumar Kandapagari</div>
+      <div>
+        Action Models for Robot Learning · drafted openly by Pavan Kumar Kandapagari
+        <span class="view-count-line">
+          · Read <span data-view-count="site">—</span> times since launch
+          <span class="view-count-note">(page loads; refreshes in the same tab count once; no IPs or cookies stored)</span>
+        </span>
+      </div>
       <div>
         <a href="/rss.xml">RSS</a> · <a href="/contents/">Contents</a> ·
         <a href="/about/">About</a>
@@ -146,5 +152,8 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION a
       })();
     </script>
     <SpeedInsights />
+    <script>
+      import '../scripts/view-counter.client.ts';
+    </script>
   </body>
 </html>

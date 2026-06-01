@@ -1,5 +1,7 @@
 # build output
 dist/
+# Vercel adapter build output + local project link
+.vercel/
 # generated types
 .astro/
 

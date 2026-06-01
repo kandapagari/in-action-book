@@ -130,6 +130,18 @@ isn't human-recorded.
 Deeper technical notes live at
 [`scripts/audio/README.md`](./scripts/audio/README.md).
 
+## Public view counter
+
+The footer shows a site-wide page-load total and every chapter section
+page shows a per-section read count. Both are backed by Upstash Redis via
+two server-rendered Astro endpoints under `/api/views/*`; chapter pages
+themselves stay fully static. Only
+integer counts are stored — no IPs, cookies, user-agents, timestamps, or
+geolocation. Locally, the endpoints return a graceful "unavailable"
+response when no Redis credentials are set, and the UI keeps an em-dash
+placeholder. See [`DEPLOY.md`](./DEPLOY.md) → "View counter — Upstash
+Redis setup" for one-time configuration.
+
 ## Deploy
 
 See [`DEPLOY.md`](./DEPLOY.md).
