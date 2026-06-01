@@ -1,0 +1,67 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const year = 2026;
+const url = 'https://action-models-book.vercel.app';
+
+const bibtex = `@book{kandapagari${year}actionmodels,
+  author    = {Kandapagari, Pavan Kumar},
+  title     = {Action Models for Robot Learning},
+  year      = {${year}},
+  publisher = {Self-published},
+  url       = {${url}},
+  note      = {Open-access living draft}
+}`;
+
+const plain = `Kandapagari, Pavan Kumar (${year}). Action Models for Robot Learning. Self-published, open-access. ${url}`;
+---
+
+<SiteLayout
+  title="Cite this book — Action Models for Robot Learning"
+  description="How to cite the open-access textbook Action Models for Robot Learning, by Pavan Kumar Kandapagari. BibTeX and plain-text references."
+>
+  <main class="toc-page">
+    <h1>Cite this book</h1>
+    <p class="lede">
+      If this book helped your work, a citation is appreciated.
+    </p>
+
+    <p>
+      This is a living, open-access draft — it changes as sections are written and revised.
+      When you cite it, please include the date you accessed it so the reference points at the
+      version you read.
+    </p>
+
+    <h2>BibTeX</h2>
+    <div class="cite-block">
+      <button type="button" class="cite-copy" data-copy-target="cite-bibtex">Copy</button>
+      <pre><code id="cite-bibtex">{bibtex}</code></pre>
+    </div>
+
+    <h2>Plain text</h2>
+    <div class="cite-block">
+      <button type="button" class="cite-copy" data-copy-target="cite-plain">Copy</button>
+      <pre><code id="cite-plain">{plain}</code></pre>
+    </div>
+
+    <p>
+      The repository also ships a <a href="https://github.com/kandapagari/in-action-book/blob/main/CITATION.cff"><code>CITATION.cff</code></a>,
+      so GitHub's <em>“Cite this repository”</em> button produces the same reference in BibTeX
+      and APA automatically.
+    </p>
+  </main>
+
+  <script is:inline>
+    document.querySelectorAll('.cite-copy').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = document.getElementById(btn.getAttribute('data-copy-target'));
+        if (!target || !navigator.clipboard) return;
+        navigator.clipboard.writeText(target.innerText).then(function () {
+          var prev = btn.textContent;
+          btn.textContent = 'Copied';
+          setTimeout(function () { btn.textContent = prev; }, 1500);
+        }).catch(function () {});
+      });
+    });
+  </script>
+</SiteLayout>

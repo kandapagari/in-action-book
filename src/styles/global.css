@@ -1109,3 +1109,32 @@ pre.astro-code > code {
   -ms-hyphens: auto;
   hanging-punctuation: first last;
 }
+
+/* --- Citation page copy blocks ------------------------------- */
+.cite-block {
+  position: relative;
+}
+.cite-block pre {
+  /* room so the BibTeX text never slides under the Copy button */
+  padding-right: 4.5rem;
+}
+.cite-copy {
+  position: absolute;
+  top: .6rem;
+  right: .6rem;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: color .15s ease, border-color .15s ease;
+}
+.cite-copy:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}

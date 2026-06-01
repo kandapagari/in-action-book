@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you reference this book, please cite it as below."
+title: "Action Models for Robot Learning"
+abstract: >-
+  An open-access textbook on action models and vision-language-action (VLA)
+  policies for robot learning, drafted in public, one section at a time.
+authors:
+  - family-names: "Kandapagari"
+    given-names: "Pavan Kumar"
+url: "https://action-models-book.vercel.app"
+repository-code: "https://github.com/kandapagari/in-action-book"
+keywords:
+  - "robot learning"
+  - "vision-language-action models"
+  - "VLA"
+  - "robotics"
+  - "imitation learning"
+  - "foundation models"
+preferred-citation:
+  type: book
+  title: "Action Models for Robot Learning"
+  authors:
+    - family-names: "Kandapagari"
+      given-names: "Pavan Kumar"
+  year: 2026
+  publisher:
+    name: "Self-published"
+  url: "https://action-models-book.vercel.app"
+  notes: "Open-access living draft; cite with the date you accessed it."
