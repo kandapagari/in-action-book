@@ -366,20 +366,20 @@
     },
     "4.x": {
       "chapter": 4,
-      "char_count": 14480,
-      "content_hash": "3ce3e18f35886443f9c3b6abbefac3f50805766c894084c93f88daabe78e0a72",
-      "duration_seconds": 948.41,
+      "char_count": 14411,
+      "content_hash": "0c53cb8c3aa8ee70ef1bd4fac67ce3b1fea47d8efa9820c2dd9afbf218e897d2",
+      "duration_seconds": 940.38,
       "file": "/audio/chapter-4/section-4_x.mp3",
-      "file_size_bytes": 7588077,
-      "generated_at": "2026-06-02T11:29:06+00:00",
+      "file_size_bytes": 7523757,
+      "generated_at": "2026-06-02T11:40:21+00:00",
       "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-4/section-4_x.mp3",
       "section": "4.x",
       "title": "Hands-on exercise + chapter references",
       "voice": "af_heart",
-      "word_count": 2355
+      "word_count": 2340
     }
   },
-  "generated_at": "2026-06-02T11:29:06+00:00",
+  "generated_at": "2026-06-02T11:40:21+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
