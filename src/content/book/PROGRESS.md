@@ -71,7 +71,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 4.3 Inverse dynamics and computed-torque control
 - [x] 4.4 Where classical methods are still load-bearing in modern robots
 - [x] 4.5 Summary
-- [ ] 4.x Hands-on exercise + chapter references
+- [x] 4.x Hands-on exercise + chapter references
 
 #### Chapter 5. Learning from rewards: MDPs and reinforcement learning
 
@@ -258,3 +258,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-05-30 — drafted §4.3 Inverse dynamics and computed-torque control (~2148 words)
 - 2026-05-31 — drafted §4.4 Where classical methods are still load-bearing in modern robots (~2052 words)
 - 2026-06-01 — drafted §4.5 Summary (~2030 words)
+- 2026-06-02 — drafted §4.x Hands-on exercise + chapter references (~2510 words)
