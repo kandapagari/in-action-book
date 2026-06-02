@@ -138,8 +138,12 @@ in pure torque mode (`setJointMotorControlArray(... ,
 controlMode=p.TORQUE_CONTROL, forces=tau)`) and compute `tau`
 explicitly from the §4.3 computed-torque law
 
-$$\tau = M(q)(\ddot{q}_d + K_d (\dot{q}_d - \dot{q}) + K_p (q_d - q))
-       + C(q,\dot{q})\dot{q} + g(q).$$
+$$
+\begin{aligned}
+\tau &= M(q)(\ddot{q}_d + K_d (\dot{q}_d - \dot{q}) + K_p (q_d - q)) \\
+&\quad + C(q,\dot{q})\dot{q} + g(q).
+\end{aligned}
+$$
 
 PyBullet exposes the inertia matrix and the bias terms through
 `calculateMassMatrix` and `calculateInverseDynamics`; you do not have
