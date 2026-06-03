@@ -62,7 +62,12 @@ function normalizeFrontmatter(raw: string): string {
   return `---\n${fixed}\n---\n${rest}`;
 }
 
-export function bookLoader(options: { base: string; pattern: string }): Loader {
+export function bookLoader(options: {
+  base: string;
+  pattern: string;
+  idField?: string;
+}): Loader {
+  const idField = options.idField ?? 'section';
   return {
     name: 'book-loader',
     load: async ({
@@ -112,7 +117,7 @@ export function bookLoader(options: { base: string; pattern: string }): Loader {
           fileUrl,
         });
 
-        const id = String(data.section);
+        const id = String(data[idField]);
         if (oldId && oldId !== id) store.delete(oldId);
         untouched.delete(id);
 

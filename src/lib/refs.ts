@@ -21,6 +21,13 @@ export function escapeHtml(s: string): string {
     .replace(/'/g, '&#39;');
 }
 
+// Appendix bodies open with a `# Appendix X. …` H1 that duplicates the
+// frontmatter title we render in the page header. Drop the leading rendered
+// `<h1>` so the title isn't shown twice.
+export function stripLeadingH1(html: string): string {
+  return html.replace(/^\s*<h1\b[^>]*>[\s\S]*?<\/h1>\s*/i, '');
+}
+
 // Split a rendered HTML body on H2 boundaries. Each chunk after the first
 // begins with the `<h2>`; chunk 0 holds everything before the first H2.
 export function splitOnH2(html: string): string[] {

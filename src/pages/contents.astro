@@ -96,16 +96,17 @@ function statusClass(s: SectionStatus): string {
       </section>
     ))}
 
-    <section class="part-block">
+    <section class="part-block appendices">
       <p class="part-heading">APPENDICES</p>
       {progress.appendices.map((a) => {
         const cls = statusClass(a.status);
         return (
-          <div class="chapter">
+          <div class="chapter appendix-row">
             <div class="ch-num">{a.letter}</div>
             <div>
               <h2 class="ch-title">
-                {a.title} <span class={`status ${cls}`}>{STATUS_LABEL[a.status]}</span>
+                <a href={`/appendix/${a.letter.toLowerCase()}/`}>{a.title}</a>{' '}
+                <span class={`status ${cls}`}>{STATUS_LABEL[a.status]}</span>
               </h2>
             </div>
           </div>
