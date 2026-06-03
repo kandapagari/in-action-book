@@ -377,9 +377,23 @@
       "title": "Hands-on exercise + chapter references",
       "voice": "af_heart",
       "word_count": 2340
+    },
+    "5.1": {
+      "chapter": 5,
+      "char_count": 11053,
+      "content_hash": "8c4ba308c1651fa1ec20de5894d25c9be4e09e492e34cf8ab6f14b2fc47b42b5",
+      "duration_seconds": 694.29,
+      "file": "/audio/chapter-5/section-5_1.mp3",
+      "file_size_bytes": 5554989,
+      "generated_at": "2026-06-03T08:06:00+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-5/section-5_1.mp3",
+      "section": "5.1",
+      "title": "States, actions, rewards, and policies",
+      "voice": "af_heart",
+      "word_count": 1969
     }
   },
-  "generated_at": "2026-06-02T11:40:21+00:00",
+  "generated_at": "2026-06-03T08:06:00+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
