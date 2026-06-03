@@ -44,6 +44,8 @@ const PERSON_SAME_AS = [
   'https://github.com/kandapagari',
   'https://www.linkedin.com/in/kandapagari/',
   'https://kandapagari.vercel.app',
+  'https://orcid.org/0009-0003-7497-3833',
+  'https://scholar.google.com/citations?user=EkSY9wUAAAAJ',
 ];
 
 // Field terms the author is an authority on. Tasteful breadth, not a stuffed
