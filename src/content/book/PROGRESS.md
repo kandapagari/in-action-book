@@ -75,7 +75,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 #### Chapter 5. Learning from rewards: MDPs and reinforcement learning
 
-- [ ] 5.1 States, actions, rewards, and policies
+- [x] 5.1 States, actions, rewards, and policies
 - [ ] 5.2 Value iteration and policy iteration
 - [ ] 5.3 Q-learning and the role of exploration
 - [ ] 5.4 Why reward design is the hardest part
@@ -259,3 +259,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-05-31 — drafted §4.4 Where classical methods are still load-bearing in modern robots (~2052 words)
 - 2026-06-01 — drafted §4.5 Summary (~2030 words)
 - 2026-06-02 — drafted §4.x Hands-on exercise + chapter references (~2510 words)
+- 2026-06-03 — drafted §5.1 States, actions, rewards, and policies (~2069 words)
