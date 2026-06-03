@@ -170,8 +170,8 @@ scalar loss back to every parameter, computing vector-Jacobian products at each
 node. After this line, every parameter in `policy` has its `.grad` attribute
 populated with $\nabla_{\theta} \mathcal{L}$, a tensor of the same shape as the
 parameter itself. This is the $n$-dimensional vector we described in §3.1: for
-`SmallPolicy`, it has on the order of 64×256 + 256 + 256×256 + 256 + 7×(256×256
-+ 256) ≈ 490,000 entries. The cost of computing all of them is roughly twice the
+`SmallPolicy`, it has on the order of 64×256 + 256 + 256×256 + 256 + 7×(256×256 +
+256) ≈ 490,000 entries. The cost of computing all of them is roughly twice the
 cost of the forward pass.
 
 If the loss is a Python sum of `CrossEntropyLoss` values — which it is here —

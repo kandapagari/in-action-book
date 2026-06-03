@@ -181,8 +181,8 @@ Chapter 2.
   training data. The tokens come out of the same decoder that would otherwise
   produce text — they live in the bottom 256 entries of Llama's vocabulary,
   repurposed.
-- **Training signal.** Two stages, both supervised. Stage one: the Llama-2
-  + SigLIP + DINOv2 backbone arrives pretrained on internet vision-language
+- **Training signal.** Two stages, both supervised. Stage one: the Llama-2 +
+  SigLIP + DINOv2 backbone arrives pretrained on internet vision-language
   data — self-supervised, no robot data. Stage two: imitation on 970,000
   robot trajectories from the Open X-Embodiment dataset, with cross-entropy
   loss over the discrete action tokens.
