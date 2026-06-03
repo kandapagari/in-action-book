@@ -221,12 +221,12 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 ### Appendices
 
-- [ ] A. Linear algebra refresher
-- [ ] B. Probability and information theory
-- [ ] C. PyTorch and JAX primer
-- [ ] D. Setting up a robotics simulator
-- [x] E. Canonical references (in TOC docx)
-- [x] F. VLA model zoo (in TOC docx)
+- [x] A. Linear algebra refresher
+- [x] B. Probability and information theory
+- [x] C. PyTorch and JAX primer
+- [x] D. Setting up a robotics simulator
+- [x] E. Canonical references (full bibliography, by chapter)
+- [x] F. VLA model zoo
 
 ## Daily session log
 
@@ -260,3 +260,9 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-01 — drafted §4.5 Summary (~2030 words)
 - 2026-06-02 — drafted §4.x Hands-on exercise + chapter references (~2510 words)
 - 2026-06-03 — drafted §5.1 States, actions, rewards, and policies (~2069 words)
+- 2026-06-03 — drafted Appendix A: Linear algebra refresher (~2471 words)
+- 2026-06-03 — drafted Appendix B: Probability and information theory (~2226 words)
+- 2026-06-03 — drafted Appendix C: PyTorch and JAX primer (~2302 words)
+- 2026-06-03 — drafted Appendix D: Setting up a robotics simulator (~2053 words)
+- 2026-06-03 — drafted Appendix E: Canonical references and offline source mirror (~2269 words)
+- 2026-06-03 — drafted Appendix F: Model zoo (~1598 words)
