@@ -17,11 +17,11 @@
     "1.2": {
       "chapter": 1,
       "char_count": 12518,
-      "content_hash": "bc75420258b4da849c3bb9d28b12a2a5f774e55b1cf501983e0ec0891de7cb28",
-      "duration_seconds": 769.23,
+      "content_hash": "514dbe741d7aa726253e88443d671d034b1ed3275b388516d1a839945b9f54c3",
+      "duration_seconds": 769.18,
       "file": "/audio/chapter-1/section-1_2.mp3",
-      "file_size_bytes": 6154605,
-      "generated_at": "2026-05-28T17:10:16+00:00",
+      "file_size_bytes": 6154221,
+      "generated_at": "2026-06-03T09:13:27+00:00",
       "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-1/section-1_2.mp3",
       "section": "1.2",
       "title": "Anatomy of an action model: inputs, outputs, training signal",
@@ -227,11 +227,11 @@
     "3.3": {
       "chapter": 3,
       "char_count": 10986,
-      "content_hash": "efc062f251883383d7097edea4bef66fb20a8087e13878495b47c6f029b78f33",
-      "duration_seconds": 697.93,
+      "content_hash": "007d41167c873807f8b52e074b348fb362e9f8b74a42c26874a606a92ff5ce23",
+      "duration_seconds": 697.55,
       "file": "/audio/chapter-3/section-3_3.mp3",
-      "file_size_bytes": 5584173,
-      "generated_at": "2026-05-28T17:11:39+00:00",
+      "file_size_bytes": 5581101,
+      "generated_at": "2026-06-03T09:13:33+00:00",
       "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-3/section-3_3.mp3",
       "section": "3.3",
       "title": "A 50-line PyTorch training loop, annotated",
@@ -393,7 +393,7 @@
       "word_count": 1969
     }
   },
-  "generated_at": "2026-06-03T08:06:00+00:00",
+  "generated_at": "2026-06-03T09:13:33+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
