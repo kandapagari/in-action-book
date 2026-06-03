@@ -7,6 +7,7 @@ import vercel from '@astrojs/vercel';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import remarkStripH1 from './src/lib/remark-strip-h1.mjs';
+import rehypeTableWrap from './src/lib/rehype-table-wrap.mjs';
 
 const SITE_URL = process.env.SITE_URL ?? 'https://action-models-book.vercel.app';
 
@@ -30,7 +31,10 @@ export default defineConfig({
   ],
   markdown: {
     remarkPlugins: [remarkStripH1, remarkMath],
-    rehypePlugins: [[rehypeKatex, { strict: false, throwOnError: false }]],
+    rehypePlugins: [
+      [rehypeKatex, { strict: false, throwOnError: false }],
+      rehypeTableWrap,
+    ],
     shikiConfig: {
       themes: {
         light: 'github-light',

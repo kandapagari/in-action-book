@@ -680,7 +680,7 @@ hr {
 /* Mobile fallback: collapse sidenotes inline */
 @media (max-width: 900px) {
   .section-page {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     max-width: var(--measure);
   }
   .sidenote, .marginnote {
@@ -749,6 +749,57 @@ pre {
   margin: 1.6rem 0;
 }
 pre code { background: none; padding: 0; }
+
+/* --- Tables (Tufte breakout) --------------------------------- */
+/* Prose stays at the narrow measure, but a table breaks out to span the
+   full content width (body + gap + sidenote gutter) and falls back to
+   horizontal scroll when it is wider than that or on small screens. The
+   wrapper is injected site-wide by the rehype-table-wrap plugin. */
+.section-page .body .table-wrap {
+  width: calc(var(--measure) + 3rem + var(--margin-side));
+  max-width: calc(100vw - 2 * var(--gutter));
+  overflow-x: auto;
+  margin: 1.8rem 0 2.2rem;
+}
+
+.section-page .body table {
+  width: max-content;
+  max-width: 100%;
+  border-collapse: collapse;
+  border-top: 1.5px solid var(--ink-soft);
+  border-bottom: 1.5px solid var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: var(--fs-tiny);
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.section-page .body thead th {
+  text-align: left;
+  vertical-align: bottom;
+  font-weight: 600;
+  font-size: var(--fs-tiny);
+  letter-spacing: .03em;
+  color: var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: .35rem .8rem .45rem;
+}
+
+.section-page .body tbody td {
+  vertical-align: top;
+  text-align: left;
+  padding: .4rem .8rem;
+  border: none;
+}
+
+/* Mobile: drop the breakout, fill the single column, scroll if needed. */
+@media (max-width: 900px) {
+  .section-page .body .table-wrap {
+    width: 100%;
+    max-width: 100%;
+  }
+}
 
 /* Lightweight syntax accents (mockup-only, no highlighter) */
 .tok-kw   { color: #8b3a3a; }
