@@ -14,7 +14,7 @@ This appendix is a reference table of the 24 vision-language-action
 and related foundation action models discussed in the book. Each row
 summarizes the developer, the backbone architecture, the parameter
 count, a one-line distinguishing feature, and the primary reference.
-The "Ch." column points to the chapter where each model is treated in
+The "Chapter" column points to the chapter where each model is treated in
 depth; many models appear briefly in adjacent chapters as well.
 
 Numerical entries are taken from each model's primary reference, as
@@ -25,32 +25,32 @@ chapter for the qualified version.
 
 ## F.1  The table
 
-| Model | Developer | Backbone | Params | Distinguishing feature | Primary ref | Ch. |
+| Model | Developer | Backbone | Params | Distinguishing feature | Primary ref | Chapter |
 |---|---|---|---|---|---|---|
-| PaLM-E | Google DeepMind | PaLM + ViT-22B | up to 562B | Injects continuous sensors into LLM embedding space; embodied multimodal LLM. | arXiv:2303.03378 | 12 |
-| RT-1 | Google DeepMind | Robotics Transformer (decoder-only) | — | FiLM multimodal fusion; image and action tokenization; 130k demos across 700+ tasks. | arXiv:2212.06817 | 11 |
-| RT-2 | Google DeepMind | PaLI-X / PaLM-E | 5B–55B | Co-fine-tuned on web + robotics data; actions as discrete text tokens; chain-of-thought reasoning. | arXiv:2307.15818 | 12 |
-| RT-2-X | 22-institution collaboration | — | — | Multi-embodiment generalization across 20+ robot hardware types. | arXiv:2310.08864 | 12, 15 |
-| OpenVLA | Stanford / Berkeley / TRI / DeepMind | Llama-2 7B + SigLIP + DinoV2 | 7B | Open-source generalist VLA; LoRA touches only 1.4% of parameters; supports quantization. | arXiv:2406.09246 | 2, 12, 16 |
-| Octo | Berkeley / Stanford / CMU / DeepMind | ViT-S/B transformer | 27M–93M | Block-wise attention to add or remove sensory inputs; open source; reward-free imitation. | arXiv:2405.12213 | 12, 16 |
-| RDT-1B | Tsinghua | Diffusion Transformer | 1B | Large-scale diffusion model for bimanual manipulation; zero-shot generalization. | arXiv:2410.07864 | 13 |
-| π0 | Physical Intelligence | PaliGemma + flow-matching action expert | 3.3B | Continuous actions at 50 Hz; ~10,000 hours of robotic trajectories; dexterous multi-stage tasks. | arXiv:2410.24164 | 13 |
-| π0-FAST | Physical Intelligence | Autoregressive π0 + FAST tokenizer | — | Frequency-space (DCT) action-sequence tokenization; ~5× faster training. | arXiv:2501.09747 | 13 |
-| SimVLA | Frontier Robotics | Standard VLM + lightweight action transformer | 0.5B–0.8B | Decoupled perception and control; flow-matching denoising; on par with π0.5 on LIBERO. | arXiv:2602.18224 | 13 |
-| Xiaomi-Robotics-0 | Xiaomi Robotics | Qwen3-VL-4B + flow-matching DiT | 4.7B | Real-time execution; flow-matching action expert. | arXiv:2602.12684 | 13 |
-| SmolVLA | Hugging Face | SmolVLM2 encoder-decoder + flow-matching transformer | 450M | Consumer-GPU and MacBook deployable; asynchronous inference decouples VLM from execution. | arXiv:2506.01844 | 13, 16 |
-| TinyVLA | Midea / academic collab. | Lightweight pretrained VLM (<1.4B) + diffusion decoder | <1.4B | Diffusion-based policy decoder; distilled from larger VLAs; fast, data-efficient inference. | arXiv:2409.12514 | 16 |
-| RoboMamba | Tongji University | Mamba SSM + frozen CLIP | — | Linear-scaling SSM backbone replaces transformer; 3.7M-parameter MLP policy head. | arXiv:2406.04339 | 8, 16 |
-| Helix / Helix 02 | Figure AI | Dual-system (7B VLM + 80M visuomotor) | 7.08B | Full upper-body 35-DoF continuous control; on-board embedded GPUs; "Sport Mode". | figure.ai/news/helix and helix-02 | 14 |
-| GR00T N1 | NVIDIA | Dual-system (System 2 VLM + System 1 reactive) | 2.2B | Humanoid-centric; 93.3% language-following; 3000h+ of human video + robot + synthetic data. | arXiv:2503.14734 | 14 |
-| ρα (Rho-alpha) | Microsoft Research | Phi family + action expert | — | Tactile sensing + online learning from human corrections; BusyBox benchmark. | MSR technical report | 14, 17 |
-| Embodied-R1 | Tianjin University / Huawei Noah's Ark | Qwen-2.5-VL-3B-Instruct | 3B | Reinforced fine-tuning (RFT); multi-task reward curriculum; affordance prediction. | arXiv:2508.13998 | 15 |
-| RoboBrain2.0 | BAAI | Qwen2.5-VL-72B-Instruct (fine-tuned) | 7B–32B | Reinforced embodied reasoning; spatial-referring data; pointing fine-tuning. | BAAI technical report | 12 |
-| LiLo-VLA | UNC / Georgia Tech / CMU | OpenVLA-OFT or π0.5 backbone | — | Modular: decouples transport (reaching) from interaction; object-centric visual masking. | arXiv:2602.21531 | 15 |
-| Long-VLA | Westlake / Zhejiang / Xi'an Jiaotong | MDT + GPT-2-style transformer | — | Phase-aware input masking; long-horizon skill chaining; L-CALVIN benchmark. | arXiv:2508.19958 | 15 |
-| LEO | BAAI | Transformer-based 3D model | — | Two-stage 3D vision–language alignment; embodied 3D scene understanding. | arXiv:2311.12871 | 15 |
-| UniAct | Tsinghua / Shanghai AI Lab | Autoregressive transformer | — | Universal atomic actions for cross-embodiment heterogeneity. | arXiv:2501.10105 | 15, 18 |
-| OpenDriveVLA | — | Autoregressive trajectory generator | — | Unified 2D / 3D perception → driving trajectories; closed-loop end-to-end control. | arXiv:2503.23463 | 15 |
+| PaLM-E | Google DeepMind | PaLM + ViT-22B | up to 562B | Injects continuous sensors into LLM embedding space; embodied multimodal LLM. | arXiv:2303.03378 | Ch. 12 |
+| RT-1 | Google DeepMind | Robotics Transformer (decoder-only) | — | FiLM multimodal fusion; image and action tokenization; 130k demos across 700+ tasks. | arXiv:2212.06817 | Ch. 11 |
+| RT-2 | Google DeepMind | PaLI-X / PaLM-E | 5B–55B | Co-fine-tuned on web + robotics data; actions as discrete text tokens; chain-of-thought reasoning. | arXiv:2307.15818 | Ch. 12 |
+| RT-2-X | 22-institution collaboration | — | — | Multi-embodiment generalization across 20+ robot hardware types. | arXiv:2310.08864 | Ch. 12, 15 |
+| OpenVLA | Stanford / Berkeley / TRI / DeepMind | Llama-2 7B + SigLIP + DinoV2 | 7B | Open-source generalist VLA; LoRA touches only 1.4% of parameters; supports quantization. | arXiv:2406.09246 | Ch. 2, 12, 16 |
+| Octo | Berkeley / Stanford / CMU / DeepMind | ViT-S/B transformer | 27M–93M | Block-wise attention to add or remove sensory inputs; open source; reward-free imitation. | arXiv:2405.12213 | Ch. 12, 16 |
+| RDT-1B | Tsinghua | Diffusion Transformer | 1B | Large-scale diffusion model for bimanual manipulation; zero-shot generalization. | arXiv:2410.07864 | Ch. 13 |
+| π0 | Physical Intelligence | PaliGemma + flow-matching action expert | 3.3B | Continuous actions at 50 Hz; ~10,000 hours of robotic trajectories; dexterous multi-stage tasks. | arXiv:2410.24164 | Ch. 13 |
+| π0-FAST | Physical Intelligence | Autoregressive π0 + FAST tokenizer | — | Frequency-space (DCT) action-sequence tokenization; ~5× faster training. | arXiv:2501.09747 | Ch. 13 |
+| SimVLA | Frontier Robotics | Standard VLM + lightweight action transformer | 0.5B–0.8B | Decoupled perception and control; flow-matching denoising; on par with π0.5 on LIBERO. | arXiv:2602.18224 | Ch. 13 |
+| Xiaomi-Robotics-0 | Xiaomi Robotics | Qwen3-VL-4B + flow-matching DiT | 4.7B | Real-time execution; flow-matching action expert. | arXiv:2602.12684 | Ch. 13 |
+| SmolVLA | Hugging Face | SmolVLM2 encoder-decoder + flow-matching transformer | 450M | Consumer-GPU and MacBook deployable; asynchronous inference decouples VLM from execution. | arXiv:2506.01844 | Ch. 13, 16 |
+| TinyVLA | Midea / academic collab. | Lightweight pretrained VLM (<1.4B) + diffusion decoder | <1.4B | Diffusion-based policy decoder; distilled from larger VLAs; fast, data-efficient inference. | arXiv:2409.12514 | Ch. 16 |
+| RoboMamba | Tongji University | Mamba SSM + frozen CLIP | — | Linear-scaling SSM backbone replaces transformer; 3.7M-parameter MLP policy head. | arXiv:2406.04339 | Ch. 8, 16 |
+| Helix / Helix 02 | Figure AI | Dual-system (7B VLM + 80M visuomotor) | 7.08B | Full upper-body 35-DoF continuous control; on-board embedded GPUs; "Sport Mode". | figure.ai/news/helix and helix-02 | Ch. 14 |
+| GR00T N1 | NVIDIA | Dual-system (System 2 VLM + System 1 reactive) | 2.2B | Humanoid-centric; 93.3% language-following; 3000h+ of human video + robot + synthetic data. | arXiv:2503.14734 | Ch. 14 |
+| ρα (Rho-alpha) | Microsoft Research | Phi family + action expert | — | Tactile sensing + online learning from human corrections; BusyBox benchmark. | MSR technical report | Ch. 14, 17 |
+| Embodied-R1 | Tianjin University / Huawei Noah's Ark | Qwen-2.5-VL-3B-Instruct | 3B | Reinforced fine-tuning (RFT); multi-task reward curriculum; affordance prediction. | arXiv:2508.13998 | Ch. 15 |
+| RoboBrain2.0 | BAAI | Qwen2.5-VL-72B-Instruct (fine-tuned) | 7B–32B | Reinforced embodied reasoning; spatial-referring data; pointing fine-tuning. | BAAI technical report | Ch. 12 |
+| LiLo-VLA | UNC / Georgia Tech / CMU | OpenVLA-OFT or π0.5 backbone | — | Modular: decouples transport (reaching) from interaction; object-centric visual masking. | arXiv:2602.21531 | Ch. 15 |
+| Long-VLA | Westlake / Zhejiang / Xi'an Jiaotong | MDT + GPT-2-style transformer | — | Phase-aware input masking; long-horizon skill chaining; L-CALVIN benchmark. | arXiv:2508.19958 | Ch. 15 |
+| LEO | BAAI | Transformer-based 3D model | — | Two-stage 3D vision–language alignment; embodied 3D scene understanding. | arXiv:2311.12871 | Ch. 15 |
+| UniAct | Tsinghua / Shanghai AI Lab | Autoregressive transformer | — | Universal atomic actions for cross-embodiment heterogeneity. | arXiv:2501.10105 | Ch. 15, 18 |
+| OpenDriveVLA | — | Autoregressive trajectory generator | — | Unified 2D / 3D perception → driving trajectories; closed-loop end-to-end control. | arXiv:2503.23463 | Ch. 15 |
 
 ## F.2  How to read the zoo
 
