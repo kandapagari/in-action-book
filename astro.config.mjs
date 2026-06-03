@@ -26,7 +26,33 @@ export default defineConfig({
   },
   integrations: [
     mdx(),
-    sitemap(),
+    sitemap({
+      // Priority scheme: the author-entity pages rank highest, then the book
+      // content, then utility pages. `lastmod` is the build time — honest for
+      // a continuously-rebuilt living draft. The default changefreq is weekly.
+      serialize(item) {
+        const path = new URL(item.url).pathname;
+        if (path === '/') {
+          item.priority = 1.0;
+          item.changefreq = 'daily';
+        } else if (path === '/about/') {
+          item.priority = 0.9;
+          item.changefreq = 'monthly';
+        } else if (path === '/contents/') {
+          item.priority = 0.8;
+          item.changefreq = 'daily';
+        } else if (path.startsWith('/chapters/') || path.startsWith('/appendix/')) {
+          item.priority = 0.7;
+          item.changefreq = 'weekly';
+        } else {
+          // /search/, /cite/, /contact/
+          item.priority = 0.4;
+          item.changefreq = 'monthly';
+        }
+        item.lastmod = new Date().toISOString();
+        return item;
+      },
+    }),
     pagefind(),
   ],
   markdown: {

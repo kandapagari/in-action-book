@@ -1,11 +1,15 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import { graph, personEntity, bookEntity } from '../lib/seo';
+
+const aboutJsonLd = graph(personEntity(), bookEntity());
 ---
 
 <SiteLayout
-  title="About — Action Models for Robot Learning"
-  description="About the open-access textbook Action Models for Robot Learning, by Pavan Kumar Kandapagari."
+  title="About Pavan Kumar Kandapagari — author of Action Models for Robot Learning"
+  description="Pavan Kumar Kandapagari works on vision-language-action (VLA) models and robot learning, and authors the open-access textbook Action Models for Robot Learning."
   currentPath="about"
+  jsonLd={aboutJsonLd}
 >
   <main class="toc-page">
     <h1>About</h1>

@@ -3,7 +3,15 @@ import SiteLayout from '../../../layouts/SiteLayout.astro';
 import { getCollection, render } from 'astro:content';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { linkifyRef, splitOnH2, stripLeadingH1 } from '../../../lib/refs';
-import { excerpt } from '../../../lib/seo';
+import {
+  excerpt,
+  plainText,
+  graph,
+  techArticleEntity,
+  breadcrumbList,
+  detectTopics,
+  SITE,
+} from '../../../lib/seo';
 
 export async function getStaticPaths() {
   const entries = (await getCollection('appendices')).sort((a, b) =>
@@ -47,24 +55,23 @@ const description = bodyExcerpt
   : `${data.title}. Appendix ${data.appendix} of "Action Models for Robot Learning" by Pavan Kumar Kandapagari.`;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
-const bookUrl = Astro.site?.toString() ?? '';
-const articleJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: `${data.title}`,
-  url: canonicalUrl,
-  inLanguage: 'en',
-  author: { '@type': 'Person', name: 'Pavan Kumar Kandapagari' },
-  isPartOf: {
-    '@type': 'Book',
-    name: 'Action Models for Robot Learning',
-    url: bookUrl,
-  },
-  description,
-};
+const topics = detectTopics(data.title, data.key_refs.join(' '), plainText(chunks[0] ?? ''));
+const appendixJsonLd = graph(
+  techArticleEntity({
+    headline: data.title,
+    url: canonicalUrl,
+    description,
+    topics,
+  }),
+  breadcrumbList([
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Contents', url: `${SITE}/contents/` },
+    { name: `Appendix ${data.appendix}. ${data.title}`, url: canonicalUrl },
+  ]),
+);
 ---
 
-<SiteLayout title={title} description={description} currentPath="section" jsonLd={articleJsonLd}>
+<SiteLayout title={title} description={description} currentPath="section" jsonLd={appendixJsonLd}>
   <main class="section-page" data-pagefind-body>
     <article class="body">
       <div class="eyebrow">Appendix {data.appendix}</div>
