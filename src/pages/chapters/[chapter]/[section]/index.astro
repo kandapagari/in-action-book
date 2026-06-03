@@ -10,7 +10,15 @@ import {
   sectionRouteParams,
 } from '../../../../lib/progress';
 import { linkifyRef, splitOnH2 } from '../../../../lib/refs';
-import { excerpt } from '../../../../lib/seo';
+import {
+  excerpt,
+  plainText,
+  graph,
+  techArticleEntity,
+  breadcrumbList,
+  detectTopics,
+  SITE,
+} from '../../../../lib/seo';
 
 export async function getStaticPaths() {
   const entries = await getCollection('chapters');
@@ -67,25 +75,24 @@ const description = bodyExcerpt
   : `${data.title}. Section ${data.section} of "Action Models for Robot Learning" by Pavan Kumar Kandapagari.`;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
-const bookUrl = Astro.site?.toString() ?? '';
-const articleJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: `${data.title}`,
-  url: canonicalUrl,
-  inLanguage: 'en',
-  author: { '@type': 'Person', name: 'Pavan Kumar Kandapagari' },
-  isPartOf: {
-    '@type': 'Book',
-    name: 'Action Models for Robot Learning',
-    url: bookUrl,
-  },
-  description,
-  ...(draftedDate ? { datePublished: draftedDate, dateModified: draftedDate } : {}),
-};
+const topics = detectTopics(data.title, data.key_refs.join(' '), plainText(chunks[0] ?? ''));
+const sectionJsonLd = graph(
+  techArticleEntity({
+    headline: data.title,
+    url: canonicalUrl,
+    description,
+    datePublished: draftedDate,
+    topics,
+  }),
+  breadcrumbList([
+    { name: 'Home', url: `${SITE}/` },
+    { name: 'Contents', url: `${SITE}/contents/` },
+    { name: `§${data.section} ${data.title}`, url: canonicalUrl },
+  ]),
+);
 ---
 
-<SiteLayout title={title} description={description} currentPath="section" jsonLd={articleJsonLd}>
+<SiteLayout title={title} description={description} currentPath="section" jsonLd={sectionJsonLd}>
   <main class="section-page" data-pagefind-body>
     <article class="body">
       <div class="eyebrow">Chapter {data.chapter} · {chapterTitle}</div>
