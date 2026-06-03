@@ -1,0 +1,147 @@
+---
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { experimental_AstroContainer as AstroContainer } from 'astro/container';
+import { linkifyRef, splitOnH2, stripLeadingH1 } from '../../../lib/refs';
+import { excerpt } from '../../../lib/seo';
+
+export async function getStaticPaths() {
+  const entries = (await getCollection('appendices')).sort((a, b) =>
+    a.data.appendix.localeCompare(b.data.appendix),
+  );
+  return entries.map((entry, i) => ({
+    params: { letter: entry.data.appendix.toLowerCase() },
+    props: {
+      entry,
+      prev: i > 0 ? entries[i - 1] : null,
+      next: i < entries.length - 1 ? entries[i + 1] : null,
+    },
+  }));
+}
+
+type AppendixEntry = Awaited<ReturnType<typeof getCollection<'appendices'>>>[number];
+type Props = { entry: AppendixEntry; prev: AppendixEntry | null; next: AppendixEntry | null };
+const { entry, prev, next } = Astro.props as Props;
+const { data } = entry;
+
+const { Content } = await render(entry);
+const container = await AstroContainer.create();
+const renderedHtml = stripLeadingH1(await container.renderToString(Content));
+const chunks = splitOnH2(renderedHtml);
+
+// Distribute key_refs as sidenotes: one after each chunk, in order. Extras
+// stack after the last chunk so we never drop a reference.
+const sidenotes = data.key_refs.map((ref, i) => ({
+  num: i + 1,
+  html: linkifyRef(ref),
+}));
+const inlineSidenotes = sidenotes.slice(0, chunks.length);
+const trailingSidenotes = sidenotes.slice(chunks.length);
+
+const statusLabel = data.status === 'revised' ? 'Revised' : 'Draft';
+
+const title = `Appendix ${data.appendix}. ${data.title} — Action Models for Robot Learning`;
+const bodyExcerpt = excerpt(chunks[0] ?? '');
+const description = bodyExcerpt
+  ? bodyExcerpt
+  : `${data.title}. Appendix ${data.appendix} of "Action Models for Robot Learning" by Pavan Kumar Kandapagari.`;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const bookUrl = Astro.site?.toString() ?? '';
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: `${data.title}`,
+  url: canonicalUrl,
+  inLanguage: 'en',
+  author: { '@type': 'Person', name: 'Pavan Kumar Kandapagari' },
+  isPartOf: {
+    '@type': 'Book',
+    name: 'Action Models for Robot Learning',
+    url: bookUrl,
+  },
+  description,
+};
+---
+
+<SiteLayout title={title} description={description} currentPath="section" jsonLd={articleJsonLd}>
+  <main class="section-page" data-pagefind-body>
+    <article class="body">
+      <div class="eyebrow">Appendix {data.appendix}</div>
+      <h1>{data.title}</h1>
+      <div class="section-meta">
+        <span>{statusLabel}</span>
+        <span class="dot">·</span>
+        <span>~{data.target_words.toLocaleString()} target words</span>
+        <span class="dot">·</span>
+        <span>Prereqs: {data.prereqs}</span>
+      </div>
+      <Fragment set:html={chunks[0] ?? ''} />
+    </article>
+
+    {inlineSidenotes[0] && (
+      <aside class="sidenote" id={`sn-${inlineSidenotes[0].num}`}>
+        <span class="num">{inlineSidenotes[0].num}</span>
+        <Fragment set:html={inlineSidenotes[0].html} />
+      </aside>
+    )}
+
+    {chunks.slice(1).map((chunk, i) => {
+      const sn = inlineSidenotes[i + 1];
+      return (
+        <Fragment>
+          <section class="body" set:html={chunk} />
+          {sn && (
+            <aside class="sidenote" id={`sn-${sn.num}`}>
+              <span class="num">{sn.num}</span>
+              <Fragment set:html={sn.html} />
+            </aside>
+          )}
+        </Fragment>
+      );
+    })}
+
+    {trailingSidenotes.map((sn) => (
+      <aside class="sidenote" id={`sn-${sn.num}`}>
+        <span class="num">{sn.num}</span>
+        <Fragment set:html={sn.html} />
+      </aside>
+    ))}
+
+    <nav class="section-nav">
+      {prev ? (
+        <a class="prev" href={`/appendix/${prev.data.appendix.toLowerCase()}/`}>
+          <span class="label">← Previous</span>
+          <span class="title">Appendix {prev.data.appendix}. {prev.data.title}</span>
+        </a>
+      ) : (
+        <a class="prev" href="/contents/">
+          <span class="label">← Contents</span>
+          <span class="title">Table of contents</span>
+        </a>
+      )}
+      {next ? (
+        <a class="next" href={`/appendix/${next.data.appendix.toLowerCase()}/`}>
+          <span class="label">Next →</span>
+          <span class="title">Appendix {next.data.appendix}. {next.data.title}</span>
+        </a>
+      ) : (
+        <a class="next" href="/contents/">
+          <span class="label">Contents →</span>
+          <span class="title">Table of contents</span>
+        </a>
+      )}
+    </nav>
+
+    {data.key_refs.length > 0 && (
+      <section class="references">
+        <h2>References</h2>
+        <ol>
+          {data.key_refs.map((ref) => (
+            <li set:html={linkifyRef(ref)} />
+          ))}
+        </ol>
+      </section>
+    )}
+  </main>
+</SiteLayout>

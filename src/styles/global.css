@@ -288,6 +288,14 @@ hr {
   font-size: 1.15rem;
   line-height: 1.6;
   color: var(--ink-soft);
+  margin: 0 0 1.25rem;
+}
+.landing-hero .hero-note {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--muted);
   margin: 0 0 2.5rem;
 }
 .landing-hero .cta {
@@ -560,6 +568,16 @@ hr {
 .toc-page .chapter li.pending a,
 .toc-page .chapter li.pending .sec-n,
 .toc-page .chapter li.pending .sec-title { color: var(--muted-light); }
+
+/* Appendix rows carry no section <ol>, so the chapter-sized margins leave
+   loose, uneven gaps. Tighten them into an evenly spaced flat list. */
+.toc-page .part-block.appendices .chapter.appendix-row {
+  margin: .9rem 0;
+  align-items: baseline;
+}
+.toc-page .part-block.appendices .chapter.appendix-row .ch-title {
+  margin-bottom: 0;
+}
 
 /* Status badge */
 .status {
