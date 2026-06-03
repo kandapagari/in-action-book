@@ -246,6 +246,11 @@ hr {
   padding: 3rem var(--gutter) 0;
 }
 
+.section-page > article.body,
+.section-page > section.body {
+  grid-column: 1;
+}
+
 .section-page .body > * {
   grid-column: 1;
 }
@@ -1094,6 +1099,7 @@ pre.astro-code > code {
   color: var(--muted-light);
 }
 .section-view-count {
+  grid-column: 1 / -1;
   margin: 3.5rem 0 0;
   padding-top: 1rem;
   border-top: 1px dotted var(--rule);
