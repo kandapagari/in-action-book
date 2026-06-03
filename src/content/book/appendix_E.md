@@ -52,7 +52,7 @@ the primary-reference column rather than re-citing the originals.
 
 ## E.2  Reading list, by chapter
 
-### Chapter 1 — The robot learning problem
+### Chapter 1. The robot learning problem
 
 - Kober, J., Bagnell, J. A., & Peters, J. (2013). Reinforcement
   Learning in Robotics: A Survey. *International Journal of Robotics
@@ -66,7 +66,7 @@ the primary-reference column rather than re-citing the originals.
 - Xu et al. (2025). An Anatomy of Vision-Language-Action Models — From
   Modules to Milestones and Challenges. arXiv:2512.11362.
 
-### Chapter 2 — Your first VLA, end-to-end
+### Chapter 2. Your first VLA, end-to-end
 
 - Kim, M. J. et al. (2024). OpenVLA — An Open-Source Vision-Language-
   Action Model. arXiv:2406.09246.
@@ -76,7 +76,7 @@ the primary-reference column rather than re-citing the originals.
 - Garcia et al. (2025). LIBERO-Para — A Diagnostic Benchmark and
   Metrics for Paraphrase Robustness in VLA Models. arXiv:2603.28301.
 
-### Chapter 3 — Math and ML prerequisites in 30 minutes
+### Chapter 3. Math and ML prerequisites in 30 minutes
 
 - Goodfellow, I., Bengio, Y., & Courville, A. (2016). *Deep
   Learning*. MIT Press.
@@ -85,7 +85,7 @@ the primary-reference column rather than re-citing the originals.
 - Paszke, A. et al. (2019). PyTorch — An Imperative Style, High-
   Performance Deep Learning Library. *NeurIPS 2019*.
 
-### Chapter 4 — Classical action models: planning and inverse dynamics
+### Chapter 4. Classical action models: planning and inverse dynamics
 
 - Fikes, R. E., & Nilsson, N. J. (1971). STRIPS — A New Approach to
   the Application of Theorem Proving to Problem Solving. *Artificial
@@ -108,7 +108,7 @@ the primary-reference column rather than re-citing the originals.
 - Hogan, N. (1985). Impedance Control — An Approach to Manipulation.
   *ASME Journal of Dynamic Systems, Measurement, and Control*.
 
-### Chapter 5 — Learning from rewards: MDPs and reinforcement learning
+### Chapter 5. Learning from rewards: MDPs and reinforcement learning
 
 - Bellman, R. (1957). *Dynamic Programming*. Princeton University
   Press.
@@ -125,7 +125,7 @@ the primary-reference column rather than re-citing the originals.
   Planning and Acting in Partially Observable Stochastic Domains.
   *Artificial Intelligence*, 101(1–2).
 
-### Chapter 6 — Learning from demonstrations: behavior cloning and imitation learning
+### Chapter 6. Learning from demonstrations: behavior cloning and imitation learning
 
 - Pomerleau, D. A. (1988). ALVINN — An Autonomous Land Vehicle in a
   Neural Network. *NeurIPS 1988*.
@@ -138,7 +138,7 @@ the primary-reference column rather than re-citing the originals.
   Survey of Robot Learning from Demonstration. *Robotics and
   Autonomous Systems*, 57(5).
 
-### Chapter 7 — Deep RL for control: DQN to SAC and PPO
+### Chapter 7. Deep RL for control: DQN to SAC and PPO
 
 - Mnih, V. et al. (2015). Human-level Control through Deep
   Reinforcement Learning (DQN). *Nature*, 518(7540).
@@ -152,7 +152,7 @@ the primary-reference column rather than re-citing the originals.
 - Tobin, J. et al. (2017). Domain Randomization for Transferring Deep
   Neural Networks from Simulation to the Real World. *IROS 2017*.
 
-### Chapter 8 — Sequence models meet control
+### Chapter 8. Sequence models meet control
 
 - Vaswani, A. et al. (2017). Attention Is All You Need. *NeurIPS 2017*.
 - Chen, L. et al. (2021). Decision Transformer — Reinforcement
@@ -167,7 +167,7 @@ the primary-reference column rather than re-citing the originals.
 - Wu et al. (2025). A Survey on Efficient Vision-Language-Action
   Models. arXiv:2510.24795.
 
-### Chapter 9 — World models and model-based learning
+### Chapter 9. World models and model-based learning
 
 - Ha, D., & Schmidhuber, J. (2018). World Models. *NeurIPS 2018*.
 - Hafner, D. et al. (2019). Learning Latent Dynamics for Planning from
@@ -182,7 +182,7 @@ the primary-reference column rather than re-citing the originals.
 - LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence.
   OpenReview position paper.
 
-### Chapter 10 — Diffusion and flow models for action generation
+### Chapter 10. Diffusion and flow models for action generation
 
 - Ho, J., Jain, A., & Abbeel, P. (2020). Denoising Diffusion
   Probabilistic Models. *NeurIPS 2020*.
@@ -199,7 +199,7 @@ the primary-reference column rather than re-citing the originals.
   Learning to Generate and Transfer Data with Rectified Flow. *ICLR
   2023*.
 
-### Chapter 11 — The VLA recipe: from CLIP to RT-1
+### Chapter 11. The VLA recipe: from CLIP to RT-1
 
 - Radford, A. et al. (2021). Learning Transferable Visual Models from
   Natural Language Supervision (CLIP). *ICML 2021*.
@@ -209,7 +209,7 @@ the primary-reference column rather than re-citing the originals.
   Control at Scale. arXiv:2212.06817.
 - Reed, S. et al. (2022). A Generalist Agent (Gato). *TMLR*.
 
-### Chapter 12 — Scaling up: PaLM-E, RT-2, OpenVLA, Octo (and friends)
+### Chapter 12. Scaling up: PaLM-E, RT-2, OpenVLA, Octo (and friends)
 
 - Driess, D. et al. (2023). PaLM-E — An Embodied Multimodal Language
   Model. arXiv:2303.03378.
@@ -223,7 +223,7 @@ the primary-reference column rather than re-citing the originals.
 - Liu et al. (2024). RDT-1B — A Diffusion Foundation Model for
   Bimanual Manipulation. arXiv:2410.07864.
 
-### Chapter 13 — Smooth control: π0 and flow-matching action heads
+### Chapter 13. Smooth control: π0 and flow-matching action heads
 
 - Black, K. et al. (2024). π0 — A Vision-Language-Action Flow Model
   for General Robot Control. arXiv:2410.24164 (companion technical
@@ -235,7 +235,7 @@ the primary-reference column rather than re-citing the originals.
 - Xiaomi Robotics (2025). Xiaomi-Robotics-0. arXiv:2602.12684.
 - Hugging Face (2025). SmolVLA. arXiv:2506.01844.
 
-### Chapter 14 — Dual-system architectures: Helix and GR00T N1
+### Chapter 14. Dual-system architectures: Helix and GR00T N1
 
 - Figure AI (2024). Helix — A Vision-Language-Action Model for
   Generalist Humanoid Control. figure.ai/news/helix.
@@ -248,7 +248,7 @@ the primary-reference column rather than re-citing the originals.
 - Ahn, M. et al. (2022). Do As I Can, Not As I Say (SayCan). *CoRL
   2022*.
 
-### Chapter 15 — Datasets, benchmarks, and evaluation; specialized and adjacent VLAs
+### Chapter 15. Datasets, benchmarks, and evaluation; specialized and adjacent VLAs
 
 - Wei et al. (2025). LiLo-VLA — Compositional Long-Horizon
   Manipulation via Linked Object-Centric Policies. arXiv:2602.21531.
@@ -265,7 +265,7 @@ the primary-reference column rather than re-citing the originals.
 - TinyVLA Team (2024). TinyVLA — Toward Fast, Data-Efficient Vision-
   Language-Action Models for Robotic Manipulation. arXiv:2409.12514.
 
-### Chapter 16 — Fine-tuning a VLA for your robot
+### Chapter 16. Fine-tuning a VLA for your robot
 
 - Hu, E. J. et al. (2022). LoRA — Low-Rank Adaptation of Large
   Language Models. *ICLR 2022*.
@@ -277,7 +277,7 @@ the primary-reference column rather than re-citing the originals.
 - Hugging Face (2025). SmolVLA. arXiv:2506.01844.
 - Liu et al. (2024). RoboMamba. arXiv:2406.04339.
 
-### Chapter 17 — Evaluation, safety, and deployment
+### Chapter 17. Evaluation, safety, and deployment
 
 - García, J., & Fernández, F. (2015). A Comprehensive Survey on Safe
   Reinforcement Learning. *Journal of Machine Learning Research*, 16.
@@ -291,7 +291,7 @@ the primary-reference column rather than re-citing the originals.
 - Garcia et al. (2025). LIBERO-Para. arXiv:2603.28301.
 - Ni et al. (2025). Embodied Arena. arXiv:2509.15273.
 
-### Chapter 18 — Open problems and what comes next
+### Chapter 18. Open problems and what comes next
 
 - Zhang et al. (2025). Pure Vision Language Action (VLA) Models — A
   Comprehensive Survey. arXiv:2509.19012.
