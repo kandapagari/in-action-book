@@ -107,7 +107,8 @@ from huggingface_hub import snapshot_download
 
 local_dir = snapshot_download(
     repo_id="openvla/openvla-7b",
-    revision="main",          # replace with the commit hash for reproducibility
+    # replace "main" with the commit hash for reproducibility
+    revision="main",
     local_dir="weights/openvla-7b",
     local_dir_use_symlinks=False,
 )
