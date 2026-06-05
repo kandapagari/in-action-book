@@ -76,8 +76,8 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 #### Chapter 5. Learning from rewards: MDPs and reinforcement learning
 
 - [x] 5.1 States, actions, rewards, and policies
-- [ ] 5.2 Value iteration and policy iteration
-- [ ] 5.3 Q-learning and the role of exploration
+- [x] 5.2 Value iteration and policy iteration
+- [x] 5.3 Q-learning and the role of exploration
 - [ ] 5.4 Why reward design is the hardest part
 - [ ] 5.5 The MDP-to-robot translation problem
 - [ ] 5.6 Summary
@@ -266,3 +266,5 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-03 — drafted Appendix D: Setting up a robotics simulator (~2053 words)
 - 2026-06-03 — drafted Appendix E: Canonical references and offline source mirror (~2269 words)
 - 2026-06-03 — drafted Appendix F: Model zoo (~1598 words)
+- 2026-06-04 — drafted §5.2 Value iteration and policy iteration (~1819 words)
+- 2026-06-05 — drafted §5.3 Q-learning and the role of exploration (~2144 words)
