@@ -391,9 +391,37 @@
       "title": "States, actions, rewards, and policies",
       "voice": "af_heart",
       "word_count": 1969
+    },
+    "5.2": {
+      "chapter": 5,
+      "char_count": 9161,
+      "content_hash": "9d375b70067bc281460512a86c72cc9e3f56565470351fb2b67c431eaf78fa8f",
+      "duration_seconds": 567.74,
+      "file": "/audio/chapter-5/section-5_2.mp3",
+      "file_size_bytes": 4542573,
+      "generated_at": "2026-06-05T09:01:32+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-5/section-5_2.mp3",
+      "section": "5.2",
+      "title": "Value iteration and policy iteration",
+      "voice": "af_heart",
+      "word_count": 1500
+    },
+    "5.3": {
+      "chapter": 5,
+      "char_count": 11244,
+      "content_hash": "31544d8fb998bd5e3ce008e0b501a155534c1db42c7b6574a066bc16341cfa71",
+      "duration_seconds": 684.67,
+      "file": "/audio/chapter-5/section-5_3.mp3",
+      "file_size_bytes": 5477997,
+      "generated_at": "2026-06-05T09:01:38+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-5/section-5_3.mp3",
+      "section": "5.3",
+      "title": "Q-learning and the role of exploration",
+      "voice": "af_heart",
+      "word_count": 1872
     }
   },
-  "generated_at": "2026-06-03T09:13:33+00:00",
+  "generated_at": "2026-06-05T09:01:38+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
