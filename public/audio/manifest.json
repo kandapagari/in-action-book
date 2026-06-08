@@ -419,9 +419,51 @@
       "title": "Q-learning and the role of exploration",
       "voice": "af_heart",
       "word_count": 1872
+    },
+    "5.4": {
+      "chapter": 5,
+      "char_count": 11071,
+      "content_hash": "6780525a1b7844c79d8a8526468edf3ae6352f3d6bc0bf68a4bfd7b944f07d4d",
+      "duration_seconds": 667.58,
+      "file": "/audio/chapter-5/section-5_4.mp3",
+      "file_size_bytes": 5341293,
+      "generated_at": "2026-06-08T09:27:51+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-5/section-5_4.mp3",
+      "section": "5.4",
+      "title": "Why reward design is the hardest part",
+      "voice": "af_heart",
+      "word_count": 1806
+    },
+    "5.5": {
+      "chapter": 5,
+      "char_count": 13128,
+      "content_hash": "f968936b8159ed67568346314e0d1477235ed0b0abd2e0a125fcd8fb5f9d8786",
+      "duration_seconds": 800.25,
+      "file": "/audio/chapter-5/section-5_5.mp3",
+      "file_size_bytes": 6402669,
+      "generated_at": "2026-06-08T09:27:58+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-5/section-5_5.mp3",
+      "section": "5.5",
+      "title": "The MDP-to-robot translation problem",
+      "voice": "af_heart",
+      "word_count": 2159
+    },
+    "5.6": {
+      "chapter": 5,
+      "char_count": 12528,
+      "content_hash": "b997670f1b2f7cbd0c51e8dd31c0399aedd065fe78551e1578bbda0cfc7d88fc",
+      "duration_seconds": 766.0,
+      "file": "/audio/chapter-5/section-5_6.mp3",
+      "file_size_bytes": 6128685,
+      "generated_at": "2026-06-08T09:28:04+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-5/section-5_6.mp3",
+      "section": "5.6",
+      "title": "Summary",
+      "voice": "af_heart",
+      "word_count": 2038
     }
   },
-  "generated_at": "2026-06-05T09:01:38+00:00",
+  "generated_at": "2026-06-08T09:28:04+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
