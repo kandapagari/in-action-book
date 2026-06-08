@@ -78,9 +78,9 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 5.1 States, actions, rewards, and policies
 - [x] 5.2 Value iteration and policy iteration
 - [x] 5.3 Q-learning and the role of exploration
-- [ ] 5.4 Why reward design is the hardest part
-- [ ] 5.5 The MDP-to-robot translation problem
-- [ ] 5.6 Summary
+- [x] 5.4 Why reward design is the hardest part
+- [x] 5.5 The MDP-to-robot translation problem
+- [x] 5.6 Summary
 - [ ] 5.x Hands-on exercise + chapter references
 
 #### Chapter 6. Learning from demonstrations: behavior cloning and imitation learning
@@ -268,3 +268,6 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-03 — drafted Appendix F: Model zoo (~1598 words)
 - 2026-06-04 — drafted §5.2 Value iteration and policy iteration (~1819 words)
 - 2026-06-05 — drafted §5.3 Q-learning and the role of exploration (~2144 words)
+- 2026-06-07 — drafted §5.4 Why reward design is the hardest part (~1949 words)
+- 2026-06-08 — drafted §5.5 The MDP-to-robot translation problem (~2241 words)
+- 2026-06-08 — drafted §5.6 Summary (~2092 words)
