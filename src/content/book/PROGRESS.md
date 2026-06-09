@@ -81,7 +81,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 5.4 Why reward design is the hardest part
 - [x] 5.5 The MDP-to-robot translation problem
 - [x] 5.6 Summary
-- [ ] 5.x Hands-on exercise + chapter references
+- [x] 5.x Hands-on exercise + chapter references
 
 #### Chapter 6. Learning from demonstrations: behavior cloning and imitation learning
 
@@ -271,3 +271,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-07 — drafted §5.4 Why reward design is the hardest part (~1949 words)
 - 2026-06-08 — drafted §5.5 The MDP-to-robot translation problem (~2241 words)
 - 2026-06-08 — drafted §5.6 Summary (~2092 words)
+- 2026-06-09 — drafted §5.x Hands-on exercise + chapter references (~2041 words)
