@@ -461,9 +461,23 @@
       "title": "Summary",
       "voice": "af_heart",
       "word_count": 2038
+    },
+    "5.x": {
+      "chapter": 5,
+      "char_count": 13924,
+      "content_hash": "2ef4d1cca55e84cc565fdb8b1f81ee2fe3b8b824a5a49b45b917e48f050ee717",
+      "duration_seconds": 966.26,
+      "file": "/audio/chapter-5/section-5_x.mp3",
+      "file_size_bytes": 7730733,
+      "generated_at": "2026-06-09T12:11:00+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-5/section-5_x.mp3",
+      "section": "5.x",
+      "title": "Hands-on exercise + chapter references",
+      "voice": "af_heart",
+      "word_count": 2193
     }
   },
-  "generated_at": "2026-06-08T09:28:04+00:00",
+  "generated_at": "2026-06-09T12:11:00+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
