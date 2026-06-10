@@ -85,7 +85,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 #### Chapter 6. Learning from demonstrations: behavior cloning and imitation learning
 
-- [ ] 6.1 Why imitation is the dominant signal in modern robotics
+- [x] 6.1 Why imitation is the dominant signal in modern robotics
 - [ ] 6.2 Behavior cloning, step by step
 - [ ] 6.3 Compounding error and DAgger
 - [ ] 6.4 A glance at IRL and adversarial imitation
@@ -272,3 +272,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-08 — drafted §5.5 The MDP-to-robot translation problem (~2241 words)
 - 2026-06-08 — drafted §5.6 Summary (~2092 words)
 - 2026-06-09 — drafted §5.x Hands-on exercise + chapter references (~2041 words)
+- 2026-06-10 — drafted §6.1 Why imitation is the dominant signal in modern robotics (~1922 words)
