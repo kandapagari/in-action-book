@@ -475,9 +475,23 @@
       "title": "Hands-on exercise + chapter references",
       "voice": "af_heart",
       "word_count": 2193
+    },
+    "6.1": {
+      "chapter": 6,
+      "char_count": 11303,
+      "content_hash": "19b64917cd7a7600fd429f912301b39d8a51aede21410ecda86780bceda38c07",
+      "duration_seconds": 698.37,
+      "file": "/audio/chapter-6/section-6_1.mp3",
+      "file_size_bytes": 5587629,
+      "generated_at": "2026-06-10T10:37:21+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-6/section-6_1.mp3",
+      "section": "6.1",
+      "title": "Why imitation is the dominant signal in modern robotics",
+      "voice": "af_heart",
+      "word_count": 1841
     }
   },
-  "generated_at": "2026-06-09T12:11:00+00:00",
+  "generated_at": "2026-06-10T10:37:21+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
