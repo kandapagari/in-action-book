@@ -489,9 +489,23 @@
       "title": "Why imitation is the dominant signal in modern robotics",
       "voice": "af_heart",
       "word_count": 1841
+    },
+    "6.2": {
+      "chapter": 6,
+      "char_count": 9608,
+      "content_hash": "7ac437d3d3c6f0b9907b8e075e3d64feecaa8021f91a08826c6f514ab0010479",
+      "duration_seconds": 588.58,
+      "file": "/audio/chapter-6/section-6_2.mp3",
+      "file_size_bytes": 4709421,
+      "generated_at": "2026-06-11T08:50:21+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-6/section-6_2.mp3",
+      "section": "6.2",
+      "title": "Behavior cloning, step by step",
+      "voice": "af_heart",
+      "word_count": 1526
     }
   },
-  "generated_at": "2026-06-10T10:37:21+00:00",
+  "generated_at": "2026-06-11T08:50:21+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
