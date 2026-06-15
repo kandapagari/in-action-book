@@ -88,10 +88,10 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 6.1 Why imitation is the dominant signal in modern robotics
 - [x] 6.2 Behavior cloning, step by step
 - [x] 6.3 Compounding error and DAgger
-- [ ] 6.4 A glance at IRL and adversarial imitation
-- [ ] 6.5 Choosing between BC, IRL, and RL
-- [ ] 6.6 Summary
-- [ ] 6.x Hands-on exercise + chapter references
+- [x] 6.4 A glance at IRL and adversarial imitation
+- [x] 6.5 Choosing between BC, IRL, and RL
+- [x] 6.6 Summary
+- [x] 6.x Hands-on exercise + chapter references
 
 #### Chapter 7. Deep RL for control: DQN to SAC and PPO
 
@@ -275,3 +275,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-10 — drafted §6.1 Why imitation is the dominant signal in modern robotics (~1922 words)
 - 2026-06-11 — drafted §6.2 Behavior cloning, step by step (~1650 words)
 - 2026-06-12 — drafted §6.3 Compounding error and DAgger (~1928 words)
+- 2026-06-15 — drafted §6.4 A glance at IRL and adversarial imitation (~1743 words)
+- 2026-06-15 — drafted §6.5 Choosing between BC, IRL, and RL (~1778 words)
+- 2026-06-15 — drafted §6.6 Summary (~1747 words)
+- 2026-06-15 — drafted §6.x Hands-on exercise + chapter references (~1962 words)
