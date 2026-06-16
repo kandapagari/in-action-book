@@ -573,9 +573,23 @@
       "title": "Hands-on exercise + chapter references",
       "voice": "af_heart",
       "word_count": 1884
+    },
+    "7.1": {
+      "chapter": 7,
+      "char_count": 10370,
+      "content_hash": "300129bb8daabc569db7d60a00e5e47944e6360d9ca4accdc8f34250d5970b23",
+      "duration_seconds": 632.92,
+      "file": "/audio/chapter-7/section-7_1.mp3",
+      "file_size_bytes": 5064045,
+      "generated_at": "2026-06-16T11:48:18+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-7/section-7_1.mp3",
+      "section": "7.1",
+      "title": "Function approximation: from Q-tables to Q-networks",
+      "voice": "af_heart",
+      "word_count": 1741
     }
   },
-  "generated_at": "2026-06-15T11:00:56+00:00",
+  "generated_at": "2026-06-16T11:48:18+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
