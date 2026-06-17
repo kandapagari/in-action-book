@@ -96,7 +96,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 #### Chapter 7. Deep RL for control: DQN to SAC and PPO
 
 - [x] 7.1 Function approximation: from Q-tables to Q-networks
-- [ ] 7.2 Policy gradients and the variance problem
+- [x] 7.2 Policy gradients and the variance problem
 - [ ] 7.3 PPO in 100 lines
 - [ ] 7.4 Off-policy actor-critic: DDPG, TD3, SAC
 - [ ] 7.5 Sim-to-real: domain randomization in one slide
@@ -280,3 +280,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-15 — drafted §6.6 Summary (~1747 words)
 - 2026-06-15 — drafted §6.x Hands-on exercise + chapter references (~1962 words)
 - 2026-06-16 — drafted §7.1 Function approximation: from Q-tables to Q-networks (~1964 words)
+- 2026-06-17 — drafted §7.2 Policy gradients and the variance problem (~1983 words)
