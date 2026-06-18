@@ -587,9 +587,23 @@
       "title": "Function approximation: from Q-tables to Q-networks",
       "voice": "af_heart",
       "word_count": 1741
+    },
+    "7.2": {
+      "chapter": 7,
+      "char_count": 10781,
+      "content_hash": "f4184747756c00eb399c3c7b2f24635b88c45aba07cb3aff3b05acc7a5f1ab4c",
+      "duration_seconds": 698.92,
+      "file": "/audio/chapter-7/section-7_2.mp3",
+      "file_size_bytes": 5592045,
+      "generated_at": "2026-06-17T08:36:05+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-7/section-7_2.mp3",
+      "section": "7.2",
+      "title": "Policy gradients and the variance problem",
+      "voice": "af_heart",
+      "word_count": 1776
     }
   },
-  "generated_at": "2026-06-16T11:48:18+00:00",
+  "generated_at": "2026-06-17T08:36:05+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
