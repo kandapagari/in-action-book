@@ -601,9 +601,23 @@
       "title": "Policy gradients and the variance problem",
       "voice": "af_heart",
       "word_count": 1776
+    },
+    "7.3": {
+      "chapter": 7,
+      "char_count": 9177,
+      "content_hash": "365c03dac3e4eb87b4fe1394dcabb4a40adf1006960ded7b9b94d867d403c12a",
+      "duration_seconds": 565.7,
+      "file": "/audio/chapter-7/section-7_3.mp3",
+      "file_size_bytes": 4526253,
+      "generated_at": "2026-06-18T10:18:26+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-7/section-7_3.mp3",
+      "section": "7.3",
+      "title": "PPO in 100 lines",
+      "voice": "af_heart",
+      "word_count": 1553
     }
   },
-  "generated_at": "2026-06-17T08:36:05+00:00",
+  "generated_at": "2026-06-18T10:18:26+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
