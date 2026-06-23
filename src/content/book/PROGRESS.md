@@ -98,16 +98,16 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 7.1 Function approximation: from Q-tables to Q-networks
 - [x] 7.2 Policy gradients and the variance problem
 - [x] 7.3 PPO in 100 lines
-- [ ] 7.4 Off-policy actor-critic: DDPG, TD3, SAC
-- [ ] 7.5 Sim-to-real: domain randomization in one slide
-- [ ] 7.6 Summary
-- [ ] 7.x Hands-on exercise + chapter references
+- [x] 7.4 Off-policy actor-critic: DDPG, TD3, SAC
+- [x] 7.5 Sim-to-real: domain randomization in one slide
+- [x] 7.6 Summary
+- [x] 7.x Hands-on exercise + chapter references
 
 ### Part 3 — Modern building blocks
 
 #### Chapter 8. Sequence models meet control
 
-- [ ] 8.1 The transformer in two pages, for control
+- [x] 8.1 The transformer in two pages, for control
 - [ ] 8.2 Decision Transformer: control as conditional sequence modeling
 - [ ] 8.3 Trajectory Transformer and beam-search planning
 - [ ] 8.4 What gets tokenized: states, actions, returns, language
@@ -282,3 +282,8 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-16 — drafted §7.1 Function approximation: from Q-tables to Q-networks (~1964 words)
 - 2026-06-17 — drafted §7.2 Policy gradients and the variance problem (~1983 words)
 - 2026-06-18 — drafted §7.3 PPO in 100 lines (~1711 words)
+- 2026-06-19 — drafted §7.4 Off-policy actor-critic: DDPG, TD3, SAC (~1878 words)
+- 2026-06-20 — drafted §7.5 Sim-to-real: domain randomization in one slide (~1629 words)
+- 2026-06-21 — drafted §7.6 Summary (~1790 words)
+- 2026-06-22 — drafted §7.x Hands-on exercise + chapter references (~2000 words)
+- 2026-06-23 — drafted §8.1 The transformer in two pages, for control (~1624 words)
