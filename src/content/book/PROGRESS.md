@@ -108,12 +108,12 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 #### Chapter 8. Sequence models meet control
 
 - [x] 8.1 The transformer in two pages, for control
-- [ ] 8.2 Decision Transformer: control as conditional sequence modeling
-- [ ] 8.3 Trajectory Transformer and beam-search planning
-- [ ] 8.4 What gets tokenized: states, actions, returns, language
-- [ ] 8.5 Bridge to foundation action models — and to the SSM alternative (RoboMamba)
-- [ ] 8.6 Summary
-- [ ] 8.x Hands-on exercise + chapter references
+- [x] 8.2 Decision Transformer: control as conditional sequence modeling
+- [x] 8.3 Trajectory Transformer and beam-search planning
+- [x] 8.4 What gets tokenized: states, actions, returns, language
+- [x] 8.5 Bridge to foundation action models — and to the SSM alternative (RoboMamba)
+- [x] 8.6 Summary
+- [x] 8.x Hands-on exercise + chapter references
 
 #### Chapter 9. World models and model-based learning
 
@@ -287,3 +287,9 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-21 — drafted §7.6 Summary (~1790 words)
 - 2026-06-22 — drafted §7.x Hands-on exercise + chapter references (~2000 words)
 - 2026-06-23 — drafted §8.1 The transformer in two pages, for control (~1624 words)
+- 2026-06-24 — drafted §8.2 Decision Transformer: control as conditional sequence modeling (~1630 words)
+- 2026-06-25 — drafted §8.3 Trajectory Transformer and beam-search planning (~1703 words)
+- 2026-06-26 — drafted §8.4 What gets tokenized: states, actions, returns, language (~1580 words)
+- 2026-06-27 — drafted §8.5 Bridge to foundation action models + SSM alternative (RoboMamba) (~1849 words)
+- 2026-06-28 — drafted §8.6 Summary (~1792 words)
+- 2026-06-29 — drafted §8.x Hands-on exercise + chapter references (~1980 words)
