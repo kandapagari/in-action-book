@@ -769,9 +769,23 @@
       "title": "Hands-on exercise + chapter references",
       "voice": "af_heart",
       "word_count": 1989
+    },
+    "9.1": {
+      "chapter": 9,
+      "char_count": 8912,
+      "content_hash": "f77532d2ed222b7012c19b39b9880a664bbbf7ce9b0248cb5ca79b8a5f17c77e",
+      "duration_seconds": 531.66,
+      "file": "/audio/chapter-9/section-9_1.mp3",
+      "file_size_bytes": 4253997,
+      "generated_at": "2026-06-30T10:28:11+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-9/section-9_1.mp3",
+      "section": "9.1",
+      "title": "What is a world model, really",
+      "voice": "af_heart",
+      "word_count": 1562
     }
   },
-  "generated_at": "2026-06-29T15:08:42+00:00",
+  "generated_at": "2026-06-30T10:28:11+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
