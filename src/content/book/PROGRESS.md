@@ -117,7 +117,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 #### Chapter 9. World models and model-based learning
 
-- [ ] 9.1 What is a world model, really
+- [x] 9.1 What is a world model, really
 - [ ] 9.2 Latent dynamics: RSSM and Dreamer
 - [ ] 9.3 Planning in latent space
 - [ ] 9.4 Video-prediction world models (Genie, V-JEPA)
@@ -293,3 +293,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-27 — drafted §8.5 Bridge to foundation action models + SSM alternative (RoboMamba) (~1849 words)
 - 2026-06-28 — drafted §8.6 Summary (~1792 words)
 - 2026-06-29 — drafted §8.x Hands-on exercise + chapter references (~1980 words)
+- 2026-06-30 — drafted §9.1 What is a world model, really (~1570 words)
