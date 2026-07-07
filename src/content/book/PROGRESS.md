@@ -118,16 +118,16 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 #### Chapter 9. World models and model-based learning
 
 - [x] 9.1 What is a world model, really
-- [ ] 9.2 Latent dynamics: RSSM and Dreamer
-- [ ] 9.3 Planning in latent space
-- [ ] 9.4 Video-prediction world models (Genie, V-JEPA)
-- [ ] 9.5 World models vs. VLAs: the architecture debate
-- [ ] 9.6 Summary
-- [ ] 9.x Hands-on exercise + chapter references
+- [x] 9.2 Latent dynamics: RSSM and Dreamer
+- [x] 9.3 Planning in latent space
+- [x] 9.4 Video-prediction world models (Genie, V-JEPA)
+- [x] 9.5 World models vs. VLAs: the architecture debate
+- [x] 9.6 Summary
+- [x] 9.x Hands-on exercise + chapter references
 
 #### Chapter 10. Diffusion and flow models for action generation
 
-- [ ] 10.1 A 10-minute introduction to diffusion models
+- [x] 10.1 A 10-minute introduction to diffusion models
 - [ ] 10.2 Diffusion Policy and ACT
 - [ ] 10.3 Flow matching and rectified flow for action
 - [ ] 10.4 Trade-offs: latency, multimodality, smoothness
@@ -294,3 +294,10 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-06-28 — drafted §8.6 Summary (~1792 words)
 - 2026-06-29 — drafted §8.x Hands-on exercise + chapter references (~1980 words)
 - 2026-06-30 — drafted §9.1 What is a world model, really (~1570 words)
+- 2026-07-01 — drafted §9.2 Latent dynamics: RSSM and Dreamer (~1696 words)
+- 2026-07-02 — drafted §9.3 Planning in latent space (~1835 words)
+- 2026-07-03 — drafted §9.4 Video-prediction world models (Genie, V-JEPA) (~1836 words)
+- 2026-07-04 — drafted §9.5 World models vs. VLAs: the architecture debate (~1650 words)
+- 2026-07-05 — drafted §9.6 Summary (~1980 words)
+- 2026-07-06 — drafted §9.x Hands-on exercise + chapter references (~2175 words)
+- 2026-07-07 — drafted §10.1 A 10-minute introduction to diffusion models (~1760 words)
