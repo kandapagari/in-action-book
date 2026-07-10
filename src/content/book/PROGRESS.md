@@ -128,9 +128,9 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 #### Chapter 10. Diffusion and flow models for action generation
 
 - [x] 10.1 A 10-minute introduction to diffusion models
-- [ ] 10.2 Diffusion Policy and ACT
-- [ ] 10.3 Flow matching and rectified flow for action
-- [ ] 10.4 Trade-offs: latency, multimodality, smoothness
+- [x] 10.2 Diffusion Policy and ACT
+- [x] 10.3 Flow matching and rectified flow for action
+- [x] 10.4 Trade-offs: latency, multimodality, smoothness
 - [ ] 10.5 Action-head choices in modern VLAs
 - [ ] 10.6 Summary
 - [ ] 10.x Hands-on exercise + chapter references
@@ -301,3 +301,6 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-05 — drafted §9.6 Summary (~1980 words)
 - 2026-07-06 — drafted §9.x Hands-on exercise + chapter references (~2175 words)
 - 2026-07-07 — drafted §10.1 A 10-minute introduction to diffusion models (~1760 words)
+- 2026-07-08 — drafted §10.2 Diffusion Policy and ACT (~1685 words)
+- 2026-07-09 — drafted §10.3 Flow matching and rectified flow for action (~1738 words)
+- 2026-07-10 — drafted §10.4 Trade-offs: latency, multimodality, smoothness (~1720 words)
