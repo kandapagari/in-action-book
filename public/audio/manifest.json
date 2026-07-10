@@ -112,6 +112,48 @@
       "voice": "af_heart",
       "word_count": 1610
     },
+    "10.2": {
+      "chapter": 10,
+      "char_count": 10075,
+      "content_hash": "769dd2febf79fa9ab804c0aa12e2a4bd6ec44e2b972377bed13b95371a1fee0e",
+      "duration_seconds": 604.75,
+      "file": "/audio/chapter-10/section-10_2.mp3",
+      "file_size_bytes": 4838829,
+      "generated_at": "2026-07-10T07:44:07+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-10/section-10_2.mp3",
+      "section": "10.2",
+      "title": "Diffusion Policy and ACT",
+      "voice": "af_heart",
+      "word_count": 1667
+    },
+    "10.3": {
+      "chapter": 10,
+      "char_count": 9576,
+      "content_hash": "8d14476f03cbc29d51f2d13fd75a8293529b94f7745a75e68b1981a6e26c9c39",
+      "duration_seconds": 572.57,
+      "file": "/audio/chapter-10/section-10_3.mp3",
+      "file_size_bytes": 4581357,
+      "generated_at": "2026-07-10T07:44:12+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-10/section-10_3.mp3",
+      "section": "10.3",
+      "title": "Flow matching and rectified flow for action",
+      "voice": "af_heart",
+      "word_count": 1618
+    },
+    "10.4": {
+      "chapter": 10,
+      "char_count": 10254,
+      "content_hash": "b4097bb747cb581ade3c9892284f830fd946b92d3e60db960fbe163fa20da52e",
+      "duration_seconds": 610.06,
+      "file": "/audio/chapter-10/section-10_4.mp3",
+      "file_size_bytes": 4881261,
+      "generated_at": "2026-07-10T07:44:17+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-10/section-10_4.mp3",
+      "section": "10.4",
+      "title": "Trade-offs: latency, multimodality, smoothness",
+      "voice": "af_heart",
+      "word_count": 1731
+    },
     "2.1": {
       "chapter": 2,
       "char_count": 9367,
@@ -883,7 +925,7 @@
       "word_count": 2208
     }
   },
-  "generated_at": "2026-07-07T08:33:25+00:00",
+  "generated_at": "2026-07-10T07:44:17+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
