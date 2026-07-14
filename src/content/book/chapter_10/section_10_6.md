@@ -1,0 +1,188 @@
+---
+chapter: 10
+section: 10.6
+title: Summary
+target_words: 2000
+status: draft
+prereqs: §10.1–§10.5; the denoising process, Diffusion Policy and ACT, flow matching and rectified flow, the latency/multimodality/smoothness framework, and the RT-2/OpenVLA/π0/Helix action-head survey
+key_refs:
+  - Ho, J., Jain, A., & Abbeel, P. (2020). Denoising Diffusion Probabilistic Models. NeurIPS 2020.
+  - Chi, C. et al. (2023). Diffusion Policy — Visuomotor Policy Learning via Action Diffusion. RSS 2023.
+  - Zhao, T. Z. et al. (2023). Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware (ACT). RSS 2023.
+  - Lipman, Y. et al. (2023). Flow Matching for Generative Modeling. ICLR 2023.
+  - Black, K. et al. (2024). π0 — A Vision-Language-Action Flow Model for General Robot Control. arXiv:2410.24164.
+---
+
+# 10.6  Summary
+
+Chapter 10 answered a question the earlier chapters kept deferring. A policy
+has to turn a chosen intention into numbers — joint velocities, gripper
+commands, end-effector deltas — and until now the book had been vague about
+how. The naive answer, regress to the mean action, fails in a specific and
+common way: when two good actions bracket a bad one, their average is the bad
+one. This chapter was about the generative machinery that fixes that failure,
+where it came from (image synthesis), how it was adapted to control, and which
+of the shipping VLAs use which variant. The through-line is that action
+generation is a design space with real axes, not a solved detail, and the
+point of the chapter was to make you fluent in those axes before Part 4 starts
+naming models that live at different corners of them.
+
+## The four ideas worth carrying forward
+
+*Diffusion generates by learning to reverse noise, and that indirection is
+exactly what lets it represent more than one right answer.* §10.1 built the
+mechanism from the ground up: corrupt data with Gaussian noise over many
+steps, then train a network to predict the noise that was added, and sampling
+becomes a walk backward down that ladder from pure noise to a clean sample
+(Ho et al. 2020). The reason this matters for control is the multimodality
+argument, which the whole chapter leaned on afterward. A network trained with
+an L2 loss to output *the* action learns the conditional mean, and the mean of
+two valid trajectories can be an invalid one — reach left or reach right
+averages to reach into the obstacle. A diffusion model never regresses to that
+mean; it learns the full conditional distribution and samples a committed
+sample from it, so the two ways around the obstacle stay two ways around the
+obstacle. That single property is why generative heads displaced regression
+heads for contact-rich manipulation.
+
+*Diffusion Policy and ACT turned image generators into action generators by
+predicting chunks, not single steps.* §10.2 was where the abstraction became
+robotics. Diffusion Policy (Chi et al. 2023) conditions the denoiser on
+observations and denoises a short *sequence* of future actions at once; ACT
+(Zhao et al. 2023) reaches the same place through a different door, a
+conditional VAE that predicts an action chunk and averages overlapping
+predictions at execution time through temporal ensembling. The shared move —
+action chunking — is the load-bearing idea. Predicting a horizon of actions
+and executing part of it before replanning smooths the output, cuts the
+decision frequency the model has to sustain, and blunts the compounding error
+from §6.3, because a chunk commits to a short plan instead of reacting one
+jittery step at a time. Remember ACT and Diffusion Policy as the pair that
+proved a generative head is not a luxury for a research demo but the default
+for fine bimanual work on cheap hardware.
+
+*Flow matching is the same idea made straighter and faster, and that speed is
+what made it viable at control rate.* §10.3 introduced the alternative that
+the frontier VLAs actually ship. Instead of a long stochastic denoising chain,
+flow matching (Lipman et al. 2023) trains a network to predict a velocity field
+that transports noise to data along a path, and sampling integrates that field
+as an ODE. Rectified flow (Liu et al. 2023) then straightens the paths so the
+integration needs very few steps — sometimes one. The consequence is the
+number of function evaluations per action drops from diffusion's tens to a
+handful, which is the difference between a head you can only run on slow
+pick-and-place and a head you can run inside a real-time loop. Flow matching is
+the machinery under π0 (arXiv:2410.24164), and it is why the smooth-control VLAs
+of Chapter 13 are possible at all.
+
+*Every action head is a choice on three axes, and no single point wins.* §10.4
+gave the analytical frame the rest of the chapter measured against:
+multimodality (can the head represent more than one valid action?), latency
+(how many network calls does one action cost, and can the loop keep control
+rate?), and smoothness (does the output avoid jitter and discontinuity?). These
+trade against each other. A discrete autoregressive head is simple and
+co-trains with language but decodes slowly and snaps motion to a grid. A
+diffusion head is maximally expressive but pays in sampling steps. A
+flow-matching head recovers most of the expressiveness at a fraction of the
+latency but adds a second network and an objective to tune. The chapter's
+insistence is that you cannot rank these in the abstract — you rank them
+against a deployment target, a control frequency, and a task's demand for
+precision.
+
+## What you should be able to do now
+
+Four concrete capabilities, in roughly the order Part 4 will ask for them.
+
+You should be able to *explain why a generative action head beats a regression
+head, in one specific failure mode*. Not "diffusion is more powerful," but the
+actual mechanism: an L2 head learns the conditional mean, the mean of a
+multimodal action distribution can be a non-action, and a generative head
+avoids this by modeling and sampling the distribution instead of collapsing it.
+§10.1 and §10.2 built this so that when a later model justifies its diffusion or
+flow head by pointing at bimodal behavior, you read it as a precise claim rather
+than a fashion.
+
+You should be able to *describe action chunking and say what three problems it
+addresses at once*. Given a policy that predicts a horizon of actions and
+executes part before replanning, you should be able to name the payoffs —
+smoother output, lower required decision frequency, and reduced compounding
+error — and connect the last of these back to the DAgger discussion of §6.3.
+This is the idea that recurs in almost every modern head, so it is worth being
+able to state without hedging.
+
+You should be able to *place diffusion and flow matching on a
+steps-versus-quality spectrum and pick between them for a latency budget*.
+Shown a control loop that must run at, say, 30 Hz, you should be able to reason
+that a tens-of-steps diffusion sampler is likely too slow, that rectified flow's
+few-step integration is the reason π0 clears the bar, and that the number of
+function evaluations is a dial you can turn rather than a fixed cost. §10.3 and
+§10.4 were training exactly this judgment.
+
+You should be able to *look at any VLA and classify its action head on the
+three axes*. Given a new system, you should be able to ask whether its head is
+discrete-token, diffusion, flow-matching, or split across clock rates, and
+predict the resulting trade in frequency, precision, multimodality, and
+architectural complexity — the same reading §10.5 ran on RT-2, OpenVLA, π0, and
+Helix. That classification is the analytical habit the chapter exists to
+install, and it is the one you will use most in Part 4.
+
+## Where the chapter has set up the rest of the book
+
+Chapter 10 hands off forward more directly than any chapter since Part 1,
+because the machinery it built is machinery the foundation models use by name.
+The first and largest handoff is to Chapter 13, which is π0 in full. §10.3 and
+§10.5 gave you the action expert and the flow-matching objective as ideas;
+Chapter 13 puts the whole model together and argues that continuous
+flow-matching heads are what let a VLA fold laundry rather than shuffle blocks.
+A reader who understood flow matching here reads Chapter 13 as the payoff, not
+as a new concept.
+
+The second handoff is to Chapter 12, where RT-2, OpenVLA, and Octo return with
+their backbones and data stories attached. §10.5 deliberately looked at their
+heads only — discrete tokens for RT-2 and OpenVLA, a diffusion head for Octo —
+and left the scaling and co-training arguments for later. Chapter 12 supplies
+those arguments, and the head-level reading from this chapter is what keeps the
+discussion honest: it is easy to credit a model's generalization to its scale
+and forget that its action head is capping its control frequency the whole time.
+
+The third handoff is to Chapter 14 and the dual-system architectures. Helix in
+§10.5 was the preview: two heads at two clock rates, a slow semantic system and
+a fast motor one. Chapter 14 builds that hybrid properly, and §10.4's insight
+that latency, multimodality, and smoothness need not be served by one decision
+is the frame that makes the dual-system split read as an answer to a real
+tension rather than as extra machinery for its own sake. The thread that ran
+from §9.5's world-model-versus-VLA debate through this chapter's heads lands in
+Chapter 14 as an architecture you can actually deploy.
+
+## What the chapter has not covered
+
+Two omissions are worth naming so they do not read as gaps later. The chapter
+developed diffusion and flow matching as generative tools for *action*, but
+said little about their other robotics use — generating *observations*, the
+video-prediction world models of §9.4 that were explicitly deferred to here for
+their generative mechanism. The mechanism is now in hand, and Chapter 15's data
+discussion and Chapter 18's open problems are where the same denoising and
+flow machinery reappears on the perception side. The split was deliberate:
+action generation is the load-bearing case for this book, and it was worth
+covering cleanly before branching.
+
+The chapter also stayed light on training economics. It said flow matching is
+cheaper to sample than diffusion and that FAST makes autoregressive heads
+train faster, but it did not weigh the cost of *training* each head on the
+scale of data a foundation model sees, or the cost of fine-tuning one to a new
+robot. Those numbers belong with the practical fine-tuning machinery of
+Chapter 16, where picking a base model and its head is a budget decision as
+much as a capability one, and where the abstract axes of §10.4 get priced.
+
+Chapter 10's contribution to the book's overall argument is to remove the last
+piece of hand-waving between "the model decided what to do" and "the robot
+moved." The three findings to carry forward are that a generative head exists to
+represent multimodal action distributions that a regression head collapses; that
+action chunking, shared across Diffusion Policy, ACT, and every flow-matching
+VLA, buys smoothness and error tolerance at once; and that flow matching's
+few-step sampling is the specific advance that let generative heads run inside
+real-time control loops. With the head understood, Part 4 can finally name the
+foundation models and argue about how they scale, confident that you can see
+past the backbone to the action head doing the last, physical mile of work.
+
+§10.x closes the chapter with a hands-on exercise — implementing a small
+diffusion action head and a flow-matching one on the same chunked-prediction
+task, and measuring how sampling steps trade against control rate — followed by
+the full reading list for the chapter.

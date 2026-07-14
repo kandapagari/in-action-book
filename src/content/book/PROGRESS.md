@@ -131,15 +131,15 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 10.2 Diffusion Policy and ACT
 - [x] 10.3 Flow matching and rectified flow for action
 - [x] 10.4 Trade-offs: latency, multimodality, smoothness
-- [ ] 10.5 Action-head choices in modern VLAs
-- [ ] 10.6 Summary
-- [ ] 10.x Hands-on exercise + chapter references
+- [x] 10.5 Action-head choices in modern VLAs
+- [x] 10.6 Summary
+- [x] 10.x Hands-on exercise + chapter references
 
 ### Part 4 — Foundation action models in depth
 
 #### Chapter 11. The VLA recipe: from CLIP to RT-1
 
-- [ ] 11.1 CLIP and the multimodal pretraining moment
+- [x] 11.1 CLIP and the multimodal pretraining moment
 - [ ] 11.2 Language-conditioned imitation: BC-Z, RT-1
 - [ ] 11.3 Action tokenization: a small idea with large consequences
 - [ ] 11.4 What RT-1 changed and what it did not
@@ -304,3 +304,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-08 — drafted §10.2 Diffusion Policy and ACT (~1685 words)
 - 2026-07-09 — drafted §10.3 Flow matching and rectified flow for action (~1738 words)
 - 2026-07-10 — drafted §10.4 Trade-offs: latency, multimodality, smoothness (~1720 words)
+- 2026-07-11 — drafted §10.5 Action-head choices in modern VLAs (~1675 words)
+- 2026-07-12 — drafted §10.6 Summary (~1836 words)
+- 2026-07-13 — drafted §10.x Hands-on exercise + chapter references (~2100 words)
+- 2026-07-14 — drafted §11.1 CLIP and the multimodal pretraining moment (~1699 words)
