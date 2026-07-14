@@ -22,19 +22,11 @@ key_refs:
 
 # 1.x  Hands-on exercise + chapter references
 
-The Chapter 1 exercise has no GPU requirement, no code requirement, and no
-robot requirement. It is a *reading and classification* exercise, designed to
-take about ninety minutes, that will make the four-family vocabulary from
-§1.4 and the three-slot anatomy from §1.2 stick. Resist the urge to skip it.
-Most students who do the exercise report afterwards that it changed how they
-read the rest of the book; most students who skip it end up doing it
-implicitly, more slowly, during Chapter 11.
+The Chapter 1 exercise needs no GPU, no code, and no robot. It's a reading-and-classification exercise, designed to take about ninety minutes, meant to make the four-family vocabulary from §1.4 and the three-slot anatomy from §1.2 actually stick. Resist the urge to skip it. Students who do it report afterward that it changed how they read the rest of the book. Students who skip it tend to do it anyway, implicitly and more slowly, somewhere around Chapter 11.
 
 ## Exercise 1.x.1 — The four-paper triage
 
-Pick four papers — one from each family — read each in *abstract plus
-figures only* mode (twenty minutes per paper, no full read), and fill in a
-table. Recommended choices for a first pass:
+Pick four papers, one from each family, read each in abstract-plus-figures-only mode (twenty minutes per paper, no full read), and fill in a table. Recommended choices for a first pass:
 
 - *Classical/analytical:* LaValle (2006), Chapter 5 of *Planning
   Algorithms*. RRT and its variants. (A textbook chapter rather than a paper
@@ -68,7 +60,7 @@ A worked example, for ALVINN:
 | Cell | Value |
 |------|-------|
 | Family | Imitation |
-| Era | 2 (end-to-end imitation, 1988 prototype) |
+| Era | 3 (first learned approaches, 1988 prototype) |
 | Slot 1 | 30×32 grayscale camera, single front-facing |
 | Slot 2 | Steering angle (a single scalar), at ~10 Hz |
 | Slot 3 | Supervised regression on human-driving demonstrations |
@@ -77,68 +69,29 @@ the dominant failure mode |
 | Why it mattered | First demonstration that a neural network could output a
 control signal directly from pixels, on real hardware |
 
-Doing this for four papers takes ninety minutes the first time and is
-faster on the second pass. The table is itself the artifact; do not write
-prose around it.
+Doing this for four papers takes ninety minutes the first time and goes faster on the second pass. The table is itself the artifact, so don't write prose around it.
 
 ## Exercise 1.x.2 — The dishwasher problem, written down
 
-Re-do the dishwasher worked example from §1.4 in writing, for a robot and
-kitchen you have actually seen. Choose any household task — emptying a
-dishwasher, sorting recycling, putting laundry in a basket — and write
-four short paragraphs (under 150 words each), one per family, that describe
-how you would build a robot to do it. For each, name:
+Re-do the dishwasher worked example from §1.4 in writing, for a robot and kitchen you've actually seen. Choose any household task, emptying a dishwasher, sorting recycling, putting laundry in a basket, and write four short paragraphs (under 150 words each), one per family, describing how you'd build a robot to do it. For each, name the data or model the family would need (a clean kitchen geometry, a reward function, a teleoperation rig and some number of demonstrations, a base VLA checkpoint), the most likely failure mode (a missing obstacle, reward hacking, compounding-error trajectory divergence, a confabulated action), and one concrete reason you would or wouldn't pick this family for the task.
 
-- The data or model the family would need (a clean kitchen geometry, a
-  reward function, a teleoperation rig and a number of demonstrations, a
-  base VLA checkpoint).
-- The most likely failure mode (a missing obstacle, reward hacking, a
-  compounding-error trajectory divergence, a confabulated action).
-- One concrete reason you would or would not pick this family for the
-  task.
-
-The exercise is the writing, not the answer. There is no scoring rubric;
-the value is in noticing where you hesitate. The places you hesitate are
-the places later chapters will fill in.
+The exercise is the writing itself, not the answer. There's no scoring rubric. The value comes from noticing where you hesitate, and the places you hesitate are exactly the places later chapters will fill in.
 
 ## Exercise 1.x.3 — Read one survey, end to end
 
-Open Sapkota et al. (arXiv:2505.04769) and read it in one sitting. It is
-long but readable, and the local source mirror has it cached. Mark, with a
-pencil or a highlighter, three places where it refers to a model or method
-that does not yet make sense to you. Those three places will be answered
-by specific chapters of this book — usually one of Chapters 11 through 14.
-At the end of each of those chapters, come back to the survey and re-read
-the marked passages. The before-and-after delta is the single best
-self-assessment that the book is working.
+Open Sapkota et al. (arXiv:2505.04769) and read it in one sitting. It's long but readable, and the local source mirror has it cached. Mark, with a pencil or a highlighter, three places where it refers to a model or method that doesn't yet make sense to you. Those three places will get answered by specific chapters of this book, usually one of Chapters 11 through 14. At the end of each of those chapters, come back to the survey and re-read the marked passages. The before-and-after delta is the single best self-assessment for whether the book is working.
 
-If you find yourself unable to mark three places — that is, if every
-sentence of the Sapkota survey already makes sense — you have read the
-prerequisites the book assumes and can probably skip Chapters 3 (math
-refresher) and parts of 8 (transformers for control), going directly to
-Part 4. Most readers will mark more than three.
+If you can't find three places to mark, meaning every sentence of the Sapkota survey already makes sense, you've read the prerequisites this book assumes and can probably skip Chapter 3 (the math refresher) and parts of Chapter 8 (transformers for control), heading straight to Part 4 instead. Most readers will mark more than three.
 
 ## Exercise 1.x.4 — A short language exercise
 
-Pick five terms from the chapter and write a one-sentence definition for
-each, *without* looking back. The list:
+Pick five terms from the chapter and write a one-sentence definition for each without looking back: compounding error, the three-slot anatomy, action tokenization, the dividing line (between classical and learned components in a stack), and cross-embodiment generalization.
 
-1. Compounding error.
-2. The three-slot anatomy.
-3. Action tokenization.
-4. The dividing line (between classical and learned components in a stack).
-5. Cross-embodiment generalization.
-
-Then look back and check. The point is not the score; the point is
-noticing which of the five you cannot define cleanly. Each of the five is
-a recurring concept; the ones you cannot define yet are the ones to read
-the next chapter with one finger on.
+Then look back and check. The point isn't the score, it's noticing which of the five you can't define cleanly. Each one is a recurring concept, and the ones you can't yet define are the ones to keep a finger on while reading the next chapter.
 
 ## Chapter 1 reading list
 
-The works below are the ones cited or referenced in §1.1–§1.6. They are
-grouped by purpose. Full bibliographic entries for everything cited in the
-whole book live in Appendix E.2; this list is the chapter-local subset.
+The works below are the ones cited or referenced across §1.1 through §1.6, grouped by purpose. Full bibliographic entries for everything cited in the whole book live in Appendix E.2; this list is just the chapter-local subset.
 
 ### Foundational references
 
@@ -230,14 +183,4 @@ whole book live in Appendix E.2; this list is the chapter-local subset.
 
 ## Chapter summary
 
-Chapter 1 set out a vocabulary for thinking about action models: the
-three-slot anatomy of inputs, outputs, and training signal; the six-era
-history that moved from STRIPS to π0; the four families — classical, RL,
-imitation, foundation/VLA — that organize the rest of the book. With that
-vocabulary, you can now read a modern VLA abstract and pull out the design
-choices, place a published system in the right family and era, sketch the
-four candidate solutions to a new robot task, and predict the failure mode
-of an action model from the family it sits in. Chapter 2 is where the
-vocabulary first earns its keep: a complete, end-to-end fine-tune of an
-OpenVLA checkpoint on a small benchmark, on a single GPU, in roughly seven
-pages.
+Chapter 1 set out a vocabulary for thinking about action models: the three-slot anatomy of inputs, outputs, and training signal, the six-era history that moved from STRIPS to π0, and the four families, classical, RL, imitation, foundation/VLA, that organize the rest of the book. With that vocabulary in hand, you can read a modern VLA abstract and pull out its design choices, place a published system in the right family and era, sketch four candidate solutions to a new robot task, and predict an action model's failure mode from the family it belongs to. Chapter 2 is where all of this first earns its keep: a complete, end-to-end fine-tune of an OpenVLA checkpoint on a small benchmark, on a single GPU, in roughly seven pages.
