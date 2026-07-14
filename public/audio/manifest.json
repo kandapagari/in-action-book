@@ -154,6 +154,62 @@
       "voice": "af_heart",
       "word_count": 1731
     },
+    "10.5": {
+      "chapter": 10,
+      "char_count": 10203,
+      "content_hash": "87c317ad9e0bb396321ecfca9ecc667dd6e1d7d1d06323d1a8eb798f4dc58782",
+      "duration_seconds": 615.58,
+      "file": "/audio/chapter-10/section-10_5.mp3",
+      "file_size_bytes": 4925421,
+      "generated_at": "2026-07-14T09:54:11+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-10/section-10_5.mp3",
+      "section": "10.5",
+      "title": "Action-head choices in modern VLAs",
+      "voice": "af_heart",
+      "word_count": 1761
+    },
+    "10.6": {
+      "chapter": 10,
+      "char_count": 10956,
+      "content_hash": "80e00f058d42280acc0da2fd4d3865df96762ee699a1fca824267193c1348a99",
+      "duration_seconds": 663.81,
+      "file": "/audio/chapter-10/section-10_6.mp3",
+      "file_size_bytes": 5311149,
+      "generated_at": "2026-07-14T09:54:17+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-10/section-10_6.mp3",
+      "section": "10.6",
+      "title": "Summary",
+      "voice": "af_heart",
+      "word_count": 1868
+    },
+    "10.x": {
+      "chapter": 10,
+      "char_count": 12541,
+      "content_hash": "5674e36e558cdd3d6d8786843287eaac04f8022a84d08beb4d37f96acaa47c2e",
+      "duration_seconds": 786.79,
+      "file": "/audio/chapter-10/section-10_x.mp3",
+      "file_size_bytes": 6294957,
+      "generated_at": "2026-07-14T09:54:23+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-10/section-10_x.mp3",
+      "section": "10.x",
+      "title": "Hands-on exercise + chapter references",
+      "voice": "af_heart",
+      "word_count": 2088
+    },
+    "11.1": {
+      "chapter": 11,
+      "char_count": 9320,
+      "content_hash": "6f1166ded45740cb56564b3a38c919a4734eed7ad262a7a696617b5264a1b07f",
+      "duration_seconds": 551.94,
+      "file": "/audio/chapter-11/section-11_1.mp3",
+      "file_size_bytes": 4416237,
+      "generated_at": "2026-07-14T09:54:28+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-11/section-11_1.mp3",
+      "section": "11.1",
+      "title": "CLIP and the multimodal pretraining moment",
+      "voice": "af_heart",
+      "word_count": 1639
+    },
     "2.1": {
       "chapter": 2,
       "char_count": 9367,
@@ -925,7 +981,7 @@
       "word_count": 2208
     }
   },
-  "generated_at": "2026-07-10T07:44:17+00:00",
+  "generated_at": "2026-07-14T09:54:28+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
