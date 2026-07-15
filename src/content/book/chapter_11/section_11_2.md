@@ -1,0 +1,171 @@
+---
+chapter: 11
+section: 11.2
+title: "Language-conditioned imitation: BC-Z, RT-1"
+target_words: 2000
+status: draft
+prereqs: §6.2 (behavior cloning, step by step), §8.1 (the transformer, for control), §11.1 (CLIP and the aligned image-text space). Helpful, §6.3 on compounding error, since scale is the answer this section gives to it.
+key_refs:
+  - Jang, E. et al. (2022). BC-Z, Zero-Shot Task Generalization with Robotic Imitation Learning. CoRL 2021 / PMLR 164.
+  - Brohan, A. et al. (2022). RT-1, Robotics Transformer for Real-World Control at Scale. arXiv:2212.06817.
+  - Radford, A. et al. (2021). Learning Transferable Visual Models From Natural Language Supervision (CLIP). ICML 2021.
+---
+
+# 11.2  Language-conditioned imitation: BC-Z, RT-1
+
+Section 11.1 left you with an image encoder that already understands
+language and no way to make it do anything. This section closes that gap.
+The mechanism is the one you met in Chapter 6 — behavior cloning, supervised
+imitation of a human demonstrator — with a single addition: the policy is
+told, in words, which task it is imitating. That addition sounds trivial and
+is not. It is the difference between a policy that learns one skill per
+network and a policy that learns hundreds in one network and can be asked for
+any of them at run time.
+
+Recall the shape of plain behavior cloning. You collect demonstrations, each
+a sequence of observation-action pairs $(o_t, a_t)$, and you fit a network
+$\pi_\theta(o_t) \to a_t$ by minimizing the difference between its output and
+the human's action. Nothing in that setup tells the policy what it is doing.
+If half your demonstrations put a can in a drawer and the other half wipe a
+table, the network sees contradictory targets for similar-looking images and
+averages them into mush. The standard fix before 2022 was one policy per
+task: separate networks, separate training runs, separate everything. That
+does not scale to a robot you would actually want in a kitchen.
+
+## Conditioning: add the task to the input
+
+The fix is to make the task part of the observation. Instead of
+$\pi_\theta(o_t)$, train $\pi_\theta(o_t, c)$, where $c$ is a task
+descriptor — an embedding of the instruction "put the can in the drawer." Now
+the two demonstration groups no longer contradict each other; they differ in
+$c$, and the network learns to route on it. Feed $c$ for wiping and you get
+wiping behavior; feed $c$ for the drawer and you get drawer behavior, from one
+set of weights. The contradictory targets become a feature: the network is
+learning a *conditional* map, and the condition disambiguates.
+
+Where does $c$ come from? This is exactly where §11.1 pays off. If you embed
+the instruction with a pretrained language model, two things follow. First,
+you get $c$ for free — no per-task ID to hand-assign, just run the sentence
+through the encoder. Second, and this is the point of the whole chapter,
+the embedding for "put the can in the drawer" sits near the embedding for
+"place the soda in the cabinet" because the language model already knows those
+sentences mean nearly the same thing. A policy conditioned on that space
+inherits the similarity. Train it on the first instruction and it has a
+running start on the second, even though no demonstration ever used those
+words. Language conditioning turns the instruction from an arbitrary label
+into a coordinate in a space where nearby points ask for nearby behaviors.
+That is the generalization plain imitation could not reach, and it is the
+chapter's third learning objective made concrete.
+
+## BC-Z: the conditioning idea, proved
+
+BC-Z (Jang et al., 2022) is the cleanest early demonstration that the idea
+works. The team collected demonstrations for around 100 manipulation tasks on
+a single real robot, then asked the question that matters: can the policy do a
+task it never saw demonstrated, purely because you described it? To make that
+question answerable they conditioned the policy two ways. One conditioning
+signal was a language embedding of the task name; the other was an embedding
+of a human performing the task on video. Both are just vectors $c$ fed
+alongside the image; the network does not care whether the vector came from
+words or from watching a person.
+
+Two design choices in BC-Z are worth naming because the field kept them.
+First, the conditioning vector is injected through FiLM — feature-wise linear
+modulation — rather than concatenated onto the input pixels. FiLM lets $c$
+scale and shift the convolutional feature maps of the vision network, so the
+task descriptor reaches deep into perception rather than sitting off to the
+side. Concretely, for a feature map $h$, FiLM computes $\gamma(c) \odot h +
+\beta(c)$, where $\gamma$ and $\beta$ are small networks that turn the task
+embedding into per-channel gains and offsets. The instruction is thus allowed
+to change *what the vision stack looks for*, which is what you want: "find the
+can" and "find the sponge" should light up different features.
+
+Second, BC-Z leaned on scale and continuous data collection to fight the
+compounding-error problem from §6.3. A cloned policy drifts into states its
+demonstrations never covered and has no idea what to do there. BC-Z's answer
+was a shared-autonomy loop: humans supervised the policy as it ran, took over
+when it faltered, and those interventions became fresh demonstrations exactly
+in the states the policy got wrong. The dataset grows where the policy is
+weakest. Hold this thought; it is the same instinct — more data, aimed well —
+that RT-1 turns into an industrial process.
+
+The headline result was modest in absolute terms and large in what it
+implied: BC-Z completed a meaningful fraction of tasks it had never been
+trained on, driven only by the language or video description. A single
+network, told what to do in words, generalizing to new words. The recipe from
+§11.1 had cashed its first check.
+
+## RT-1: the same idea at fleet scale
+
+RT-1 (Brohan et al., 2022, arXiv:2212.06817) is BC-Z's idea with the
+constants turned up and the architecture modernized from a convolutional
+policy to a transformer. The conditioning is the same in spirit — the
+instruction is embedded (with a Universal Sentence Encoder) and used to
+modulate perception through FiLM — but almost every other quantity is an order
+of magnitude larger, and the output representation changes in a way that
+Chapter's rest depends on.
+
+Walk the forward pass. RT-1 takes a short history of camera images, six of
+them, not just the current frame, so the policy can see motion and infer
+things a single frame hides — whether the gripper is already closing, whether
+an object is sliding. Each image goes through a FiLM-conditioned EfficientNet,
+which turns the picture into a grid of feature vectors already shaped by the
+instruction. That grid is large, so a module called TokenLearner squeezes it
+down to a handful of the most informative tokens per frame — a learned
+attention-based compression that keeps inference cheap enough to run on a real
+robot. The resulting tokens, across all six frames, feed a decoder-only
+transformer, which attends over the sequence and emits the action.
+
+The action itself is where RT-1 makes its most-copied move. Rather than
+regress continuous joint or gripper values, RT-1 *discretizes* each action
+dimension into 256 bins and predicts a token per dimension — arm translation,
+arm rotation, gripper, plus a discrete mode switch between moving the arm,
+moving the base, and terminating. Control becomes next-token prediction, the
+same objective a language model trains on, which is why a transformer is a
+natural fit. Why bins instead of real numbers gets a section of its own: this
+is the "small idea with large consequences" that §11.3 unpacks, and the
+chapter's hands-on exercise asks you to build the tokenizer yourself. For now,
+take it as given that the action is a short string of tokens the transformer
+produces one at a time.
+
+The data is the part that does not fit in a diagram. RT-1 was trained on
+roughly 130,000 demonstrations spanning more than 700 distinct language
+instructions, collected by a fleet of 13 Everyday Robots over about 17 months
+in real office-kitchen environments. That last clause is the expensive one.
+Every one of those episodes is a human teleoperating a physical robot in a
+real space, not a simulation run overnight on a cluster. §11.5 is about what
+that investment bought and at what point the curve of return justified it; the
+short version is that RT-1's generalization and robustness scaled with the
+breadth of that dataset in a way smaller efforts never showed, and §11.4 is
+about which of RT-1's gains came from the transformer and which came from the
+data — because the two are easy to confuse and the answer is not the flattering
+one.
+
+## What conditioning does and does not buy
+
+Be precise about the win, because it is narrower than the demos suggest. A
+language-conditioned policy generalizes well to *new phrasings and
+recombinations of familiar skills* — "pick up the apple" when it has seen
+"pick up the orange" and "pick up the apple" separately in other contexts. The
+aligned language space (§11.1) is what makes that transfer cheap. What it does
+not do is invent motor skills it never practiced. Ask RT-1 to do something
+mechanically unlike anything in its 700 instructions — fold a shirt, when it
+has only ever done pick-and-place and drawer manipulation — and no amount of
+clever phrasing conjures the behavior. The language covers the *what*; the
+demonstrations still have to cover the *how*. Conditioning widens the front
+door of instruction; it does not fill the room behind it.
+
+There is also a subtler cost. Because the instruction modulates perception,
+a bad or out-of-distribution instruction quietly corrupts what the policy
+sees, not just what it decides. Feed RT-1 a sentence unlike its training
+instructions and you do not get a clean "I don't know" — you get confidently
+wrong perception feeding confidently wrong action. This is the flip side of
+FiLM reaching deep into the vision stack, and it is one reason later models
+(Chapter 12) move toward backbones pretrained on far broader language, so
+that "out of distribution" is a much larger set to fall out of.
+
+Both BC-Z and RT-1 share one architectural commitment we have been deferring:
+they turn actions into tokens and predict them discretely. That choice is not
+obvious — actions are continuous, and binning them throws information away on
+purpose — so the next section makes the case for why it is worth it and shows
+what breaks if you get the discretization wrong.
