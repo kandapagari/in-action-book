@@ -140,7 +140,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 #### Chapter 11. The VLA recipe: from CLIP to RT-1
 
 - [x] 11.1 CLIP and the multimodal pretraining moment
-- [ ] 11.2 Language-conditioned imitation: BC-Z, RT-1
+- [x] 11.2 Language-conditioned imitation: BC-Z, RT-1
 - [ ] 11.3 Action tokenization: a small idea with large consequences
 - [ ] 11.4 What RT-1 changed and what it did not
 - [ ] 11.5 The data side: when does scale start to pay off
@@ -308,3 +308,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-12 — drafted §10.6 Summary (~1836 words)
 - 2026-07-13 — drafted §10.x Hands-on exercise + chapter references (~2100 words)
 - 2026-07-14 — drafted §11.1 CLIP and the multimodal pretraining moment (~1699 words)
+- 2026-07-15 — drafted §11.2 Language-conditioned imitation: BC-Z, RT-1 (~1658 words)
