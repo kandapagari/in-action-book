@@ -141,9 +141,9 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 - [x] 11.1 CLIP and the multimodal pretraining moment
 - [x] 11.2 Language-conditioned imitation: BC-Z, RT-1
-- [ ] 11.3 Action tokenization: a small idea with large consequences
-- [ ] 11.4 What RT-1 changed and what it did not
-- [ ] 11.5 The data side: when does scale start to pay off
+- [x] 11.3 Action tokenization: a small idea with large consequences
+- [x] 11.4 What RT-1 changed and what it did not
+- [x] 11.5 The data side: when does scale start to pay off
 - [ ] 11.6 Summary
 - [ ] 11.x Hands-on exercise + chapter references
 
@@ -309,3 +309,6 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-13 — drafted §10.x Hands-on exercise + chapter references (~2100 words)
 - 2026-07-14 — drafted §11.1 CLIP and the multimodal pretraining moment (~1699 words)
 - 2026-07-15 — drafted §11.2 Language-conditioned imitation: BC-Z, RT-1 (~1658 words)
+- 2026-07-15 — drafted §11.3 Action tokenization: a small idea with large consequences (~1650 words)
+- 2026-07-16 — drafted §11.4 What RT-1 changed and what it did not (~1580 words)
+- 2026-07-17 — drafted §11.5 The data side: when does scale start to pay off (~1825 words)
