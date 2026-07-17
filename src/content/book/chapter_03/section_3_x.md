@@ -16,52 +16,19 @@ key_refs:
 
 # 3.x  Hands-on exercise + chapter references
 
-Chapter 3 was the math chapter; the exercise is the chapter where the math
-shows up on a stopwatch. The four drills below take a combined two hours on
-a laptop CPU. No GPU is required, no robot is required, no internet is
-required after the initial dependency install. The point is to leave the
-chapter with the SmallPolicy from §3.3 sitting in a directory on your disk,
-a debugging notebook beside it with the seven §3.5 checks scripted into
-reusable functions, and a one-page side-by-side comparison of the three
-§3.4 loss families on the same toy task. That artifact is what Chapters 6,
-7, and 10 will assume you can stand up from scratch in under twenty
-minutes.
+Chapter 3 was the math chapter; the exercise is where that math shows up on a stopwatch. The four drills below take a combined two hours on a laptop CPU. No GPU required, no robot required, no internet required after the initial dependency install. The point is to leave the chapter with the SmallPolicy from §3.3 sitting in a directory on your disk, a debugging notebook beside it with the seven §3.5 checks scripted into reusable functions, and a one-page side-by-side comparison of the three §3.4 loss families on the same toy task. That artifact is what Chapters 6, 7, and 10 will assume you can stand up from scratch in under twenty minutes.
 
 ## Exercise 3.x.1 — Implement SmallPolicy and reproduce the baseline curve
 
-Open a new file called `small_policy.py` and re-implement the SmallPolicy
-from §3.3 from the description in the chapter. *Do not copy* the listing
-verbatim. The point of writing it from the chapter description is to
-notice the six lines of actual optimization work versus the surrounding
-plumbing, which is the central claim of §3.6. The architecture is a
-three-layer MLP: input is a 14-dimensional observation (7 joint angles,
-7 joint velocities), output is a 7-dimensional continuous action, hidden
-size 256, ReLU activations, no dropout. The dataset is synthetic — a
-toy inverse-dynamics map where the action is a fixed linear function of
-the observation plus Gaussian noise. Generate 10 000 training pairs and
-2 000 validation pairs once, cache them to `.npz`, and reuse the cache
-across all four exercises so that the data side is identical.
+Open a new file called `small_policy.py` and re-implement the SmallPolicy from §3.3 based on the chapter's description. Don't copy the listing verbatim. Writing it from the description forces you to notice the six lines of actual optimization work against the surrounding plumbing, which is the central claim of §3.6. The architecture is a three-layer MLP: input is a 14-dimensional observation (7 joint angles, 7 joint velocities), output is a 7-dimensional continuous action, hidden size 256, ReLU activations, no dropout. The dataset is synthetic, a toy inverse-dynamics map where the action is a fixed linear function of the observation plus Gaussian noise. Generate 10,000 training pairs and 2,000 validation pairs once, cache them to `.npz`, and reuse the cache across all four exercises so the data side stays identical throughout.
 
-Train with MSE loss, Adam at `lr=1e-3`, batch size 64, for 50 epochs.
-Log training and validation loss to a CSV every 100 steps. The
-deliverable is one plot — training loss and validation loss on the same
-y-axis, step on the x-axis. You should see a clean monotone decrease for
-both, validation slightly above training, both flattening around step
-3 000. If your curves look qualitatively different — oscillation, NaN,
-flat from step 0, no gap between train and validation — *stop and run
-the §3.5 checklist before continuing*. The whole point of this exercise
-is that the baseline curve has a known shape and any deviation is
-diagnostic. Save the plot as `baseline_mse.png`.
+Train with MSE loss, Adam at `lr=1e-3`, batch size 64, for 50 epochs. Log training and validation loss to a CSV every 100 steps. The deliverable is one plot, training loss and validation loss on the same y-axis, step on the x-axis. You should see a clean monotone decrease for both, validation sitting slightly above training, both flattening around step 3,000. If your curves look qualitatively different, oscillation, NaN, flat from step 0, no gap between train and validation, stop and run the §3.5 checklist before continuing. The whole point of this exercise is that the baseline curve has a known shape, and any deviation is diagnostic. Save the plot as `baseline_mse.png`.
 
 Wall clock on a 2023-era laptop CPU: about ten minutes.
 
 ## Exercise 3.x.2 — Break the loop on purpose, one fault at a time
 
-Copy `small_policy.py` to `broken_drills.py`. Introduce, one at a time
-and never simultaneously, the following five faults, each in its own
-branch controlled by a `fault` argument. Run a 50-epoch training for
-each fault. Save the loss curve. Do not look at the §3.5 prediction for
-each fault until *after* you have run the drill and stared at the curve.
+Copy `small_policy.py` to `broken_drills.py`. Introduce, one at a time and never simultaneously, the following five faults, each in its own branch controlled by a `fault` argument. Run a 50-epoch training for each fault, and save the loss curve. Don't look at the §3.5 prediction for a fault until after you've run the drill and stared at the curve yourself.
 
 1. `fault="big_lr"`: change `lr` from `1e-3` to `1e0`. Expected
    signature from §3.5: oscillation, possibly NaN.
@@ -82,23 +49,13 @@ each fault until *after* you have run the drill and stared at the curve.
    bimodal. Expected signature: training loss plateaus at a value
    roughly equal to half the squared inter-mode distance, never lower.
 
-For each fault, write one sentence — "training loss did X, gradient norm
-did Y, the diagnosis from §3.5 is Z" — and save all six plots
-(baseline plus five faults) to `drills/curves/`. The collection is the
-deliverable. Most students will get four of the five diagnoses right on
-the first read of the curves; the bimodal one is the hardest because
-the plateau looks similar to a capacity ceiling. The Chapter 10
-discussion of Diffusion Policy (arXiv:2303.04137) and ACT
-(arXiv:2304.13705) returns to this exact failure as the motivating
-example for distributional action heads.
+For each fault, write one sentence, "training loss did X, gradient norm did Y, the diagnosis from §3.5 is Z," and save all six plots (baseline plus five faults) to `drills/curves/`. The collection is the deliverable. Most students get four of the five diagnoses right on the first read of the curves; the bimodal one is hardest, since the plateau looks similar to a capacity ceiling. The Chapter 10 discussion of Diffusion Policy (arXiv:2303.04137) and ACT (arXiv:2304.13705) returns to this exact failure as the motivating example for distributional action heads.
 
 Wall clock: about thirty minutes for all five drills combined.
 
 ## Exercise 3.x.3 — The three-loss-family bake-off
 
-This is the loss-family exercise from §3.4 made concrete. Take the same
-SmallPolicy architecture and the same synthetic dataset from Exercise
-3.x.1, and train three versions:
+This is the loss-family exercise from §3.4 made concrete. Take the same SmallPolicy architecture and the same synthetic dataset from Exercise 3.x.1, and train three versions:
 
 - *Supervised cross-entropy*: discretize each action dimension into 64
   uniform bins (taken from the per-dimension min and max of the training
@@ -114,59 +71,23 @@ SmallPolicy architecture and the same synthetic dataset from Exercise
   plus `σ` to the model, and have it predict the noise. This is a
   minimal Diffusion-Policy-shaped objective (arXiv:2303.04137).
 
-Train each for 50 epochs with the same Adam settings, log the same
-fields, and produce one comparison plot — three loss curves on the same
-axes, normalized by their respective theoretical minimum so the y-axes
-are comparable. Then, at inference, do something interesting: for each
-of 20 held-out observations, sample 10 predictions from each model
-(deterministic argmax for cross-entropy, deterministic forward pass for
-MSE, 10 reverse-process samples with 20 integration steps each for the
-denoising model). Plot the spread.
+Train each for 50 epochs with the same Adam settings, log the same fields, and produce one comparison plot: three loss curves on the same axes, normalized by their respective theoretical minimum so the y-axes stay comparable. Then, at inference, do something interesting: for each of 20 held-out observations, sample 10 predictions from each model (deterministic argmax for cross-entropy, deterministic forward pass for MSE, 10 reverse-process samples with 20 integration steps each for the denoising model). Plot the spread.
 
-The plot should make three things visible. The cross-entropy model is
-deterministic at argmax and produces zero spread; switching to a
-sampled prediction makes it multimodal but only at bin resolution. The
-MSE model collapses to a single mean prediction at every observation,
-regardless of bimodality in the data. The denoising model produces a
-smooth distribution that, on the bimodal dataset from Exercise 3.x.2
-fault 5, recovers both modes. That single plot is the visual answer to
-"why does π0 use flow matching" (arXiv:2410.24164) and "why does Octo
-use a diffusion head" (arXiv:2405.12213). Chapter 10 spends most of its
-length unpacking what you see here in 30 minutes of CPU.
+The plot should make three things visible. The cross-entropy model is deterministic at argmax and produces zero spread; switching to a sampled prediction makes it multimodal, but only at bin resolution. The MSE model collapses to a single mean prediction at every observation regardless of bimodality in the data. The denoising model produces a smooth distribution that, on the bimodal dataset from Exercise 3.x.2 fault 5, recovers both modes. That single plot is the visual answer to "why does π0 use flow matching" (arXiv:2410.24164) and "why does Octo use a diffusion head" (arXiv:2405.12213). Chapter 10 spends most of its length unpacking what you see here in 30 minutes of CPU time.
 
 Wall clock: about forty-five minutes including the inference sweep.
 
 ## Exercise 3.x.4 — Read one PyTorch paper appendix
 
-Open the OpenVLA paper (Kim et al., 2024, arXiv:2406.09246) to the
-training-details appendix (typically Appendix A or B; the exact section
-heading differs between arXiv versions). Read only that appendix. Mark,
-with a pencil or in a text file, every hyperparameter that is
-specifically called out: optimizer, learning rate, schedule, weight
-decay, batch size, gradient-clip threshold, mixed-precision dtype,
-warmup steps, total steps. Then open `small_policy.py` and write a
-short comment block above your training loop that records the
-*difference* between each of those values and what you used. For
-example: "OpenVLA: AdamW, `lr=5e-5`, cosine schedule with 1000 warmup
-steps, weight decay `0.01`, grad clip `1.0`, bf16 mixed precision. Me:
-Adam, `lr=1e-3`, no schedule, no weight decay, no clip, fp32." There
-is no scoring rubric. The point is to make the OpenVLA training appendix
-not feel like a list of inscrutable magic numbers — every one of those
-numbers is a knob you have now turned at least once in the wrong
-direction.
+Open the OpenVLA paper (Kim et al., 2024, arXiv:2406.09246) to the training-details appendix (typically Appendix A or B; the exact section heading differs between arXiv versions). Read only that appendix. Mark, with a pencil or in a text file, every hyperparameter specifically called out: optimizer, learning rate, schedule, weight decay, batch size, gradient-clip threshold, mixed-precision dtype, warmup steps, total steps. Then open `small_policy.py` and write a short comment block above your training loop recording the difference between each of those values and what you used. For example: "OpenVLA: AdamW, `lr=5e-5`, cosine schedule with 1000 warmup steps, weight decay `0.01`, grad clip `1.0`, bf16 mixed precision. Me: Adam, `lr=1e-3`, no schedule, no weight decay, no clip, fp32." There's no scoring rubric here. The point is making the OpenVLA training appendix stop feeling like a list of inscrutable magic numbers, since every one of those numbers is a knob you've now turned at least once in the wrong direction yourself.
 
-When you reach Chapter 16 and need to fine-tune OpenVLA for your own
-data, you will return to this comment block. The shape of "what you
-have to tune away from defaults" is much more important than the
-specific values.
+When you reach Chapter 16 and need to fine-tune OpenVLA for your own data, you'll return to this comment block. The shape of what you have to tune away from defaults matters far more than the specific values.
 
 Wall clock: about thirty minutes for the read plus annotation.
 
 ## Chapter 3 reading list
 
-The works below are the ones cited in §3.1–§3.6. They are grouped by
-purpose. Full bibliographic entries for everything cited in the whole
-book live in Appendix E.2; this list is the chapter-local subset.
+The works below are the ones cited across §3.1 through §3.6, grouped by purpose. Full bibliographic entries for everything cited in the whole book live in Appendix E.2; this list is just the chapter-local subset.
 
 ### Deep learning foundations (linear algebra, calculus, training)
 
@@ -250,16 +171,4 @@ book live in Appendix E.2; this list is the chapter-local subset.
 
 ## Chapter summary
 
-Chapter 3 was the math, code, and debugging chapter, and it closes Part
-1. You can now write the gradient of a scalar loss with respect to a
-parameter vector and follow it through a transformer; you can convert
-between cross-entropy and KL divergence without thinking about it; you
-can stand up a 50-line PyTorch training loop for any of the three loss
-families in under twenty minutes; and you have a seven-step debugging
-checklist that diagnoses the most common reasons a training run refuses
-to converge. With those four capabilities in hand, Part 2 begins.
-Chapter 4 covers the classical-actions family — STRIPS, PDDL, inverse
-kinematics, motion planning, computed-torque control — which is both
-the oldest layer in the action-model story and the one still running
-underneath every modern VLA stack you will encounter in the rest of the
-book.
+Chapter 3 was the math, code, and debugging chapter, and it closes Part 1. You can now write the gradient of a scalar loss with respect to a parameter vector and follow it through a transformer. You can convert between cross-entropy and KL divergence without thinking about it. You can stand up a 50-line PyTorch training loop for any of the three loss families in under twenty minutes, and you have a seven-step debugging checklist that diagnoses the most common reasons a training run refuses to converge. With those four capabilities in hand, Part 2 begins. Chapter 4 covers the classical-actions family, STRIPS, PDDL, inverse kinematics, motion planning, computed-torque control, both the oldest layer in the action-model story and the one still running underneath every modern VLA stack you'll encounter in the rest of the book.
