@@ -15,206 +15,44 @@ key_refs:
 
 # 5.6  Summary
 
-Chapter 5 was the reward chapter. Every section from §5.1 to §5.5 circled
-the same object — the Markov decision process — from a different angle,
-and the cumulative message is more nuanced than "reward works". It works
-under specific conditions, it fails in specific ways, and the engineering
-cost of applying it to a physical robot is non-trivial in ways the theory
-does not advertise. This summary collects the load-bearing ideas and
-flags which ones the rest of the book will keep reaching for.
+Chapter 5 was the reward chapter. Every section from §5.1 to §5.5 circled the same object, the Markov decision process, from a different angle, and the cumulative message runs more nuanced than "reward works." It works under specific conditions, fails in specific ways, and the engineering cost of applying it to a physical robot is non-trivial in ways the theory doesn't advertise. This summary collects the load-bearing ideas and flags which ones the rest of the book keeps reaching for.
 
 ## The four ideas worth carrying forward
 
-*The MDP tuple is a modeling choice, not a fact about the world.* §5.1
-introduced the five-tuple $(\mathcal{S}, \mathcal{A}, P, R, \gamma)$ as
-a mathematical object, but the more important point was that you — the
-engineer — have to choose every component of it for each specific task.
-The state space does not arrive pre-labeled; you decide whether to
-represent a tabletop scene as joint angles, end-effector poses, a raw
-image, or all three. The action space does not arrive with a preferred
-granularity; you decide whether the agent controls joint torques at
-200 Hz or Cartesian poses at 10 Hz. The reward function does not arrive
-with the task; you invent it. This design burden is the tax the MDP
-formalism charges for its analytical tractability, and §5.5 spent an
-entire section itemizing the failure modes of each component in the
-robotics context. When you read a paper that says "we trained an RL agent
-on this task", the first question is always "what did they choose for
-$\mathcal{S}$, $\mathcal{A}$, and $R$, and does each choice make sense
-for the task?" The theory provides no answer; only the engineer does.
+The MDP tuple is a modeling choice, not a fact about the world. §5.1 introduced the five-tuple $(\mathcal{S}, \mathcal{A}, P, R, \gamma)$ as a mathematical object, but the more important point was that you, the engineer, have to choose every component of it for each specific task. The state space doesn't arrive pre-labeled; you decide whether to represent a tabletop scene as joint angles, end-effector poses, a raw image, or all three. The action space doesn't arrive with a preferred granularity; you decide whether the agent controls joint torques at 200 Hz or Cartesian poses at 10 Hz. The reward function doesn't arrive with the task; you invent it. This design burden is the tax the MDP formalism charges for its analytical tractability, and §5.5 spent an entire section itemizing the failure modes of each component in the robotics context. When you read a paper that says "we trained an RL agent on this task," the first question is always what they chose for $\mathcal{S}$, $\mathcal{A}$, and $R$, and whether each choice makes sense for the task. The theory provides no answer; only the engineer does.
 
-*Optimal value functions are defined recursively, and all practical RL
-algorithms are algorithms for computing them.* §5.2 derived the Bellman
-optimality equations and showed that both value iteration and policy
-iteration can be read as algorithms for finding their fixed point. §5.3
-showed that Q-learning is the same fixed-point iteration with $P$
-replaced by sampled transitions. The value function in a DQN critic
-(Chapter 7) is the same object, approximated by a neural network rather
-than stored in a table. The critic inside SAC is the same object again,
-extended to a continuous action space. None of this is coincidence: the
-Bellman equations are the structure of discounted sequential
-decision-making, and every algorithm that learns from reward inherits
-that structure. When you see an actor-critic update in Chapter 7, or a
-value-function baseline in a policy-gradient, recognizing that these
-are Bellman fixed-point iterations with function approximators and
-variance reduction bolted on is the insight that makes the full family
-of deep RL methods legible rather than a catalogue of unrelated tricks.
+Optimal value functions are defined recursively, and all practical RL algorithms are algorithms for computing them. §5.2 derived the Bellman optimality equations and showed that both value iteration and policy iteration can be read as algorithms for finding their fixed point. §5.3 showed that Q-learning is the same fixed-point iteration with $P$ replaced by sampled transitions. The value function in a DQN critic (Chapter 7) is the same object, approximated by a neural network rather than stored in a table. The critic inside SAC is the same object again, extended to a continuous action space. None of this is coincidence: the Bellman equations are the structure of discounted sequential decision-making, and every algorithm that learns from reward inherits that structure. When you see an actor-critic update in Chapter 7, or a value-function baseline in a policy-gradient, recognizing that these are Bellman fixed-point iterations with function approximators and variance reduction bolted on is the insight that makes the full family of deep RL methods legible rather than a catalogue of unrelated tricks.
 
-*Q-learning is off-policy, and off-policy is the property that makes
-large replay buffers possible.* §5.3 showed that Q-learning's TD update
-converges to $Q^\star$ regardless of the behaviour policy, as long as
-every state-action pair is visited sufficiently. That decoupling between
-the data-collection policy and the learned policy is the fundamental
-property that lets DQN (Chapter 7) train from a buffer of a million
-transitions from stale policies, and lets offline RL (referenced in
-Chapter 12 in the context of data-driven pretraining) train from a
-fixed dataset with no environment interaction at all. The convergence
-guarantee softens under function approximation — the tabular argument
-does not carry over cleanly to neural networks — but the architectural
-motivation does not. Every time you see a replay buffer in a deep RL
-system, you are seeing the practical consequence of Q-learning's
-off-policy property.
+Q-learning is off-policy, and off-policy is the property that makes large replay buffers possible. §5.3 showed that Q-learning's TD update converges to $Q^\star$ regardless of the behaviour policy, as long as every state-action pair is visited sufficiently. That decoupling between the data-collection policy and the learned policy is the fundamental property letting DQN (Chapter 7) train from a buffer of a million transitions from stale policies, and letting offline RL (referenced in Chapter 12 in the context of data-driven pretraining) train from a fixed dataset with no environment interaction at all. The convergence guarantee softens under function approximation, since the tabular argument doesn't carry over cleanly to neural networks, but the architectural motivation doesn't budge. Every time you see a replay buffer in a deep RL system, you're seeing the practical consequence of Q-learning's off-policy property.
 
-*Reward design is an engineering problem disguised as a specification
-problem.* §5.4 made the case that writing a correct reward function is
-structurally harder than it looks, for two distinct reasons. Sparse
-rewards provide no gradient until the agent accidentally succeeds, which
-is rare enough on manipulation tasks to be practically impossible without
-exploration engineering or prior knowledge. Dense rewards solve the
-gradient problem but introduce specification gaming: the agent optimizes
-whatever you measure, and the gap between what you measure and what you
-want is nearly always nonzero. Potential-based shaping (Ng, Harada &
-Russell, 1999) gives a principled way to add intermediate signal without
-corrupting the optimal policy, but it still requires a useful potential
-function, and designing one correctly is nearly as hard as designing the
-dense reward directly. The practical upshot is that reward engineering
-is expensive, iterative, and prone to surprising failures even in
-competent hands — which is one of the two main reasons behavior cloning,
-covered in Chapter 6, displaced RL as the dominant training signal for
-manipulation in the 2020s. The other main reason is sample efficiency.
+Reward design is an engineering problem disguised as a specification problem. §5.4 made the case that writing a correct reward function is structurally harder than it looks, for two distinct reasons. Sparse rewards provide no gradient until the agent accidentally succeeds, rare enough on manipulation tasks to be practically impossible without exploration engineering or prior knowledge. Dense rewards solve the gradient problem but introduce specification gaming: the agent optimizes whatever you measure, and the gap between what you measure and what you want is nearly always nonzero. Potential-based shaping (Ng, Harada & Russell, 1999) gives a principled way to add intermediate signal without corrupting the optimal policy, but it still requires a useful potential function, and designing one correctly is nearly as hard as designing the dense reward directly. The practical upshot is that reward engineering is expensive, iterative, and prone to surprising failures even in competent hands, one of the two main reasons behavior cloning, covered in Chapter 6, displaced RL as the dominant training signal for manipulation in the 2020s. The other main reason is sample efficiency.
 
 ## What you should be able to do now
 
-Four concrete capabilities, in roughly the order they will be needed in
-later chapters.
+Four concrete capabilities, in roughly the order they're needed in later chapters.
 
-You should be able to *write down a task as an MDP tuple and identify
-all the modeling choices you made*. Pick any task — a robot pouring
-water, a navigation agent in a maze, an arm unscrewing a bolt — and
-enumerate $\mathcal{S}$, $\mathcal{A}$, $P$, $R$, $\gamma$ explicitly.
-Name the elements of the state, the resolution and frequency of the
-action, the form of the transition (deterministic? stochastic? known?
-learned?), and the reward signal including any shaping terms. Then list
-the three most dangerous modeling choices: the ones where a different
-choice would have made the task substantially easier or harder to learn.
-This exercise is not academic. Every design review of an RL system in
-industry is, at its core, this exercise, and being able to do it
-fluently is the skill that separates people who can debug RL failures
-from people who can only name them.
+You should be able to write down a task as an MDP tuple and identify all the modeling choices you made. Pick any task, a robot pouring water, a navigation agent in a maze, an arm unscrewing a bolt, and enumerate $\mathcal{S}$, $\mathcal{A}$, $P$, $R$, $\gamma$ explicitly. Name the elements of the state, the resolution and frequency of the action, the form of the transition (deterministic? stochastic? known? learned?), and the reward signal including any shaping terms. Then list the three most dangerous modeling choices, the ones where a different choice would have made the task substantially easier or harder to learn. This exercise isn't academic. Every design review of an RL system in industry is, at its core, this exercise, and doing it fluently is the skill separating people who can debug RL failures from people who can only name them.
 
-You should be able to *implement tabular Q-learning on a small problem,
-run it to convergence, and verify the result against the value function
-produced by value iteration*. The 4×4 gridworld in §5.2 is the right
-test bed. The Q-learning implementation from §5.3 fits in under twenty
-lines; adding $\varepsilon$-greedy exploration, a decay schedule for
-$\varepsilon$, and a convergence check adds another ten. The diagnostic
-is to compare $Q_\infty(s, a)$ from Q-learning against
-$Q^\star(s, a)$ from value iteration over the known $P$: they should
-agree to within the noise introduced by the finite episode count and
-the stochastic-approximation step sizes. If they do not, the
-Q-learning implementation is wrong, and the most common reason is that
-the transition tuple $(s, a, r, s')$ is being formed incorrectly — $r$
-is the reward for arriving in $s'$ but is being incorrectly assigned to
-departing $s$. Getting this right on a gridworld before touching deep
-RL is the exercise that saves the most debugging time later.
+You should be able to implement tabular Q-learning on a small problem, run it to convergence, and verify the result against the value function produced by value iteration. The 4×4 gridworld in §5.2 is the right test bed. The Q-learning implementation from §5.3 fits in under twenty lines; adding $\varepsilon$-greedy exploration, a decay schedule for $\varepsilon$, and a convergence check adds another ten. The diagnostic is comparing $Q_\infty(s, a)$ from Q-learning against $Q^\star(s, a)$ from value iteration over the known $P$: they should agree to within the noise introduced by the finite episode count and the stochastic-approximation step sizes. If they don't, the Q-learning implementation is wrong, and the most common reason is that the transition tuple $(s, a, r, s')$ is being formed incorrectly, with $r$ being the reward for arriving in $s'$ but incorrectly assigned to departing $s$. Getting this right on a gridworld before touching deep RL is the exercise that saves the most debugging time later.
 
-You should be able to *recognize reward gaming in a published result and
-propose a potential-based fix*. Given a description of a task and a
-reward function, identify at least two behaviors that would achieve high
-reward without achieving the task. For each, either (a) propose a
-potential $\Phi$ whose gradient discourages the exploit, or (b) argue
-that the exploit cannot be suppressed without a fundamentally different
-reward structure. This skill matters because every deployment story in
-Chapter 17 includes at least one reward-gaming incident, and the
-difference between catching the gaming before deployment and catching it
-after is almost entirely determined by whether the engineer thought
-carefully about the reward function at design time.
+You should be able to recognize reward gaming in a published result and propose a potential-based fix. Given a description of a task and a reward function, identify at least two behaviors that would achieve high reward without achieving the task. For each, either propose a potential $\Phi$ whose gradient discourages the exploit, or argue that the exploit can't be suppressed without a fundamentally different reward structure. This skill matters because every deployment story in Chapter 17 includes at least one reward-gaming incident, and the difference between catching the gaming before deployment and catching it after comes down almost entirely to whether the engineer thought carefully about the reward function at design time.
 
-You should be able to *read a robotics RL paper and identify the four
-MDP-to-robot design decisions — state representation, action space,
-episode structure, and sim-to-real strategy — and classify each as
-well-motivated, underspecified, or suspect*. §5.5 named the failure
-modes: a state representation that is not sufficient for the task,
-an action space at the wrong level of abstraction, episode resets that
-do not match real-world cost, and a sim-to-real gap that was not
-measured. Papers that underspecify these choices are papers whose
-results may not hold on different hardware or under slightly different
-task conditions, and identifying the gap is the first step toward
-reproducing or extending the work.
+You should be able to read a robotics RL paper and identify the four MDP-to-robot design decisions, state representation, action space, episode structure, sim-to-real strategy, and classify each as well-motivated, underspecified, or suspect. §5.5 named the failure modes: a state representation insufficient for the task, an action space at the wrong level of abstraction, episode resets that don't match real-world cost, and a sim-to-real gap that was never measured. Papers that underspecify these choices are papers whose results may not hold on different hardware or under slightly different task conditions, and identifying the gap is the first step toward reproducing or extending the work.
 
 ## Where the chapter has set up the rest of the book
 
-Chapter 5 hands off in three directions. The most direct is Chapter 7:
-Deep RL for control, which takes the tabular Q-learning of §5.3 and the
-policy iteration of §5.2 and replaces every table with a neural network.
-DQN is tabular Q-learning with a replay buffer and a target network.
-PPO is policy iteration with a surrogate objective and a clipped gradient.
-SAC is actor-critic with soft Bellman backups. All of Chapter 7 is
-Chapter 5 with function approximation, and the reader who understands
-the tabular case will find the deep-RL case to be a set of engineering
-choices rather than new theory.
+Chapter 5 hands off in three directions. The most direct is Chapter 7, deep RL for control, which takes the tabular Q-learning of §5.3 and the policy iteration of §5.2 and replaces every table with a neural network. DQN is tabular Q-learning with a replay buffer and a target network. PPO is policy iteration with a surrogate objective and a clipped gradient. SAC is actor-critic with soft Bellman backups. All of Chapter 7 is Chapter 5 with function approximation, and a reader who understands the tabular case will find the deep-RL case a set of engineering choices rather than new theory.
 
-The less direct handoff is Chapter 6: Learning from demonstrations. §5.4
-ended by arguing that reward design is expensive enough that behavior
-cloning often wins on practical grounds. Chapter 6 makes that case
-formally: it introduces the imitation-learning framing, shows why behavior
-cloning is a supervised problem that sidesteps reward design entirely,
-and shows where it fails (compounding error). Chapter 6 is, in part,
-the chapter that explains why the VLAs in Part 4 look the way they do —
-trained on demonstrations, not on reward.
+The less direct handoff is Chapter 6, learning from demonstrations. §5.4 ended by arguing that reward design is expensive enough that behavior cloning often wins on practical grounds. Chapter 6 makes that case formally: it introduces the imitation-learning framing, shows why behavior cloning is a supervised problem that sidesteps reward design entirely, and shows where it fails (compounding error). Chapter 6 is, in part, the chapter explaining why the VLAs in Part 4 look the way they do, trained on demonstrations, not on reward.
 
-The third handoff is longer-range. §5.5 described the sim-to-real gap and
-noted that world models (Chapter 9) are one partial answer: if you can
-learn a good model of real-robot dynamics from a small amount of hardware
-data, you can train in that learned model rather than in a fixed simulator,
-and the model can be updated as the robot encounters new environments.
-The MDP formalism is also the starting point for offline RL, which trains
-from a static dataset without any environment interaction; that approach
-becomes relevant in Chapter 12 when we discuss how OpenVLA and Octo were
-pretrained on large heterogeneous datasets collected by other researchers.
+The third handoff runs longer-range. §5.5 described the sim-to-real gap and noted that world models (Chapter 9) are one partial answer: if you can learn a good model of real-robot dynamics from a small amount of hardware data, you can train in that learned model rather than in a fixed simulator, updating it as the robot encounters new environments. The MDP formalism is also the starting point for offline RL, which trains from a static dataset without any environment interaction; that approach becomes relevant in Chapter 12 when we discuss how OpenVLA and Octo were pretrained on large heterogeneous datasets collected by other researchers.
 
 ## What the chapter has not covered
 
-Two omissions are worth naming. Chapter 5 covered MDPs but not POMDPs
-in any depth. §5.5 noted that most robotics problems are technically
-POMDPs — the agent does not have direct access to the full state — but
-treated partial observability as an engineering issue to be handled by
-observation design and frame-stacking rather than by POMDP algorithms.
-That is the right practical stance for the systems in this book, but the
-reader who wants to understand the formal theory should consult Kaelbling,
-Littman & Cassandra (1998), which established the POMDP framework for
-robotics, and the approximate-POMDP literature that followed.
+Two omissions are worth naming. Chapter 5 covered MDPs but not POMDPs in any depth. §5.5 noted that most robotics problems are technically POMDPs, since the agent doesn't have direct access to the full state, but treated partial observability as an engineering issue handled by observation design and frame-stacking rather than by POMDP algorithms. That's the right practical stance for the systems in this book, but a reader who wants the formal theory should consult Kaelbling, Littman & Cassandra (1998), which established the POMDP framework for robotics, and the approximate-POMDP literature that followed.
 
-The chapter also has not covered hierarchical RL: the idea of constructing
-a two-level MDP where the high-level agent selects subgoals and the
-low-level agent achieves them. Hierarchical RL is a natural partial answer
-to both long-horizon credit assignment and reward sparsity, and it appears
-implicitly in Chapter 14 when dual-system architectures (Helix,
-GR00T N1) are discussed. The connection is real but we defer it to the
-chapter where concrete examples appear, rather than introducing the
-abstraction here without a system to attach it to.
+The chapter also hasn't covered hierarchical RL: the idea of constructing a two-level MDP where the high-level agent selects subgoals and the low-level agent achieves them. Hierarchical RL is a natural partial answer to both long-horizon credit assignment and reward sparsity, and it appears implicitly in Chapter 14 when dual-system architectures (Helix, GR00T N1) are discussed. The connection is real, but we defer it to the chapter where concrete examples appear rather than introducing the abstraction here without a system to attach it to.
 
-Chapter 5's contribution to the book's overall argument is the reward
-family from §1.4: the action models that learn by interacting with the
-world under an extrinsic signal. The three central findings — that the
-Bellman equations are the shared backbone of all reward-based learning,
-that reward design is hard enough to be a limiting factor in practice,
-and that the MDP tuple is a modeling choice with high-stakes design
-decisions embedded in every component — are the findings that Parts 3
-and 4 will return to when explaining why foundation action models are
-trained on demonstrations rather than reward, and what would need to
-change for reward-based pretraining to become practical at scale.
+Chapter 5's contribution to the book's overall argument is the reward family from §1.4: the action models that learn by interacting with the world under an extrinsic signal. The three central findings, that the Bellman equations are the shared backbone of all reward-based learning, that reward design is hard enough to be a limiting factor in practice, and that the MDP tuple is a modeling choice with high-stakes design decisions embedded in every component, are the findings Parts 3 and 4 return to when explaining why foundation action models are trained on demonstrations rather than reward, and what would need to change for reward-based pretraining to become practical at scale.
 
-§5.x closes Chapter 5 with a hands-on exercise — implementing Q-learning
-on the FrozenLake-v1 environment, verifying the result against a known
-optimal policy, and then watching it fail on a slightly modified
-reward function — and the full reading list for the chapter.
+§5.x closes Chapter 5 with a hands-on exercise, implementing Q-learning on the FrozenLake-v1 environment, verifying the result against a known optimal policy, and then watching it fail on a slightly modified reward function, and the full reading list for the chapter.

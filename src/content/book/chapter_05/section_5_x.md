@@ -17,7 +17,7 @@ key_refs:
 
 # 5.x  Hands-on exercise + chapter references
 
-Chapter 5 was the reward chapter; the exercise is the one where you write the reward and watch what an agent does with it. The four drills below take a combined two hours on a laptop CPU. No GPU is required, no robot is required, and no internet is required after the initial dependency install. The point is to leave Chapter 5 with a working Q-learning implementation that you trust, a first-hand example of reward gaming you designed yourself, and a practiced eye for the four MDP-to-robot design decisions from §5.5 as they appear in a real paper. Chapter 7 will build on all three.
+Chapter 5 was the reward chapter; the exercise is where you write the reward and watch what an agent does with it. The four drills below take a combined two hours on a laptop CPU. No GPU required, no robot required, no internet required after the initial dependency install. The point is leaving Chapter 5 with a working Q-learning implementation you trust, a first-hand example of reward gaming you designed yourself, and a practiced eye for the four MDP-to-robot design decisions from §5.5 as they appear in a real paper. Chapter 7 builds on all three.
 
 Install `gymnasium` (the maintained fork of OpenAI Gym, Brockman et al., 2016, arXiv:1606.01540) if you do not have it:
 
@@ -31,7 +31,7 @@ FrozenLake-v1 with `is_slippery=False` is the test environment for Exercises 5.x
 
 Write two Python files: `value_iteration.py` and `q_learning.py`. Both operate on the 4×4 FrozenLake-v1 grid with `is_slippery=False`, so the transition tensor $P$ is deterministic.
 
-**Value iteration** (`value_iteration.py`): gymnasium's `FrozenLakeEnv` exposes the full transition tensor as `env.P[state][action]`, a list of `(probability, next_state, reward, done)` tuples. Use that to run the Bellman optimality update
+Value iteration (`value_iteration.py`): gymnasium's `FrozenLakeEnv` exposes the full transition tensor as `env.P[state][action]`, a list of `(probability, next_state, reward, done)` tuples. Use that to run the Bellman optimality update
 
 $$
 V^{(k+1)}(s) = \max_{a}\,\sum_{s'} P(s' \mid s, a)\,\bigl[R(s, a, s') + \gamma\,V^{(k)}(s')\bigr]
@@ -39,23 +39,23 @@ $$
 
 with $\gamma = 0.99$ until $\max_s |V^{(k+1)}(s) - V^{(k)}(s)| < 10^{-8}$. Extract the greedy policy $\pi^\star(s) = \arg\max_a Q^\star(s, a)$, where you derive $Q^\star$ from $V^\star$ in the usual one-step lookahead. Save $V^\star$ and $\pi^\star$ as reference objects.
 
-**Q-learning** (`q_learning.py`): implement the update from §5.3 —
+Q-learning (`q_learning.py`): implement the update from §5.3,
 
 ```python
 Q[s, a] += alpha * (r + gamma * np.max(Q[s_next]) - Q[s, a])
 ```
 
-with $\alpha = 0.1$, $\gamma = 0.99$, $\varepsilon$-greedy exploration starting at $\varepsilon = 1.0$ and decaying by a factor of 0.999 per episode to a floor of 0.01. Run for 5 000 episodes. Record the episode-return rolling average (window 100 episodes) and save it as `q_learning_curve.png`. After training, extract the greedy policy $\hat\pi(s) = \arg\max_a Q(s, a)$.
+with $\alpha = 0.1$, $\gamma = 0.99$, $\varepsilon$-greedy exploration starting at $\varepsilon = 1.0$ and decaying by a factor of 0.999 per episode to a floor of 0.01. Run for 5,000 episodes. Record the episode-return rolling average (window 100 episodes) and save it as `q_learning_curve.png`. After training, extract the greedy policy $\hat\pi(s) = \arg\max_a Q(s, a)$.
 
-The diagnostic is a side-by-side comparison: for each of the 16 states, print $\pi^\star(s)$ from value iteration beside $\hat\pi(s)$ from Q-learning. On the deterministic grid they should agree on every non-terminal state. If they do not, the most common causes are: (1) the Q-table is indexed $(s, a)$ but the `done` flag is not handled — if you bootstrap on a terminal state you get a corrupt target — and (2) the episode return is not resetting between episodes. Fix these before Exercise 5.x.2.
+The diagnostic is a side-by-side comparison: for each of the 16 states, print $\pi^\star(s)$ from value iteration beside $\hat\pi(s)$ from Q-learning. On the deterministic grid they should agree on every non-terminal state. If they don't, the most common causes are the Q-table being indexed $(s, a)$ without handling the `done` flag (bootstrapping on a terminal state gives a corrupt target) and the episode return not resetting between episodes. Fix these before Exercise 5.x.2.
 
 Wall clock: about twenty-five minutes.
 
 ## Exercise 5.x.2 — Watch Q-learning fail with a shaped reward and then succeed with a principled one
 
-This exercise is in two parts and demonstrates §5.4's central argument in miniature.
+This exercise runs in two parts and demonstrates §5.4's central argument in miniature.
 
-**Part A — a shape that backfires.** Make a copy of `q_learning.py` called `q_learning_bad_shape.py`. Add a shaping term to the reward:
+Part A, a shape that backfires. Make a copy of `q_learning.py` called `q_learning_bad_shape.py`. Add a shaping term to the reward:
 
 ```python
 # Manhattan distance to goal (state 15), lower is better
@@ -66,11 +66,11 @@ def manhattan_to_goal(s):
 r_shaped = r - 0.1 * manhattan_to_goal(s_next)
 ```
 
-Train for 5 000 episodes on the slippery variant (`is_slippery=True`, so transitions are stochastic: the intended action fires with probability 1/3, and each orthogonal direction fires with probability 1/3). Plot the episode-return curve.
+Train for 5,000 episodes on the slippery variant (`is_slippery=True`, so transitions are stochastic: the intended action fires with probability 1/3, and each orthogonal direction fires with probability 1/3). Plot the episode-return curve.
 
-You will observe that the agent learns to hover near the goal rather than stepping onto it: stepping onto the goal gives $r = +1$ but also terminates the episode, ending the stream of small negative shaping bonuses for being close. The agent has found a policy that scores higher under your shaped reward than the intended optimal policy does. This is the §5.4 specification-gaming failure. Describe it in one sentence: "the agent did X because Y metric was higher that way than the correct way."
+You'll observe that the agent learns to hover near the goal rather than stepping onto it: stepping onto the goal gives $r = +1$ but also terminates the episode, ending the stream of small negative shaping bonuses for being close. The agent has found a policy that scores higher under your shaped reward than the intended optimal policy does. This is the §5.4 specification-gaming failure. Describe it in one sentence: "the agent did X because Y metric was higher that way than the correct way."
 
-**Part B — potential-based shaping that does not corrupt the optimal policy.** Make another copy, `q_learning_good_shape.py`. Replace the raw shaping term with the potential-based version from §5.4 (Ng, Harada & Russell, 1999):
+Part B, potential-based shaping that doesn't corrupt the optimal policy. Make another copy, `q_learning_good_shape.py`. Replace the raw shaping term with the potential-based version from §5.4 (Ng, Harada & Russell, 1999):
 
 ```python
 # Potential: negative Manhattan distance, so Phi(s) is higher near goal
@@ -81,9 +81,9 @@ def phi(s):
 r_shaped = r + gamma * phi(s_next) - phi(s)
 ```
 
-Train for 5 000 episodes on the slippery variant. Plot the curve on the same axes as Part A. The potential-based agent should converge to the correct policy — the one that steps onto the goal rather than camping adjacent to it — while still converging faster than the un-shaped baseline from 5.x.1.
+Train for 5,000 episodes on the slippery variant. Plot the curve on the same axes as Part A. The potential-based agent should converge to the correct policy, the one that steps onto the goal rather than camping adjacent to it, while still converging faster than the un-shaped baseline from 5.x.1.
 
-Save the comparison plot as `shaping_comparison.png`. The three curves — no shaping (from 5.x.1), bad shaping, and potential-based shaping — on the same axes are the visual summary of why the Ng et al. result matters. The curves for no-shaping and good-shaping should end near the same asymptotic performance; the bad-shaping curve should end lower.
+Save the comparison plot as `shaping_comparison.png`. The three curves, no shaping (from 5.x.1), bad shaping, and potential-based shaping, on the same axes are the visual summary of why the Ng et al. result matters. The no-shaping and good-shaping curves should end near the same asymptotic performance; the bad-shaping curve should end lower.
 
 Wall clock: about forty minutes including the two training runs and the plot.
 
@@ -99,7 +99,7 @@ This exercise puts a number on the §5.3 claim that exploration scheduling matte
 
 Plot all five episode-return rolling averages (window 100) on the same axes. Save as `exploration_ablation.png`. Write one sentence about each curve: what did the agent learn, and why does the curve look the way it does? Then answer one question in plain prose: which of the five would you pick for a real robot, and why?
 
-There is a correct answer for the gridworld — agent 4 or 5 depending on how patient you are — but the reasoning is more important than the number. The §5.5 argument that episode length and reset cost interact with exploration is the argument you are making in miniature here: on a slippery grid, agent 2 (no exploration) gets stuck in the top-left corner and never discovers the goal, exactly as a real robot with a deterministic "always move right" policy never discovers that the grasp has to be approached from above.
+There's a correct answer for the gridworld, agent 4 or 5 depending on how patient you are, but the reasoning matters more than the number. The §5.5 argument that episode length and reset cost interact with exploration is the argument you're making in miniature here: on a slippery grid, agent 2 (no exploration) gets stuck in the top-left corner and never discovers the goal, exactly as a real robot with a deterministic "always move right" policy never discovers that the grasp has to be approached from above.
 
 Wall clock: about twenty-five minutes for five training runs and the plot.
 
@@ -107,23 +107,23 @@ Wall clock: about twenty-five minutes for five training runs and the plot.
 
 Open one of the following: Haarnoja et al. (2018), "Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Learned Reward Function," which includes experiments on a simulated half-cheetah and ant; or any deep-RL-for-manipulation paper from the last three years you have available. Read the experiment section and the appendix. In a text file `paper_audit.txt`, answer the following five questions, one paragraph each:
 
-1. **State representation.** What is $\mathcal{S}$? Is it Markov for the task? If the paper uses a raw image, what temporal information is discarded and how does the system compensate?
+1. State representation. What is $\mathcal{S}$? Is it Markov for the task? If the paper uses a raw image, what temporal information is discarded and how does the system compensate?
 
-2. **Action space.** What is $\mathcal{A}$? What control frequency is used? Is this joint torques, joint positions, Cartesian end-effector poses, or something else? Is the choice motivated in the text?
+2. Action space. What is $\mathcal{A}$? What control frequency is used? Is this joint torques, joint positions, Cartesian end-effector poses, or something else? Is the choice motivated in the text?
 
-3. **Reward function.** What is $R$? Is it sparse, dense, or shaped? If shaped, is the shaping potential-based? Can you identify at least one behavior the reward might accidentally incentivize that is different from the intended task?
+3. Reward function. What is $R$? Is it sparse, dense, or shaped? If shaped, is the shaping potential-based? Can you identify at least one behavior the reward might accidentally incentivize that differs from the intended task?
 
-4. **Episode structure.** How are episodes reset? What does the reset cost? Does the reset cost match real-world deployment? If trained in simulation, is the sim-to-real gap discussed?
+4. Episode structure. How are episodes reset? What does the reset cost? Does the reset cost match real-world deployment? If trained in simulation, is the sim-to-real gap discussed?
 
-5. **Overall judgment.** Of the four design decisions — state, action, reward, episode — which is the most load-bearing and which is the most underspecified? What one change would most improve the validity of the result?
+5. Overall judgment. Of the four design decisions, state, action, reward, episode, which is the most load-bearing and which is the most underspecified? What one change would most improve the validity of the result?
 
-There is no scoring rubric. The point is that the five-question template from §5.5 stops being abstract once you have applied it to a paper that matters to you. Every design-review conversation you will have in the rest of your career about a robotics RL system is some version of these five questions.
+There's no scoring rubric. The point is that the five-question template from §5.5 stops being abstract once you've applied it to a paper that matters to you. Every design-review conversation you'll have in the rest of your career about a robotics RL system is some version of these five questions.
 
 Wall clock: about thirty minutes for the read plus the written audit.
 
 ## Chapter 5 reading list
 
-The works below are cited in §5.1–§5.6. They are grouped by purpose. Full bibliographic entries for everything cited in the book live in Appendix E.2; this list is the chapter-local subset.
+The works below are cited across §5.1 through §5.6, grouped by purpose. Full bibliographic entries for everything cited in the book live in Appendix E.2; this list is just the chapter-local subset.
 
 ### MDP theory: the formal backbone
 
@@ -161,4 +161,4 @@ The works below are cited in §5.1–§5.6. They are grouped by purpose. Full bi
 
 ## Chapter summary
 
-Chapter 5 gave you the theoretical substrate for reward-based learning, and the four exercises made it concrete. You can now implement tabular Q-learning from scratch, verify it against value iteration on a known environment, and trust that the implementation is correct before touching a neural network. You have seen, with your own hands, a reward-gaming failure and understood exactly why it happened and how potential-based shaping avoids it. You can run an exploration ablation and read its results rather than taking on faith that ε-decay schedules matter. And you have a reusable five-question template for auditing the MDP design choices in any robotics RL paper you encounter. Chapter 6 takes the question §5.4 raised — what do you do when writing a reward function is too expensive or too error-prone? — and answers it with demonstrations instead of rewards.
+Chapter 5 gave you the theoretical substrate for reward-based learning, and the four exercises made it concrete. You can now implement tabular Q-learning from scratch, verify it against value iteration on a known environment, and trust that the implementation is correct before touching a neural network. You've seen, with your own hands, a reward-gaming failure, understood exactly why it happened, and seen how potential-based shaping avoids it. You can run an exploration ablation and read its results rather than taking on faith that ε-decay schedules matter. And you have a reusable five-question template for auditing the MDP design choices in any robotics RL paper you encounter. Chapter 6 takes the question §5.4 raised, what do you do when writing a reward function is too expensive or too error-prone, and answers it with demonstrations instead of rewards.
