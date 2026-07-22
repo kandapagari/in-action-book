@@ -144,13 +144,13 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 11.3 Action tokenization: a small idea with large consequences
 - [x] 11.4 What RT-1 changed and what it did not
 - [x] 11.5 The data side: when does scale start to pay off
-- [ ] 11.6 Summary
-- [ ] 11.x Hands-on exercise + chapter references
+- [x] 11.6 Summary
+- [x] 11.x Hands-on exercise + chapter references
 
 #### Chapter 12. Scaling up: RT-2, OpenVLA, and Octo
 
-- [ ] 12.1 RT-2: a VLM that also outputs actions
-- [ ] 12.2 OpenVLA: an open-source 7B-parameter VLA
+- [x] 12.1 RT-2: a VLM that also outputs actions
+- [x] 12.2 OpenVLA: an open-source 7B-parameter VLA
 - [ ] 12.3 Octo: a generalist policy with a diffusion head
 - [ ] 12.4 Open X-Embodiment: the dataset that made all of this possible
 - [ ] 12.5 What "emergent" really means in this context
@@ -312,3 +312,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-15 — drafted §11.3 Action tokenization: a small idea with large consequences (~1650 words)
 - 2026-07-16 — drafted §11.4 What RT-1 changed and what it did not (~1580 words)
 - 2026-07-17 — drafted §11.5 The data side: when does scale start to pay off (~1825 words)
+- 2026-07-18 — drafted §11.6 Summary (~1898 words)
+- 2026-07-19 — drafted §11.x Hands-on exercise + chapter references (~1950 words)
+- 2026-07-20 — drafted §12.1 RT-2: a VLM that also outputs actions (~1656 words)
+- 2026-07-22 — drafted §12.2 OpenVLA: an open-source 7B-parameter VLA (~1708 words)
