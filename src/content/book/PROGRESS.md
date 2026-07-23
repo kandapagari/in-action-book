@@ -26,6 +26,33 @@ identifies the next pending section, drafts it, and updates the status here.
 - The daily task drafts in `.md` first; we promote sections to chapter `.docx`
   files at the end of each chapter for editorial review.
 
+## Field-tracking notes (2026-07-23)
+
+Gap review against chapters 13–18 (all still pending as of this date). Sources to
+pull into Appendix E / chapter references when each section is drafted:
+
+- π0 lineage: π0.5 (arXiv 2504.16054, open-world generalization), π0.6 (Physical
+  Intelligence, Nov 2025, RL-from-experience), π0.7 (Apr 2026, steerable generalist).
+- Helix-02 (Figure, Jan 2026): "System 0" neural whole-body controller replacing
+  ~109k lines of hand-coded C++ locomotion; May 2026 leaderless two-robot bedroom demo.
+- GR00T N1.5 → N1.6 (Cosmos-2B VLM backbone, 2× DiT) → N1.7 (whole-body,
+  GEAR-SONIC); NVIDIA/Unitree reference humanoid hardware, late 2026.
+- Gemini Robotics 1.5 / Robotics-ER 1.5–1.6 (arXiv 2510.03342): "Embodied
+  Thinking" and Motion Transfer — a third dual-system-style family, not yet
+  represented in the TOC.
+- Dexterity-focused foundation models: Genesis AI GENE-26.5, RLWRLD RLDX-1.
+- V-JEPA 2 → V-JEPA 2-AC (arXiv 2506.09985; Meta AI, 2025): world model
+  post-trained into a zero-shot pick-and-place policy from <62h unlabeled video,
+  80% vs. Octo's 15% on a held-out task — cross-reference from §9.4.
+- Embodied reasoning: embodied chain-of-thought, latent-reasoning VLAs
+  (LaRA-VLA, arXiv 2602.01166), HALO, ThinkAct.
+- Safety: VLA-safety survey (arXiv 2604.23775), runtime action authorization
+  survey (arXiv 2606.00090), TRAP adversarial-patch CoT hijacking (arXiv
+  2603.23117).
+- Benchmarks: RoboArena as a red-team-style eval suite alongside LIBERO/CALVIN/
+  SimplerEnv; Open X-Embodiment has no single branded successor — growth now
+  comes from large teleop fleets (AGIBot Genie-1, bimanual YAM, Unitree G1).
+
 ## Status
 
 ### Part 1 — Foundations and a first taste of VLAs
@@ -162,7 +189,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [ ] 13.1 The trouble with discrete action tokens
 - [ ] 13.2 π0's architecture, end to end
 - [ ] 13.3 Flow matching as a control objective
-- [ ] 13.4 What π0 can do that earlier VLAs cannot
+- [ ] 13.4 What π0 can do that earlier VLAs cannot — and the π0.5 → π0.6 → π0.7 lineage (open-world generalization, RL-from-experience, steerable generalist behavior)
 - [ ] 13.5 Open questions in continuous-action foundation models
 - [ ] 13.6 Summary
 - [ ] 13.x Hands-on exercise + chapter references
@@ -170,18 +197,18 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 #### Chapter 14. Dual-system architectures: Helix and GR00T N1
 
 - [ ] 14.1 Why a single forward pass is not always enough
-- [ ] 14.2 Helix: a high-level VLM and a low-level sensorimotor model
-- [ ] 14.3 GR00T N1: humanoid-flavored dual systems
+- [ ] 14.2 Helix: a high-level VLM and a low-level sensorimotor model — through Helix-02's "System 0" whole-body controller (replacing hand-coded locomotion) and leaderless multi-robot coordination
+- [ ] 14.3 GR00T N1 and its N1.5–N1.7 successors: humanoid-flavored dual systems — plus Gemini Robotics-ER as a third family (embodied reasoning + VLA, "Embodied Thinking," Motion Transfer)
 - [ ] 14.4 Latency budgets and real-time control
-- [ ] 14.5 Deployment case studies (Figure 02, GR00T-enabled humanoids)
+- [ ] 14.5 Deployment case studies (Figure Helix-02, GR00T-enabled humanoids, dexterity-focused entrants such as Genesis AI's GENE and RLWRLD's RLDX-1)
 - [ ] 14.6 Summary
 - [ ] 14.x Hands-on exercise + chapter references
 
 #### Chapter 15. Datasets, benchmarks, and evaluation
 
 - [ ] 15.1 What a robot dataset looks like, by example
-- [ ] 15.2 Open X-Embodiment in detail
-- [ ] 15.3 Sim benchmarks (LIBERO, CALVIN, RoboCasa, SimplerEnv)
+- [ ] 15.2 Open X-Embodiment in detail — and what has (and has not) succeeded it: large teleop fleets (AGIBot Genie-1, bimanual YAM, Unitree G1) feeding newer foundation models rather than a single branded dataset
+- [ ] 15.3 Sim benchmarks (LIBERO, CALVIN, RoboCasa, SimplerEnv) and red-team-style suites such as RoboArena
 - [ ] 15.4 Real-robot evaluation: variance, success rate, time-to-completion
 - [ ] 15.5 Building your own evaluation
 - [ ] 15.6 Summary
@@ -202,19 +229,19 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 #### Chapter 17. Evaluation, safety, and deployment
 
 - [ ] 17.1 Safety as a layer, not a property
-- [ ] 17.2 Runtime monitors and shielding
+- [ ] 17.2 Runtime monitors and shielding — VLM-as-monitor patterns (Code-as-Monitor) and runtime action authorization
 - [ ] 17.3 A/B evaluation on hardware
 - [ ] 17.4 Logging, alerting, and rollback
-- [ ] 17.5 What we still cannot certify
+- [ ] 17.5 What we still cannot certify — plus emerging attack surfaces (adversarial patches that hijack VLA chain-of-thought reasoning)
 - [ ] 17.6 Summary
 - [ ] 17.x Hands-on exercise + chapter references
 
 #### Chapter 18. Open problems and what comes next
 
-- [ ] 18.1 Generalization across embodiments
-- [ ] 18.2 Long-horizon and dexterous tasks
-- [ ] 18.3 Video-pretrained action models
-- [ ] 18.4 Reasoning + action: LLM chains of thought meet control
+- [ ] 18.1 Generalization across embodiments — including the shift toward whole-body neural control (Helix-02's System 0) blurring the classical/learned locomotion boundary from Chapter 4
+- [ ] 18.2 Long-horizon and dexterous tasks — dexterity remains below human level even as dedicated foundation models (GENE, RLDX-1) target it directly
+- [ ] 18.3 Video-pretrained action models — now with a concrete result: V-JEPA 2 → V-JEPA 2-AC, zero-shot pick-and-place from under 62 hours of unlabeled robot video
+- [ ] 18.4 Reasoning + action: LLM chains of thought meet control — no longer speculative; an active subfield (embodied CoT, latent-reasoning VLAs, Gemini's Embodied Thinking)
 - [ ] 18.5 What to read next, and how to contribute
 - [ ] 18.6 Summary
 - [ ] 18.x Hands-on exercise + chapter references
