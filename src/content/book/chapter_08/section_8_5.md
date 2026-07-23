@@ -13,188 +13,42 @@ key_refs:
   - Gu and Dao (2023). Mamba: linear-time sequence modeling with selective state spaces.
 ---
 
-# 8.5  Bridge to foundation action models — and to the SSM alternative (RoboMamba)
+# 8.5  Bridge to foundation action models, and to the SSM alternative (RoboMamba)
 
-This chapter started from an RL problem — offline trajectories, returns,
-the Bellman equation lurking in the background — and ended up with a
-machine that predicts the next token. The Decision Transformer and the
-Trajectory Transformer are both, structurally, language models that
-happen to read robot data. That structural fact is the bridge. Everything
-in Part 4 of this book is the same machine pointed at more data, more
-modalities, and a vision-language model's pretrained weights. This
-section makes the crossing explicit: it traces the four changes that turn
-a sequence model into a foundation action model, and then it does
-something the rest of Part 4 will not, which is to show that the
-transformer is not the only sequence model that can make the crossing.
-RoboMamba (arXiv:2406.04339) gets there with a state space model instead,
-and seeing how it differs sharpens what the transformer was actually
-buying you.
+This chapter started from an RL problem, offline trajectories, returns, the Bellman equation lurking in the background, and ended up with a machine that predicts the next token. The Decision Transformer and the Trajectory Transformer are both, structurally, language models that happen to read robot data. That structural fact is the bridge. Everything in Part 4 of this book is the same machine pointed at more data, more modalities, and a vision-language model's pretrained weights. This section makes the crossing explicit: it traces the four changes that turn a sequence model into a foundation action model, and then it does something the rest of Part 4 will not, which is to show that the transformer is not the only sequence model that can make the crossing. RoboMamba (arXiv:2406.04339) gets there with a state space model instead, and seeing how it differs sharpens what the transformer was actually buying you.
 
 ## Four changes, and nothing else
 
-Take a Decision Transformer and ask what you would have to change to turn
-it into RT-2 (arXiv:2307.15818). The list is short, and its shortness is
-the point.
+Take a Decision Transformer and ask what you would have to change to turn it into RT-2 (arXiv:2307.15818). The list is short, and its shortness is the point.
 
-First, drop the return. The Decision Transformer conditions on a
-return-to-go token because it is doing offline RL — you tell it how well
-to perform and it complies. The foundation action models are imitation
-learners (Chapter 6): they condition on a language instruction instead of
-a number, and they try to reproduce the demonstrated behavior, not to hit
-a commanded score. So the return token, the one §8.4 called the strange
-token with no analogue in language, simply goes away. In its place sits a
-sentence: "pick up the can." The conditioning signal changes from a
-scalar you invent at test time to a string a human types, and the model's
-job changes from "behave this well" to "do this thing."
+First, drop the return. The Decision Transformer conditions on a return-to-go token because it is doing offline RL: you tell it how well to perform and it complies. The foundation action models are imitation learners (Chapter 6): they condition on a language instruction instead of a number, and they try to reproduce the demonstrated behavior, not to hit a commanded score. So the return token, the one §8.4 called the strange token with no analogue in language, simply goes away. In its place sits a sentence: "pick up the can." The conditioning signal changes from a scalar you invent at test time to a string a human types, and the model's job changes from "behave this well" to "do this thing."
 
-Second, swap the data. A Decision Transformer trains on one task's
-worth of trajectories — D4RL hopper, say, a few million transitions from
-a single MuJoCo robot. RT-1 (arXiv:2212.06817) trains on roughly 130,000
-demonstrations spanning 700-plus tasks on a real mobile manipulator, and
-its successors train on Open X-Embodiment, which pools data from dozens
-of labs and robot bodies (Chapter 12 takes the dataset apart). The
-architecture barely moves; the data moves by three orders of magnitude.
-This is the part beginners underestimate. The sequence-modeling recipe
-was sitting there in 2021; what made it a *foundation* model was pointing
-it at a corpus large and diverse enough that the next-token objective
-started producing behavior that generalized across tasks it had never
-seen jointly. A useful way to hold this: the Decision Transformer
-answered "can a sequence model do control?" and the foundation models
-answered "what happens to a sequence model at robot-data scale?" Those
-are different questions, and the second one has no clean theoretical
-answer — you find out by training the thing, which is why so much of
-Part 4 reads like engineering reports rather than theorems.
+Second, swap the data. A Decision Transformer trains on one task's worth of trajectories, D4RL hopper, say, a few million transitions from a single MuJoCo robot. RT-1 (arXiv:2212.06817) trains on roughly 130,000 demonstrations spanning 700-plus tasks on a real mobile manipulator, and its successors train on Open X-Embodiment, which pools data from dozens of labs and robot bodies (Chapter 12 takes the dataset apart). The architecture barely moves; the data moves by three orders of magnitude. This is the part beginners underestimate. The sequence-modeling recipe was sitting there in 2021; what made it a *foundation* model was pointing it at a corpus large and diverse enough that the next-token objective started producing behavior that generalized across tasks it had never seen jointly. A useful way to hold this: the Decision Transformer answered "can a sequence model do control?" and the foundation models answered "what happens to a sequence model at robot-data scale?" Those are different questions, and the second one has no clean theoretical answer; you find out by training the thing, which is why so much of Part 4 reads like engineering reports rather than theorems.
 
-Third, initialize from a vision-language model rather than from scratch.
-The Decision Transformer's embedding tables are random at the start of
-training. RT-2's are not: it begins life as PaLI-X or PaLM-E, a model
-already trained on web-scale image-text pairs, and robot data is poured
-in afterward. This is why §8.4 spent so long on the action-token
-overloading trick. Because actions are encoded as token IDs the
-vision-language model already owns, fine-tuning on robot data does not
-require bolting on a new output head; producing an action is the same
-operation as producing a word, so the web knowledge in those weights
-partly survives the transition. OpenVLA (arXiv:2406.09246) follows the
-identical pattern with an open Llama-2-based backbone and a SigLIP/DINOv2
-vision stack, which is why it can be a 7-billion-parameter model that a
-single lab can actually fine-tune.
+Third, initialize from a vision-language model rather than from scratch. The Decision Transformer's embedding tables are random at the start of training. RT-2's are not: it begins life as PaLI-X or PaLM-E, a model already trained on web-scale image-text pairs, and robot data is poured in afterward. This is why §8.4 spent so long on the action-token overloading trick. Because actions are encoded as token IDs the vision-language model already owns, fine-tuning on robot data does not require bolting on a new output head; producing an action is the same operation as producing a word, so the web knowledge in those weights partly survives the transition. OpenVLA (arXiv:2406.09246) follows the identical pattern with an open Llama-2-based backbone and a SigLIP/DINOv2 vision stack, which is why it can be a 7-billion-parameter model that a single lab can actually fine-tune.
 
-Fourth — and this one is optional, which is the seam Chapters 10 and 13
-pry open — reconsider the action head. RT-1 and RT-2 keep the discrete
-action tokens from §8.4 all the way to the output: the model emits binned
-integers and you de-bin them into a motion. Octo (arXiv:2405.12213) and
-π0 (arXiv:2410.24164) instead attach a continuous head — a diffusion or
-flow-matching decoder — onto the same transformer trunk, trading the
-clean "everything is a token" story for smoother, higher-frequency
-control. Hold that thread; it is the whole argument of Chapter 13.
+Fourth, and this one is optional, which is the seam Chapters 10 and 13 pry open, reconsider the action head. RT-1 and RT-2 keep the discrete action tokens from §8.4 all the way to the output: the model emits binned integers and you de-bin them into a motion. Octo (arXiv:2405.12213) and π0 (arXiv:2410.24164) instead attach a continuous head, a diffusion or flow-matching decoder, onto the same transformer trunk, trading the clean "everything is a token" story for smoother, higher-frequency control. Hold that thread; it is the whole argument of Chapter 13.
 
-That is the bridge. Drop the return, scale the data, start from a VLM,
-optionally change the head. No new core idea is required between the
-Decision Transformer and a foundation action model — which is both the
-good news (you already understand the architecture) and the uncomfortable
-news (most of the progress came from data and compute, not from a clever
-mechanism).
+That is the bridge. Drop the return, scale the data, start from a VLM, optionally change the head. No new core idea is required between the Decision Transformer and a foundation action model, which is both the good news (you already understand the architecture) and the uncomfortable news (most of the progress came from data and compute, not from a clever mechanism).
 
 ## The cost the transformer never stopped charging
 
-There is a tax buried in that architecture, and it is the reason the rest
-of this section exists. Attention compares every token with every other
-token, so its cost grows with the square of the sequence length. For a
-sentence that is fine. For a robot that streams images at 30 Hz, keeps a
-history of frames, and must emit an action within a few tens of
-milliseconds to stay in its control loop, quadratic attention is a real
-budget problem. A 7-billion-parameter VLA like OpenVLA produces actions
-at a handful of hertz on a good GPU — usable, but not comfortable for
-contact-rich control, and not cheap. Chapter 14's dual-system
-architectures exist partly to work around exactly this latency, splitting
-a slow deliberative model from a fast reactive one.
+There is a tax buried in that architecture, and it is the reason the rest of this section exists. Attention compares every token with every other token, so its cost grows with the square of the sequence length. For a sentence that is fine. For a robot that streams images at 30 Hz, keeps a history of frames, and must emit an action within a few tens of milliseconds to stay in its control loop, quadratic attention is a real budget problem. A 7-billion-parameter VLA like OpenVLA produces actions at a handful of hertz on a good GPU, usable, but not comfortable for contact-rich control, and not cheap. Chapter 14's dual-system architectures exist partly to work around exactly this latency, splitting a slow deliberative model from a fast reactive one.
 
-So a fair question, which the foundation-model literature mostly answers
-with "buy a bigger GPU," is whether the sequence model underneath has to
-be a transformer at all. The next-token recipe — read a sequence of
-tokens, predict the next one — does not actually require attention. It
-requires *some* sequence model. Attention is one choice, and a famously
-expensive one.
+So a fair question, which the foundation-model literature mostly answers with "buy a bigger GPU," is whether the sequence model underneath has to be a transformer at all. The next-token recipe, read a sequence of tokens, predict the next one, does not actually require attention. It requires *some* sequence model. Attention is one choice, and a famously expensive one.
 
 ## RoboMamba: the same recipe on a state space model
 
-Mamba (Gu and Dao, 2023) is a state space model, an SSM: instead of
-attending over the whole history at every step, it maintains a fixed-size
-recurrent state and updates it as tokens stream in. The consequence that
-matters here is the cost curve. Mamba's inference is *linear* in sequence
-length, not quadratic, because each new token does a constant amount of
-work against the running state rather than re-examining every past token.
-The selective-state mechanism that makes Mamba competitive with attention
-on language is a §-worth of detail this book does not need; the
-load-bearing fact for us is the complexity class. A transformer carries
-its entire history forward explicitly and pays to look at all of it every
-step; an SSM compresses the history into a bounded state and pays a flat
-rate per step. That compression is a bet — it assumes the running state
-can summarize what matters — and for streaming sensor data, where the
-recent past dominates and the relevant context is bounded, it is often a
-good bet.
+Mamba (Gu and Dao, 2023) is a state space model, an SSM: instead of attending over the whole history at every step, it maintains a fixed-size recurrent state and updates it as tokens stream in. The consequence that matters here is the cost curve. Mamba's inference is *linear* in sequence length, not quadratic, because each new token does a constant amount of work against the running state rather than re-examining every past token. The selective-state mechanism that makes Mamba competitive with attention on language is a section's worth of detail this book does not need; the load-bearing fact for us is the complexity class. A transformer carries its entire history forward explicitly and pays to look at all of it every step; an SSM compresses the history into a bounded state and pays a flat rate per step. That compression is a bet, it assumes the running state can summarize what matters, and for streaming sensor data, where the recent past dominates and the relevant context is bounded, it is often a good bet.
 
-RoboMamba (arXiv:2406.04339) takes the four-change recipe above and runs
-it with Mamba where the transformer used to be. The construction is
-faithful to the pattern. It pairs a vision encoder with a Mamba backbone
-and co-trains so that visual tokens align with the language embedding
-space, which gives the model visual common sense and robot-relevant
-reasoning — the SSM analogue of starting from a VLM. Then, to get
-actions, it attaches a simple policy head that predicts an SE(3)
-end-effector pose, and fine-tunes only that head. The headline numbers
-are the argument for the whole approach: RoboMamba reaches manipulation
-competence by updating roughly 0.1% of its parameters, and it runs
-inference about three times faster than comparable transformer VLAs. The
-linear-cost backbone is doing visible work.
+RoboMamba (arXiv:2406.04339) takes the four-change recipe above and runs it with Mamba where the transformer used to be. The construction is faithful to the pattern. It pairs a vision encoder with a Mamba backbone and co-trains so that visual tokens align with the language embedding space, which gives the model visual common sense and robot-relevant reasoning, the SSM analogue of starting from a VLM. Then, to get actions, it attaches a simple policy head that predicts an SE(3) end-effector pose, and fine-tunes only that head. The headline numbers are the argument for the whole approach: RoboMamba reaches manipulation competence by updating roughly 0.1% of its parameters, and it runs inference about three times faster than comparable transformer VLAs. The linear-cost backbone is doing visible work.
 
-What should you take from this? Not that SSMs win — the foundation
-models that defined the field, and the ones this book spends Part 4 on,
-are transformers, and the largest, best-generalizing action models remain
-transformer-based as of this writing. The lesson is the more useful one
-for a student trying to read the field clearly: the *recipe* is separable
-from the *architecture*. Tokenize the world, condition on language,
-initialize from a model that already understands images and text,
-fine-tune a small action head. That recipe ran on a transformer in RT-2
-and on a state space model in RoboMamba, and both produced a working
-vision-language-action model. When you read Chapter 13 on π0 or Chapter 14
-on dual-system designs, keep asking which parts of the system are the
-recipe and which are the architecture, because conflating the two is how
-people end up believing that attention is load-bearing when it is often
-just incumbent.
+What should you take from this? Not that SSMs win, the foundation models that defined the field, and the ones this book spends Part 4 on, are transformers, and the largest, best-generalizing action models remain transformer-based as of this writing. The lesson is the more useful one for a student trying to read the field clearly: the *recipe* is separable from the *architecture*. Tokenize the world, condition on language, initialize from a model that already understands images and text, fine-tune a small action head. That recipe ran on a transformer in RT-2 and on a state space model in RoboMamba, and both produced a working vision-language-action model. When you read Chapter 13 on π0 or Chapter 14 on dual-system designs, keep asking which parts of the system are the recipe and which are the architecture, because conflating the two is how people end up believing that attention is load-bearing when it is often just incumbent.
 
-It is worth being honest about why transformers still won the field
-despite the tax. Two reasons. The pretrained weights that make a
-foundation action model work — the web knowledge in PaLI-X, Llama-2,
-SigLIP — exist for transformers because the entire language and vision
-community standardized on them first; you cannot initialize from a
-vision-language model that nobody bothered to train. And attention's
-ability to reach any token directly, the very thing that costs you the
-quadratic factor, pays off when a task depends on a detail
-many steps back. RoboMamba's reasoning is competitive, but it leans on a
-co-trained vision encoder to supply the heavy multimodal grounding, and
-the largest, most general action models published to date are still
-transformers. The SSM result is a proof of possibility and an efficiency
-argument, not a changing of the guard — which is exactly why it belongs in
-a bridge section rather than a chapter of its own.
+It is worth being honest about why transformers still won the field despite the tax. Two reasons. The pretrained weights that make a foundation action model work, the web knowledge in PaLI-X, Llama-2, SigLIP, exist for transformers because the entire language and vision community standardized on them first; you cannot initialize from a vision-language model that nobody bothered to train. And attention's ability to reach any token directly, the very thing that costs you the quadratic factor, pays off when a task depends on a detail many steps back. RoboMamba's reasoning is competitive, but it leans on a co-trained vision encoder to supply the heavy multimodal grounding, and the largest, most general action models published to date are still transformers. The SSM result is a proof of possibility and an efficiency argument, not a changing of the guard, which is exactly why it belongs in a bridge section rather than a chapter of its own.
 
 ## What the bridge does and does not carry
 
-One caution before the chapter closes. The bridge carries the *mechanism*
-— next-token prediction over a tokenized trajectory — cleanly into Part 4.
-It does not carry the *guarantees*. The Decision Transformer sat inside an
-offline-RL framing where you could at least reason about returns and
-optimality; the foundation action models drop that scaffolding and become
-pure imitation learners, inheriting the compounding-error problem from
-§6.3 and offering no value function to fall back on. They are more capable
-and less analyzable at the same time. The smoothness fixes (diffusion and
-flow heads, Chapter 10), the data-scale arguments (Chapter 12), and the
-safety layers (Chapter 17) all exist in part to manage what gets lost when
-you trade the RL framing for the language-modeling one. The bridge is
-real, but it is one-way: you can walk a sequence model across into a
-foundation action model, and once there, the RL tools you started this
-chapter with mostly stay behind.
+One caution before the chapter closes. The bridge carries the *mechanism*, next-token prediction over a tokenized trajectory, cleanly into Part 4. It does not carry the *guarantees*. The Decision Transformer sat inside an offline-RL framing where you could at least reason about returns and optimality; the foundation action models drop that scaffolding and become pure imitation learners, inheriting the compounding-error problem from §6.3 and offering no value function to fall back on. They are more capable and less analyzable at the same time. The smoothness fixes (diffusion and flow heads, Chapter 10), the data-scale arguments (Chapter 12), and the safety layers (Chapter 17) all exist in part to manage what gets lost when you trade the RL framing for the language-modeling one. The bridge is real, but it is one-way: you can walk a sequence model across into a foundation action model, and once there, the RL tools you started this chapter with mostly stay behind.
 
-With the crossing mapped, the chapter has done its job: you can now see RT-1,
-RT-2, OpenVLA, and even the SSM-based RoboMamba as the same sequence-modeling
-idea from §8.1 scaled up and re-pointed. The summary in §8.6 collects the
-chapter's load-bearing ideas before Part 4 starts building on them in earnest.
+With the crossing mapped, the chapter has done its job: you can now see RT-1, RT-2, OpenVLA, and even the SSM-based RoboMamba as the same sequence-modeling idea from §8.1 scaled up and re-pointed. The summary in §8.6 collects the chapter's load-bearing ideas before Part 4 starts building on them in earnest.
