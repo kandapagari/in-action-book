@@ -12,7 +12,7 @@
 
 import opentype from 'opentype.js';
 import sharp from 'sharp';
-import toIco from 'to-ico';
+import pngToIco from 'png-to-ico';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -226,7 +226,7 @@ async function main() {
     rasterize(staticSvg, 32, 32),
     rasterize(staticSvg, 48, 48),
   ]);
-  const ico = await toIco([i16, i32, i48]);
+  const ico = await pngToIco([i16, i32, i48]);
   await fs.writeFile(path.join(PUBLIC_DIR, 'favicon.ico'), ico);
 
   // icon-maskable-512.png and og-image.png are intentionally NOT regenerated
