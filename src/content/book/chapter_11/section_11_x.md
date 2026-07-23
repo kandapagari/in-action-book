@@ -25,7 +25,7 @@ doing even though the tokenizer is fifty lines of NumPy, because the fifty lines
 force you to confront every decision RT-1 made quietly: how many bins, uniform
 or not, per-dimension range or global, and what error you are willing to eat at
 the bin edges. The supporting drills push on the edges §11.3 and §11.5 argued
-about — where the resolution floor actually bites, and whether more bins is the
+about: where the resolution floor actually bites, and whether more bins is the
 free lunch it looks like.
 
 Budget about two hours. None of it is GPU time; this chapter's exercise is
