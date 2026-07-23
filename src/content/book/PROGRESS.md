@@ -53,6 +53,32 @@ pull into Appendix E / chapter references when each section is drafted:
   SimplerEnv; Open X-Embodiment has no single branded successor — growth now
   comes from large teleop fleets (AGIBot Genie-1, bimanual YAM, Unitree G1).
 
+## Field-tracking notes (2026-07-23b)
+
+Second pass same day — fresh searches turned up items not in the entry above:
+
+- LingBot-VLA 2.0 (Ant Group/Robbyant, released 2026-07-08): 6B-parameter open-source
+  VLA, Apache 2.0 weights + code, one policy running unmodified across 20 robot
+  morphologies from 17 manufacturers (Unitree, AgiBot, Franka, Fourier, etc.);
+  reported to beat π0.5 on the GM-100 bimanual benchmark. Trained on 60k hours of
+  real-world data (50k robot teleop + 10k distilled first-person human video).
+  Relevant to §13.4/§13.5 and §15.2 (teleop-fleet successors to Open X-Embodiment).
+- GR00T N1.7 reached General Availability (NVIDIA, ~Apr–Jul 2026): swaps the Eagle
+  VLM backbone for Cosmos-Reason2-2B (Qwen3-VL architecture, physics-informed
+  pretraining via Cosmos World Foundation Model); central new contribution is
+  EgoScale, ~20,854 hours of first-person human video pretraining feeding a
+  32-layer DiT low-level controller. Refines the N1.5→N1.7 lineage note already in
+  §14.3.
+- New VLA adversarial-safety papers not yet listed: VLA-Hijack, a transferable
+  patch attack with cross-architecture black-box transfer across OpenVLA/UniVLA/
+  CronusVLA (arXiv 2605.28083); partially-observable adversarial patch attacks on
+  VLA policies (arXiv 2606.03556); ForesightSafety-VLA, a diagnostic safety
+  benchmark (arXiv 2606.27079). Relevant to §17.5 alongside the already-tracked
+  TRAP paper.
+- Broader dataset/benchmark survey: "Vision-Language-Action in Robotics: A Survey
+  of Datasets, Benchmarks, and Data Engines" (arXiv 2604.23001) — useful framing
+  reference for §15.1–§15.3.
+
 ## Status
 
 ### Part 1 — Foundations and a first taste of VLAs
