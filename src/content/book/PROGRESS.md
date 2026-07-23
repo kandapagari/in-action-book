@@ -151,7 +151,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 - [x] 12.1 RT-2: a VLM that also outputs actions
 - [x] 12.2 OpenVLA: an open-source 7B-parameter VLA
-- [ ] 12.3 Octo: a generalist policy with a diffusion head
+- [x] 12.3 Octo: a generalist policy with a diffusion head
 - [ ] 12.4 Open X-Embodiment: the dataset that made all of this possible
 - [ ] 12.5 What "emergent" really means in this context
 - [ ] 12.6 Summary
@@ -316,3 +316,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-19 — drafted §11.x Hands-on exercise + chapter references (~1950 words)
 - 2026-07-20 — drafted §12.1 RT-2: a VLM that also outputs actions (~1656 words)
 - 2026-07-22 — drafted §12.2 OpenVLA: an open-source 7B-parameter VLA (~1708 words)
+- 2026-07-23 — drafted §12.3 Octo: a generalist policy with a diffusion head (~1791 words)

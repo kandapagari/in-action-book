@@ -14,170 +14,36 @@ key_refs:
 
 # 7.5  Sim-to-real: domain randomization in one slide
 
-Section 7.4 left us with an uncomfortable arithmetic. Soft actor-critic
-is roughly an order of magnitude more sample-efficient than PPO, and yet
-"an order of magnitude better" still lands at tens of thousands of
-environment transitions to learn a single manipulation skill. On a fast
-MuJoCo simulator that is a coffee break. On a real seven-axis arm it is
-days of supervised operation, joints wearing under load, and the
-non-negotiable possibility that a half-trained exploratory policy drives
-the gripper into the table. The escape hatch every robot-learning group
-reaches for is the same: train in a simulator where transitions are
-nearly free and failures cost nothing, then ship the resulting policy to
-hardware. The catch — and it is the whole subject of this section — is
-that the simulator is wrong. Its contact model is an approximation, its
-friction coefficients are guesses, its camera renders clean textures the
-real camera never sees, and its actuators respond instantly where real
-motors lag. A policy that overfits to those quirks works beautifully in
-sim and falls over on the robot. This mismatch has a name, the *reality
-gap*, and domain randomization is the bluntest, most effective tool we
-have for crossing it.
+Section 7.4 left us with an uncomfortable arithmetic. Soft actor-critic is roughly an order of magnitude more sample-efficient than PPO, and yet "an order of magnitude better" still lands at tens of thousands of environment transitions to learn a single manipulation skill. On a fast MuJoCo simulator that is a coffee break. On a real seven-axis arm it is days of supervised operation, joints wearing under load, and the non-negotiable possibility that a half-trained exploratory policy drives the gripper into the table. The escape hatch every robot-learning group reaches for is the same: train in a simulator where transitions are nearly free and failures cost nothing, then ship the resulting policy to hardware. The catch, and it is the whole subject of this section, is that the simulator is wrong. Its contact model is an approximation, its friction coefficients are guesses, its camera renders clean textures the real camera never sees, and its actuators respond instantly where real motors lag. A policy that overfits to those quirks works beautifully in sim and falls over on the robot. This mismatch has a name, the *reality gap*, and domain randomization is the bluntest, most effective tool we have for crossing it.
 
 ## The reality gap is a distribution-shift problem
 
-It helps to see the reality gap through the lens of §3.4 rather than as
-something exotic to robotics. A policy trained in simulation is a
-function fit on a training distribution — the distribution of states,
-images, and dynamics the simulator produces. Deployed on hardware, it is
-evaluated on a different distribution. This is ordinary train/test
-distribution shift, the same failure mode that breaks any supervised
-model asked to generalize beyond its training set. The only thing special
-about the robot case is that we have unusual control over the training
-distribution: we built the simulator, so we get to choose what it
-samples.
+It helps to see the reality gap through the lens of §3.4 rather than as something exotic to robotics. A policy trained in simulation is a function fit on a training distribution, the distribution of states, images, and dynamics the simulator produces. Deployed on hardware, it is evaluated on a different distribution. This is ordinary train/test distribution shift, the same failure mode that breaks any supervised model asked to generalize beyond its training set. The only thing special about the robot case is that we have unusual control over the training distribution: we built the simulator, so we get to choose what it samples.
 
-That observation is the entire idea behind domain randomization. If you
-cannot make the simulator match reality precisely — and you cannot,
-because you do not know the real friction coefficient to three decimal
-places — then do not try. Instead, randomize the uncertain parameters
-across a wide range during training, so that the real world looks to the
-policy like just one more sample from a distribution it has already seen.
-The policy is never allowed to depend on the exact value of any quantity
-it cannot trust, because that quantity keeps changing under its feet. Put
-as a slogan that fits on the one slide the section title promises:
-**reality becomes just another randomized instance.**
+That observation is the entire idea behind domain randomization. If you cannot make the simulator match reality precisely, and you cannot, because you do not know the real friction coefficient to three decimal places, then do not try. Instead, randomize the uncertain parameters across a wide range during training, so that the real world looks to the policy like just one more sample from a distribution it has already seen. The policy is never allowed to depend on the exact value of any quantity it cannot trust, because that quantity keeps changing under its feet. Put as a slogan that fits on the one slide the section title promises: **reality becomes just another randomized instance.**
 
 ## Visual randomization: the original result
 
-The technique entered the field through vision. Tobin et al. (2017,
-IROS) were trying to train an object detector in simulation that would
-work on a real robot, and rather than invest in photorealistic rendering
-they did the opposite. They rendered the same scene thousands of times
-with the textures, colors, lighting positions, camera pose, and
-distractor-object placement all randomized to deliberately unrealistic
-extremes — checkerboard tables, neon clutter, light sources scattered at
-implausible angles. The bet was that a network forced to locate an object
-across that chaotic range of appearances would learn features invariant
-to texture and lighting altogether, and would therefore treat a real,
-photographically mundane scene as merely one more variation. The bet paid
-off: the detector transferred to the real world with no real images in
-training at all, localizing objects to within about a centimeter. The
-lesson generalized fast. If the policy's input is pixels, randomize
-everything about how those pixels are generated that does not carry task
-information, and the network is pushed to ignore the rendering and attend
-to the geometry.
+The technique entered the field through vision. Tobin et al. (2017, IROS) were trying to train an object detector in simulation that would work on a real robot, and rather than invest in photorealistic rendering they did the opposite. They rendered the same scene thousands of times with the textures, colors, lighting positions, camera pose, and distractor-object placement all randomized to deliberately unrealistic extremes: checkerboard tables, neon clutter, light sources scattered at implausible angles. The bet was that a network forced to locate an object across that chaotic range of appearances would learn features invariant to texture and lighting altogether, and would therefore treat a real, photographically mundane scene as merely one more variation. The bet paid off: the detector transferred to the real world with no real images in training at all, localizing objects to within about a centimeter. The lesson generalized fast. If the policy's input is pixels, randomize everything about how those pixels are generated that does not carry task information, and the network is pushed to ignore the rendering and attend to the geometry.
 
 ## Dynamics randomization: the harder half
 
-Vision is the easy half, because appearance is obviously a nuisance
-variable. The harder and more consequential form is *dynamics*
-randomization, where the quantities you perturb are the physics
-parameters that actually determine how the robot moves: link masses,
-joint friction and damping, motor gains, actuator latency, the
-coefficient of restitution at contacts, and the time delay between
-issuing a command and the body responding. Peng et al. (2018, ICRA)
-made the case directly for control, randomizing dynamics parameters while
-training a manipulation policy and showing transfer to a real arm. The
-mechanism is subtler than the visual case. A policy trained under a single
-fixed set of dynamics learns an open-loop-ish strategy tuned to exactly
-those numbers; change the friction by ten percent and the carefully
-calibrated motion overshoots. A policy trained across a wide band of
-dynamics cannot rely on any one setting, so it is forced to learn
-something more like feedback control — sense the current state, react to
-what the body is actually doing, correct continuously. Robustness to the
-range, in other words, tends to produce closed-loop behavior as a
-side effect, and closed-loop behavior is exactly what survives contact
-with an unmodeled real robot.
+Vision is the easy half, because appearance is obviously a nuisance variable. The harder and more consequential form is *dynamics* randomization, where the quantities you perturb are the physics parameters that actually determine how the robot moves: link masses, joint friction and damping, motor gains, actuator latency, the coefficient of restitution at contacts, and the time delay between issuing a command and the body responding. Peng et al. (2018, ICRA) made the case directly for control, randomizing dynamics parameters while training a manipulation policy and showing transfer to a real arm. The mechanism is subtler than the visual case. A policy trained under a single fixed set of dynamics learns an open-loop-ish strategy tuned to exactly those numbers; change the friction by ten percent and the carefully calibrated motion overshoots. A policy trained across a wide band of dynamics cannot rely on any one setting, so it is forced to learn something more like feedback control: sense the current state, react to what the body is actually doing, correct continuously. Robustness to the range, in other words, tends to produce closed-loop behavior as a side effect, and closed-loop behavior is exactly what survives contact with an unmodeled real robot.
 
-There is a recurring design subtlety worth naming. Randomizing dynamics
-makes the environment *partially observable*: from a single frame the
-policy cannot tell whether it is in a high-friction or low-friction draw
-of the world. Two responses are common. The first is to give the policy a
-short history of recent states and actions — a stack of frames or a small
-recurrent memory — so it can infer the current dynamics from how the robot
-has been responding, a trick sometimes called *implicit system
-identification*. The second is to accept that the policy will hedge,
-producing a single robust behavior that is acceptable across the whole
-range rather than optimal for any one setting. Both appear constantly in
-the literature, and the choice between an explicitly conservative policy
-and an adaptive, history-conditioned one is a genuine design axis, not a
-solved question.
+There is a recurring design subtlety worth naming. Randomizing dynamics makes the environment *partially observable*: from a single frame the policy cannot tell whether it is in a high-friction or low-friction draw of the world. Two responses are common. The first is to give the policy a short history of recent states and actions, a stack of frames or a small recurrent memory, so it can infer the current dynamics from how the robot has been responding, a trick sometimes called *implicit system identification*. The second is to accept that the policy will hedge, producing a single robust behavior that is acceptable across the whole range rather than optimal for any one setting. Both appear constantly in the literature, and the choice between an explicitly conservative policy and an adaptive, history-conditioned one is a genuine design axis, not a solved question.
 
 ## Two landmark demonstrations
 
-Two results are worth carrying in your head as concrete anchors, because
-they bracket what the method can do.
+Two results are worth carrying in your head as concrete anchors, because they bracket what the method can do.
 
-The first is OpenAI's in-hand manipulation work that solved a Rubik's
-Cube one-handed with a Shadow robotic hand (Akkaya et al. 2019,
-arXiv:1910.07113). The control policy was trained entirely in simulation
-under aggressive randomization of physics, sensor noise, and even the
-robot's own geometry. Their refinement, *automatic domain randomization*
-(ADR), is the part worth remembering: instead of fixing the randomization
-ranges by hand, they widened each range automatically as the policy got
-good enough to handle the current one, growing the training distribution
-in lockstep with competence. The hand learned to adapt to perturbations it
-had never explicitly seen — fingers tied together, a plush giraffe shoved
-against the cube — because the curriculum had taught it to expect that the
-world's parameters were never to be trusted.
+The first is OpenAI's in-hand manipulation work that solved a Rubik's Cube one-handed with a Shadow robotic hand (Akkaya et al. 2019, arXiv:1910.07113). The control policy was trained entirely in simulation under aggressive randomization of physics, sensor noise, and even the robot's own geometry. Their refinement, *automatic domain randomization* (ADR), is the part worth remembering: instead of fixing the randomization ranges by hand, they widened each range automatically as the policy got good enough to handle the current one, growing the training distribution in lockstep with competence. The hand learned to adapt to perturbations it had never explicitly seen, fingers tied together, a plush giraffe shoved against the cube, because the curriculum had taught it to expect that the world's parameters were never to be trusted.
 
-The second is quadrupedal locomotion. Lee et al. (2020, Science
-Robotics) trained an ANYmal robot to walk and recover over rough,
-slippery, and deformable terrain entirely in simulation with randomized
-ground properties and disturbances, then deployed it outdoors over mud,
-snow, and rubble with no real-world fine-tuning. Legged locomotion is the
-domain where sim-to-real has arguably matured most completely: the
-dynamics are fast and contact-rich, real-world trial-and-error is
-genuinely dangerous, and yet randomized-sim training followed by
-zero-shot deployment is now close to a standard recipe rather than a stunt.
+The second is quadrupedal locomotion. Lee et al. (2020, Science Robotics) trained an ANYmal robot to walk and recover over rough, slippery, and deformable terrain entirely in simulation with randomized ground properties and disturbances, then deployed it outdoors over mud, snow, and rubble with no real-world fine-tuning. Legged locomotion is the domain where sim-to-real has arguably matured most completely: the dynamics are fast and contact-rich, real-world trial-and-error is genuinely dangerous, and yet randomized-sim training followed by zero-shot deployment is now close to a standard recipe rather than a stunt.
 
 ## Where it breaks, and the alternatives that bound it
 
-Domain randomization is not free, and the section would be dishonest
-without its failure modes. Widening the randomization range trades peak
-performance for robustness: a policy that must succeed across friction
-coefficients from 0.3 to 1.5 will be beaten, on any single friction
-value, by a policy specialized to it. Push the ranges too wide and the
-task can become unlearnable, because no single behavior succeeds across
-the whole span and training stalls or collapses. The ranges themselves
-are hand-chosen hyperparameters, and choosing them badly — too narrow to
-cover reality, or centered on the wrong nominal values — reintroduces the
-gap you were trying to close. ADR addresses the width problem but not the
-centering problem; the simulator's structural errors, the physics it
-gets categorically wrong rather than merely imprecisely, are not fixed by
-sampling a parameter more widely.
+Domain randomization is not free, and the section would be dishonest without its failure modes. Widening the randomization range trades peak performance for robustness: a policy that must succeed across friction coefficients from 0.3 to 1.5 will be beaten, on any single friction value, by a policy specialized to it. Push the ranges too wide and the task can become unlearnable, because no single behavior succeeds across the whole span and training stalls or collapses. The ranges themselves are hand-chosen hyperparameters, and choosing them badly, too narrow to cover reality, or centered on the wrong nominal values, reintroduces the gap you were trying to close. ADR addresses the width problem but not the centering problem; the simulator's structural errors, the physics it gets categorically wrong rather than merely imprecisely, are not fixed by sampling a parameter more widely.
 
-This is why domain randomization usually travels with companions. *System
-identification* measures the real robot's parameters and narrows the
-randomization band around the truth, getting the best of both worlds.
-*Domain adaptation* methods adjust the policy or its input features using
-a modest amount of real data, meeting the gap from the other side. And
-the rapid-adaptation line of work — exemplified by RMA on legged
-robots — trains an explicit module that infers the environment parameters
-online from the recent state history and feeds them to the policy, turning
-the partial-observability problem from a nuisance into a designed-for
-input. The honest framing is that domain randomization is the cheap,
-strong baseline that gets a policy most of the way across the gap, and the
-other techniques are what you add when "most of the way" is not enough.
+This is why domain randomization usually travels with companions. *System identification* measures the real robot's parameters and narrows the randomization band around the truth, getting the best of both worlds. *Domain adaptation* methods adjust the policy or its input features using a modest amount of real data, meeting the gap from the other side. And the rapid-adaptation line of work, exemplified by RMA on legged robots, trains an explicit module that infers the environment parameters online from the recent state history and feeds them to the policy, turning the partial-observability problem from a nuisance into a designed-for input. The honest framing is that domain randomization is the cheap, strong baseline that gets a policy most of the way across the gap, and the other techniques are what you add when "most of the way" is not enough.
 
-For the purposes of this book, the takeaway is conceptual rather than
-recipe-level. Domain randomization reframes the sim-to-real problem as a
-distribution-design problem, and it works because robustness to variation
-is a usable substitute for accuracy you do not have. That same instinct —
-train across enormous variation so that the test case is just another
-sample — reappears, scaled up by orders of magnitude, when we get to the
-data side of foundation action models: the multi-robot, multi-environment
-datasets of Chapter 12 and Chapter 15 are, in a sense, domain
-randomization performed with real robots instead of a simulator. Section
-7.6 closes the chapter by tying the deep-RL toolkit together and stating
-plainly which parts of it survive into the VLA era and which do not.
+For the purposes of this book, the takeaway is conceptual rather than recipe-level. Domain randomization reframes the sim-to-real problem as a distribution-design problem, and it works because robustness to variation is a usable substitute for accuracy you do not have. That same instinct, train across enormous variation so that the test case is just another sample, reappears, scaled up by orders of magnitude, when we get to the data side of foundation action models: the multi-robot, multi-environment datasets of Chapter 12 and Chapter 15 are, in a sense, domain randomization performed with real robots instead of a simulator. Section 7.6 closes the chapter by tying the deep-RL toolkit together and stating plainly which parts of it survive into the VLA era and which do not.
