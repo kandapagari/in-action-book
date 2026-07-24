@@ -336,6 +336,62 @@
       "voice": "af_heart",
       "word_count": 1790
     },
+    "12.4": {
+      "chapter": 12,
+      "char_count": 9305,
+      "content_hash": "9a1750c04277bb5e48aa42f4ab5e90b91ee7f2624fd1465fac4e1f1ff31292d6",
+      "duration_seconds": 582.59,
+      "file": "/audio/chapter-12/section-12_4.mp3",
+      "file_size_bytes": 4661421,
+      "generated_at": "2026-07-24T09:46:33+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-12/section-12_4.mp3",
+      "section": "12.4",
+      "title": "Open X-Embodiment: the dataset that made all of this possible",
+      "voice": "af_heart",
+      "word_count": 1570
+    },
+    "12.5": {
+      "chapter": 12,
+      "char_count": 10649,
+      "content_hash": "cc7d708c8bfc2bb4990252d59d7a267ab05b72c8f883c5b3af824906ac4a5f87",
+      "duration_seconds": 637.64,
+      "file": "/audio/chapter-12/section-12_5.mp3",
+      "file_size_bytes": 5101869,
+      "generated_at": "2026-07-24T09:46:37+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-12/section-12_5.mp3",
+      "section": "12.5",
+      "title": "What \"emergent\" really means in this context",
+      "voice": "af_heart",
+      "word_count": 1778
+    },
+    "12.6": {
+      "chapter": 12,
+      "char_count": 11671,
+      "content_hash": "671edbb56e943f2018a09ece4af983712b6436cea9ef008da060962b7c410f2e",
+      "duration_seconds": 718.59,
+      "file": "/audio/chapter-12/section-12_6.mp3",
+      "file_size_bytes": 5749485,
+      "generated_at": "2026-07-24T09:46:43+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-12/section-12_6.mp3",
+      "section": "12.6",
+      "title": "Summary",
+      "voice": "af_heart",
+      "word_count": 2011
+    },
+    "12.x": {
+      "chapter": 12,
+      "char_count": 11584,
+      "content_hash": "7b921d418e65e78dfeaae2281a3c56836970510f74f6a951f592f425735cbccd",
+      "duration_seconds": 713.94,
+      "file": "/audio/chapter-12/section-12_x.mp3",
+      "file_size_bytes": 5712237,
+      "generated_at": "2026-07-24T09:46:49+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-12/section-12_x.mp3",
+      "section": "12.x",
+      "title": "Hands-on exercise + chapter references",
+      "voice": "af_heart",
+      "word_count": 2010
+    },
     "2.1": {
       "chapter": 2,
       "char_count": 9334,
@@ -1107,7 +1163,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-07-23T11:14:32+00:00",
+  "generated_at": "2026-07-24T09:46:49+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
