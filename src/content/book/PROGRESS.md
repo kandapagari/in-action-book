@@ -205,10 +205,10 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 12.1 RT-2: a VLM that also outputs actions
 - [x] 12.2 OpenVLA: an open-source 7B-parameter VLA
 - [x] 12.3 Octo: a generalist policy with a diffusion head
-- [ ] 12.4 Open X-Embodiment: the dataset that made all of this possible
-- [ ] 12.5 What "emergent" really means in this context
-- [ ] 12.6 Summary
-- [ ] 12.x Hands-on exercise + chapter references
+- [x] 12.4 Open X-Embodiment: the dataset that made all of this possible
+- [x] 12.5 What "emergent" really means in this context
+- [x] 12.6 Summary
+- [x] 12.x Hands-on exercise + chapter references
 
 #### Chapter 13. Smooth control: π0 and flow-matching action heads
 
@@ -370,3 +370,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-20 — drafted §12.1 RT-2: a VLM that also outputs actions (~1656 words)
 - 2026-07-22 — drafted §12.2 OpenVLA: an open-source 7B-parameter VLA (~1708 words)
 - 2026-07-23 — drafted §12.3 Octo: a generalist policy with a diffusion head (~1791 words)
+- 2026-07-23 — drafted §12.4 Open X-Embodiment: the dataset that made all of this possible (~1532 words)
+- 2026-07-24 — drafted §12.5 What "emergent" really means in this context (~1732 words)
+- 2026-07-24 — drafted §12.6 Summary (~1920 words)
+- 2026-07-24 — drafted §12.x Hands-on exercise + chapter references (~1990 words)
