@@ -1,0 +1,61 @@
+---
+chapter: 13
+section: 13.4
+title: "What π0 can do that earlier VLAs cannot — and the π0.5 → π0.6 → π0.7 lineage"
+target_words: 2000
+status: draft
+prereqs: §13.1 (the three-part failure of the discrete token head on fast, dexterous, long-horizon tasks), §13.2 (π0's backbone-plus-expert architecture), §13.3 (flow matching as the objective that lets the expert emit a multimodal chunk in a handful of steps), §12.2 (OpenVLA as the 7B token-head baseline). Helpful, §11.5 on when data scale starts to pay off.
+key_refs:
+  - Black, K. et al. (2024). π0, A Vision-Language-Action Flow Model for General Robot Control. arXiv:2410.24164.
+  - Physical Intelligence (2025). π0.5, A VLA with Open-World Generalization. arXiv:2504.16054.
+  - Physical Intelligence (2025). π0.6, Recovery and RL-from-experience technical report.
+  - Physical Intelligence (2026). π0.7, steerable generalist technical report.
+---
+
+# 13.4  What π0 can do that earlier VLAs cannot — and the π0.5 → π0.6 → π0.7 lineage
+
+The last three sections built π0 (arXiv:2410.24164) from parts. Now the question is whether the parts add up to anything a robot operator would notice, because architecture that only wins on a latency spreadsheet is not worth a chapter. The honest answer is that π0 clears a specific bar earlier VLAs kept tripping over, and the clearest demonstration is a task no RT-2 or OpenVLA demo ever tried to show: folding laundry.
+
+## The laundry test
+
+Pull a shirt out of a dryer and it comes out as a wad. There is no canonical shape, no fixed set of grasp points, no way to write down "the state" the way you can for a block on a table. Two operators folding the same shirt will not produce the same trajectory, and the same operator will not repeat their own trajectory twice. The task runs for a minute or more of continuous manipulation, it demands both arms working in concert, and it fails softly in a hundred small ways rather than crisply in one.
+
+Every property that makes laundry hard is a property the discrete token head from §13.1 handled badly. The wad has no clean discretization, so binning the action space throws away the fine adjustments that separate a caught sleeve from a dropped one. The multimodality is real and unavoidable, so a head that averages competing folds settles on a motion that folds nothing. The horizon is long, so compounding error from autoregressive decoding has a minute to accumulate. π0 folds the shirt. Not perfectly, not every time, but it folds a shirt it has never seen, from a fresh wad, at a success rate that made the original demo notable rather than staged. That is the headline result, and it is worth being precise about why the three components from this chapter are each load-bearing for it.
+
+The continuous action chunk from §13.2 gives the fine motor resolution: no bins between the gripper and the fabric. Flow matching from §13.3 keeps the competing folds as separate modes instead of blending them, so the robot commits to one plausible fold rather than hallucinating the mean of several. And chunking a full second of motion per generation keeps the two arms coordinated over stretches where a per-step token decoder would drift. Take away any one of the three and the shirt stays a wad.
+
+It helps to put a concrete failure next to the success. Point OpenVLA (§12.2) at the same wad and the trouble is not that it produces nothing; it produces a smeared reach. Its discretized head, asked to average the several reasonable ways to grab a crumpled sleeve, emits a command that grabs none of them, and its per-token decode is slow enough that by the time the chunk lands the fabric has already shifted under the first gripper. The failure is quiet and it is the same failure whether the shirt is on the left or the right of the table, because the cause is structural rather than a tuning miss. π0 does not have a better shirt heuristic. It has a head that never had to average in the first place.
+
+## Where the gap shows up in numbers
+
+The laundry demo is vivid but anecdotal, so it helps to name the axis where π0 separates from the token-head generation more measurably. On the dexterous, multi-stage tasks the π0 paper reports (folding, bussing a table, assembling a box), the continuous head holds a usable success rate over horizons where discrete-token baselines degrade toward zero. The mechanism is the one §13.1 predicted rather than a surprise: token heads pay a per-decode latency and a per-step error tax that both scale with how long and how finely the task has to be controlled, and laundry maxes out both.
+
+There is a cost worth stating plainly, because π0 is not free. Flow matching needs a lot of clean demonstrations, and π0's roughly 10,000 hours of cross-embodiment teleoperation is far past what a university lab collects in a year. The architecture makes dexterity possible; the data bill is what makes it real, and for most readers that bill is the actual barrier. We take the data side apart in Chapter 15, and the fine-tuning shortcuts that get you a useful π0 without 10,000 fresh hours are the whole of Chapter 16.
+
+## π0.5: the same recipe, aimed at houses it has never entered
+
+The first π0 could fold a shirt in a lab that resembled its training kitchens. It could not walk into a stranger's home and clean up, because the scenes, the objects, and the layouts were all off-distribution. π0.5 (arXiv:2504.16054) is Physical Intelligence's answer to that gap, and the interesting part is that it barely changed the action machinery. The flow-matching expert stays. What changed is the training mixture and the way the model reasons about a novel scene before it acts.
+
+π0.5 co-trains on a broader stack than robot teleoperation alone: web data, verbal instructions, high-level subtask predictions, and multi-robot data all feed the same model, so the semantic backbone sees far more of the world than a robot's wrist camera ever will. The payoff the paper reports is generalization to genuinely new homes: a robot cleaning a kitchen and a bedroom it was never trained in, chaining the long sequence of subtasks that a real cleanup demands. Cleaning a bedroom is not one skill. It is picking clothes off a floor, putting them somewhere sensible, clearing a nightstand, and making a bed, and the order is not scripted for the robot in advance. π0.5 handles the sequencing by predicting the next high-level subtask in language and then acting on it with the same flow-matching head, so the model that decides "pick up the shirt now" and the model that produces the arm motion are the same weights reasoning at two levels.
+
+The lesson stacks directly on §11.5's scaling argument. Dexterity came from the action head; open-world generalization came from feeding the backbone data that is not itself robot data. Those are two different scaling stories in one model, and π0.5 is where they combine. Notice what did not change: the action expert and its flow-matching objective are inherited from π0 essentially intact. If you were expecting the leap in generalization to demand a new action head, that expectation is exactly what π0.5 refutes, and the refutation is the point.
+
+## π0.6: learning from its own mistakes
+
+Imitation has a ceiling that Chapter 6 named. A policy cloned from demonstrations is bounded by the demonstrations; when it drifts into a state the experts never visited, it has nothing to imitate and no signal telling it how to recover. For a shirt-folder that ceiling shows up as the failure that never quite gets fixed no matter how much more human data you pour in, because the humans rarely demonstrate the specific recovery the robot needs.
+
+π0.6, Physical Intelligence's late-2025 iteration, attacks the ceiling with reinforcement learning layered on top of the imitation base, learning from the robot's own experience rather than only from teleoperation. This is the move Chapter 7 set up: use RL to push past the demonstrator, but do it on top of a policy that already works instead of from scratch, which is the only way RL is tractable on real hardware. The reported gains concentrate exactly where imitation stalls, on reliability and recovery over long tasks, the difference between a robot that folds twenty shirts and quietly gives up on the twenty-first and one that recovers a fumbled grasp and keeps going. RL-from-experience does not replace the flow-matching head from §13.3; it fine-tunes it against a reward the robot collects itself.
+
+The recovery point deserves a concrete shape, because it is where the imitation ceiling bites hardest. Suppose the gripper catches a shirt by one sleeve and the fabric hangs wrong, a state no teleoperator bothered to demonstrate a fix for. An imitation-only policy in that state is guessing, since its whole competence came from states experts actually visited. A policy that has run the task thousands of times on hardware and been rewarded for finishing has, in effect, demonstrated recoveries to itself, and that self-generated data is exactly the part of the distribution human teleoperation is worst at covering. This is why RL-from-experience and imitation are complements rather than rivals: imitation gets the robot into the neighborhood of competence cheaply, and RL cleans up the long tail of failures that no reasonable amount of extra teleoperation would have reached. The cost, and there is always a cost, is that on-robot RL is slow and finicky in ways a simulator hides, which is a thread §13.5 picks up.
+
+## π0.7: steerability
+
+By early 2026 the lineage had a generalist that could act in new homes and improve from its own runs. The remaining complaint from operators was control: a capable generalist that does roughly the right thing is hard to correct when you want the shirt folded a particular way, or the table cleared in a particular order. π0.7 (Physical Intelligence, 2026) foregrounds steerability, keeping the generalist competence while making the model take direction, so that a human instruction actually redirects behavior at a finer grain than "which task" and closer to "how, exactly."
+
+> TODO: π0.6 and π0.7 have no arXiv IDs in SOURCES_INDEX.txt or the TOC; the TOC lists only "Physical Intelligence subsequent technical reports (2025)." Cited above by org and year. Confirm canonical titles and any arXiv IDs before this chapter goes to editorial, and verify the π0.7 date (drafting from the field-tracking note dated 2026-07-23, which places π0.7 around April 2026).
+
+## The through-line
+
+Read the four models as one argument and the shape is clear. π0 proved a flow-matching continuous head could do dexterous, long-horizon manipulation that token heads could not. π0.5 showed the bottleneck on generalization was backbone data, not the action head, and fixed it by co-training on the non-robot world. π0.6 showed the bottleneck on reliability was imitation's ceiling, and fixed it with RL on the robot's own experience. π0.7 turned a capable generalist into a controllable one. None of these threw away the previous step; each kept the flow-matching engine from §13.3 and changed what was stacked around it. That is a healthier pattern than the field's usual habit of replacing the whole model every six months, and it is a useful thing for a student to notice early: the durable contribution here is the action head, and almost everything after π0 is a data-and-training story wrapped around it.
+
+Which raises the obvious next question. If the flow-matching head is so durable, what does it still not do, and where are the open problems that the π0 lineage has papered over rather than solved? That is §13.5.
