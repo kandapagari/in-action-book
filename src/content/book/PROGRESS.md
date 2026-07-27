@@ -212,9 +212,9 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 #### Chapter 13. Smooth control: π0 and flow-matching action heads
 
-- [ ] 13.1 The trouble with discrete action tokens
-- [ ] 13.2 π0's architecture, end to end
-- [ ] 13.3 Flow matching as a control objective
+- [x] 13.1 The trouble with discrete action tokens
+- [x] 13.2 π0's architecture, end to end
+- [x] 13.3 Flow matching as a control objective
 - [ ] 13.4 What π0 can do that earlier VLAs cannot — and the π0.5 → π0.6 → π0.7 lineage (open-world generalization, RL-from-experience, steerable generalist behavior)
 - [ ] 13.5 Open questions in continuous-action foundation models
 - [ ] 13.6 Summary
@@ -374,3 +374,6 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-24 — drafted §12.5 What "emergent" really means in this context (~1732 words)
 - 2026-07-24 — drafted §12.6 Summary (~1920 words)
 - 2026-07-24 — drafted §12.x Hands-on exercise + chapter references (~1990 words)
+- 2026-07-27 — drafted §13.1 The trouble with discrete action tokens (~1580 words)
+- 2026-07-27 — drafted §13.2 π0's architecture, end to end (~1575 words)
+- 2026-07-27 — drafted §13.3 Flow matching as a control objective (~1605 words)
