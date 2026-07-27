@@ -436,17 +436,17 @@
     },
     "13.4": {
       "chapter": 13,
-      "char_count": 10783,
-      "content_hash": "56988f54dd9e12d0a65df68b3fde94019d9d3f6dfd0441181ec1d6758efffdd6",
-      "duration_seconds": 663.22,
+      "char_count": 11231,
+      "content_hash": "c477f6eda82d4af4971d2ca569fe88b0822a31838bf22396aebaadb2a591db48",
+      "duration_seconds": 686.28,
       "file": "/audio/chapter-13/section-13_4.mp3",
-      "file_size_bytes": 5306541,
-      "generated_at": "2026-07-27T09:28:06+00:00",
+      "file_size_bytes": 5491053,
+      "generated_at": "2026-07-27T09:38:46+00:00",
       "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-13/section-13_4.mp3",
       "section": "13.4",
       "title": "What \u03c00 can do that earlier VLAs cannot \u2014 and the \u03c00.5 \u2192 \u03c00.6 \u2192 \u03c00.7 lineage",
       "voice": "af_heart",
-      "word_count": 1834
+      "word_count": 1895
     },
     "13.5": {
       "chapter": 13,
@@ -1261,7 +1261,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-07-27T09:28:22+00:00",
+  "generated_at": "2026-07-27T09:38:46+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
