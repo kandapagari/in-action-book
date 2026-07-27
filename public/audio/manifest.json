@@ -392,6 +392,104 @@
       "voice": "af_heart",
       "word_count": 2010
     },
+    "13.1": {
+      "chapter": 13,
+      "char_count": 9436,
+      "content_hash": "b05be147442643087f7e8ef822bfd4b2cf6c9e7b5f4bbae1836fc525a0d44ecf",
+      "duration_seconds": 584.55,
+      "file": "/audio/chapter-13/section-13_1.mp3",
+      "file_size_bytes": 4677165,
+      "generated_at": "2026-07-27T09:22:54+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-13/section-13_1.mp3",
+      "section": "13.1",
+      "title": "The trouble with discrete action tokens",
+      "voice": "af_heart",
+      "word_count": 1604
+    },
+    "13.2": {
+      "chapter": 13,
+      "char_count": 9468,
+      "content_hash": "2f0aa4d72dd1aeca0f41c58db9d02d8c80aa8c0e4c3c2ef47f5a4a1e596bc8bb",
+      "duration_seconds": 570.38,
+      "file": "/audio/chapter-13/section-13_2.mp3",
+      "file_size_bytes": 4563693,
+      "generated_at": "2026-07-27T09:22:58+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-13/section-13_2.mp3",
+      "section": "13.2",
+      "title": "\u03c00's architecture, end to end",
+      "voice": "af_heart",
+      "word_count": 1603
+    },
+    "13.3": {
+      "chapter": 13,
+      "char_count": 9412,
+      "content_hash": "50c63deb4b2f3d249243a1ca2a81824744592dea599f301bc337662c5ce32603",
+      "duration_seconds": 570.36,
+      "file": "/audio/chapter-13/section-13_3.mp3",
+      "file_size_bytes": 4563501,
+      "generated_at": "2026-07-27T09:23:01+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-13/section-13_3.mp3",
+      "section": "13.3",
+      "title": "Flow matching as a control objective",
+      "voice": "af_heart",
+      "word_count": 1615
+    },
+    "13.4": {
+      "chapter": 13,
+      "char_count": 10783,
+      "content_hash": "56988f54dd9e12d0a65df68b3fde94019d9d3f6dfd0441181ec1d6758efffdd6",
+      "duration_seconds": 663.22,
+      "file": "/audio/chapter-13/section-13_4.mp3",
+      "file_size_bytes": 5306541,
+      "generated_at": "2026-07-27T09:28:06+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-13/section-13_4.mp3",
+      "section": "13.4",
+      "title": "What \u03c00 can do that earlier VLAs cannot \u2014 and the \u03c00.5 \u2192 \u03c00.6 \u2192 \u03c00.7 lineage",
+      "voice": "af_heart",
+      "word_count": 1834
+    },
+    "13.5": {
+      "chapter": 13,
+      "char_count": 9885,
+      "content_hash": "c68c7fd4ab8deafda48cdfe95b9318368857409f26783ca414d105f9f18e5434",
+      "duration_seconds": 598.88,
+      "file": "/audio/chapter-13/section-13_5.mp3",
+      "file_size_bytes": 4791789,
+      "generated_at": "2026-07-27T09:28:10+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-13/section-13_5.mp3",
+      "section": "13.5",
+      "title": "Open questions in continuous-action foundation models",
+      "voice": "af_heart",
+      "word_count": 1671
+    },
+    "13.6": {
+      "chapter": 13,
+      "char_count": 11568,
+      "content_hash": "4d29c5f68267edf6efdca8a0bfd84cfb58e180c157cf83a5a43cf73347ccc18d",
+      "duration_seconds": 703.72,
+      "file": "/audio/chapter-13/section-13_6.mp3",
+      "file_size_bytes": 5630445,
+      "generated_at": "2026-07-27T09:28:16+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-13/section-13_6.mp3",
+      "section": "13.6",
+      "title": "Summary",
+      "voice": "af_heart",
+      "word_count": 1922
+    },
+    "13.x": {
+      "chapter": 13,
+      "char_count": 11407,
+      "content_hash": "09cc6babc80405ff017928091ef67931fb441ea4688f592cf8a3a952aa86a02f",
+      "duration_seconds": 707.55,
+      "file": "/audio/chapter-13/section-13_x.mp3",
+      "file_size_bytes": 5661165,
+      "generated_at": "2026-07-27T09:28:22+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-13/section-13_x.mp3",
+      "section": "13.x",
+      "title": "Hands-on exercise + chapter references",
+      "voice": "af_heart",
+      "word_count": 1972
+    },
     "2.1": {
       "chapter": 2,
       "char_count": 9334,
@@ -1163,7 +1261,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-07-24T09:46:49+00:00",
+  "generated_at": "2026-07-27T09:28:22+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
