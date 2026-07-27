@@ -215,10 +215,10 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 13.1 The trouble with discrete action tokens
 - [x] 13.2 π0's architecture, end to end
 - [x] 13.3 Flow matching as a control objective
-- [ ] 13.4 What π0 can do that earlier VLAs cannot — and the π0.5 → π0.6 → π0.7 lineage (open-world generalization, RL-from-experience, steerable generalist behavior)
-- [ ] 13.5 Open questions in continuous-action foundation models
-- [ ] 13.6 Summary
-- [ ] 13.x Hands-on exercise + chapter references
+- [x] 13.4 What π0 can do that earlier VLAs cannot — and the π0.5 → π0.6 → π0.7 lineage (open-world generalization, RL-from-experience, steerable generalist behavior)
+- [x] 13.5 Open questions in continuous-action foundation models
+- [x] 13.6 Summary
+- [x] 13.x Hands-on exercise + chapter references
 
 #### Chapter 14. Dual-system architectures: Helix and GR00T N1
 
@@ -377,3 +377,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-27 — drafted §13.1 The trouble with discrete action tokens (~1580 words)
 - 2026-07-27 — drafted §13.2 π0's architecture, end to end (~1575 words)
 - 2026-07-27 — drafted §13.3 Flow matching as a control objective (~1605 words)
+- 2026-07-27 — drafted §13.4 What π0 can do that earlier VLAs cannot (π0.5→π0.6→π0.7 lineage) (~1810 words)
+- 2026-07-27 — drafted §13.5 Open questions in continuous-action foundation models (~1770 words)
+- 2026-07-27 — drafted §13.6 Summary (~1894 words)
+- 2026-07-27 — drafted §13.x Hands-on exercise + chapter references (~1840 words)
