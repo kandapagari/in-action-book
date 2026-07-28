@@ -490,6 +490,104 @@
       "voice": "af_heart",
       "word_count": 1972
     },
+    "14.1": {
+      "chapter": 14,
+      "char_count": 9877,
+      "content_hash": "adcbc36df66dcde60e31669ccf871e44e33e355c72fc8583d03221ac15b0708f",
+      "duration_seconds": 590.93,
+      "file": "/audio/chapter-14/section-14_1.mp3",
+      "file_size_bytes": 4728045,
+      "generated_at": "2026-07-28T09:16:19+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_1.mp3",
+      "section": "14.1",
+      "title": "Why a single forward pass is not always enough",
+      "voice": "af_heart",
+      "word_count": 1755
+    },
+    "14.2": {
+      "chapter": 14,
+      "char_count": 9027,
+      "content_hash": "251a0fbfc12c25860964d8621f3aa71a87894e4b238af9cfb126172e4e0fb7fe",
+      "duration_seconds": 556.52,
+      "file": "/audio/chapter-14/section-14_2.mp3",
+      "file_size_bytes": 4452909,
+      "generated_at": "2026-07-28T09:16:22+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_2.mp3",
+      "section": "14.2",
+      "title": "Helix: a high-level VLM and a low-level sensorimotor model",
+      "voice": "af_heart",
+      "word_count": 1542
+    },
+    "14.3": {
+      "chapter": 14,
+      "char_count": 9556,
+      "content_hash": "4637b8c9f7f7e15cc1468bc7834bf30adbe7be3d123f162205bc8f7eb46f2be2",
+      "duration_seconds": 599.62,
+      "file": "/audio/chapter-14/section-14_3.mp3",
+      "file_size_bytes": 4797741,
+      "generated_at": "2026-07-28T09:16:26+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_3.mp3",
+      "section": "14.3",
+      "title": "GR00T N1 and its N1.5\u2013N1.7 successors: humanoid-flavored dual systems",
+      "voice": "af_heart",
+      "word_count": 1603
+    },
+    "14.4": {
+      "chapter": 14,
+      "char_count": 10378,
+      "content_hash": "1754607ce25b8e33491295c1ec3ddbed16b4c61bd59d20c8fb69bacf9dc3ac84",
+      "duration_seconds": 625.53,
+      "file": "/audio/chapter-14/section-14_4.mp3",
+      "file_size_bytes": 5004909,
+      "generated_at": "2026-07-28T09:16:30+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_4.mp3",
+      "section": "14.4",
+      "title": "Latency budgets and real-time control",
+      "voice": "af_heart",
+      "word_count": 1795
+    },
+    "14.5": {
+      "chapter": 14,
+      "char_count": 9716,
+      "content_hash": "d161b6728b8bb680b37c0e6d5faa98816ccc92f45da3ef9a6f068e98666d2745",
+      "duration_seconds": 593.42,
+      "file": "/audio/chapter-14/section-14_5.mp3",
+      "file_size_bytes": 4748013,
+      "generated_at": "2026-07-28T09:16:33+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_5.mp3",
+      "section": "14.5",
+      "title": "Deployment case studies",
+      "voice": "af_heart",
+      "word_count": 1644
+    },
+    "14.6": {
+      "chapter": 14,
+      "char_count": 14046,
+      "content_hash": "7db82595886487fdd2235d5403855b4d52b5b21cd49b93f1a0451c790a9f622b",
+      "duration_seconds": 866.99,
+      "file": "/audio/chapter-14/section-14_6.mp3",
+      "file_size_bytes": 6936621,
+      "generated_at": "2026-07-28T09:16:40+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_6.mp3",
+      "section": "14.6",
+      "title": "Summary",
+      "voice": "af_heart",
+      "word_count": 2374
+    },
+    "14.x": {
+      "chapter": 14,
+      "char_count": 11024,
+      "content_hash": "a7693e9bb574ac1fc88995b19b7b43f990e3c50da536fc01a3420071a1815d56",
+      "duration_seconds": 684.34,
+      "file": "/audio/chapter-14/section-14_x.mp3",
+      "file_size_bytes": 5475501,
+      "generated_at": "2026-07-28T09:16:46+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_x.mp3",
+      "section": "14.x",
+      "title": "Hands-on exercise + chapter references",
+      "voice": "af_heart",
+      "word_count": 1873
+    },
     "2.1": {
       "chapter": 2,
       "char_count": 9334,
@@ -1261,7 +1359,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-07-27T09:38:46+00:00",
+  "generated_at": "2026-07-28T09:16:46+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
