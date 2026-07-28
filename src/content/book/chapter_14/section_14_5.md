@@ -1,0 +1,52 @@
+---
+chapter: 14
+section: 14.5
+title: "Deployment case studies"
+target_words: 2000
+status: draft
+prereqs: §14.2 (Helix's two-system split, the continuous latent channel, and the System 0 whole-body controller in Helix-02), §14.3 (GR00T N1 and the N1.5–N1.7 lineage, the diffusion action head, and the EgoScale video corpus), §14.4 (the latency budget and why worst-case jitter, not mean throughput, decides whether a stack ships).
+key_refs:
+  - Figure AI (2025). Helix, A Vision-Language-Action Model for Generalist Humanoid Control. figure.ai/news/helix.
+  - Figure AI (2026). Helix-02. figure.ai/news/helix-02.
+  - Bjorck, J. et al. (2025). GR00T N1, An Open Foundation Model for Generalist Humanoid Robots. arXiv:2503.14734.
+---
+
+# 14.5  Deployment case studies
+
+The last four sections built the dual-system idea up from an argument to a latency budget. This one turns it around and asks the only question a factory manager cares about: does it hold up over a full shift, on a real robot, doing real work? A demo runs for ninety seconds under good lighting with an engineer's thumb near the stop button. Deployment means eight hours, a thousand repetitions, a floor that gets cluttered, and nobody watching most of the time. The gap between those two things is where most robot-learning results quietly die, so it is worth looking hard at the few systems that have crossed it.
+
+## Figure at BMW: the same task, ten thousand times
+
+Figure's most-cited deployment is not the kitchen demo from §14.2. It is the work its humanoids did on a BMW line at the Spartanburg plant in South Carolina, where the robots were put on a real manufacturing station rather than a staged one. The task was deliberately unglamorous: take sheet-metal parts and place them into fixtures, the kind of load-and-position job that sits at the boring end of automotive assembly and the hard end of robot manipulation, because the parts are heavy, the tolerances are tight, and the fixture will not forgive a placement that is two centimeters off.
+
+What makes this a useful case study is the mismatch between how simple the task looks and how much of the chapter it exercises. Placing a part into a fixture is a contact-rich operation with a short reaction window: the moment the part touches the fixture edge, the robot has tens of milliseconds to feel the contact and adjust before it either seats the part or jams it. That is System 1 territory, the fast loop from §14.4 reacting to wrist-force readings, and it is exactly the kind of event a 7 Hz single-system policy would sail straight through. Meanwhile the decision of which part, which fixture, in which order lives on the slow clock, where the VLM has time to reason about a scene that changes as the line moves. The Spartanburg task needed both clocks for the same reason the chapter has spent four sections insisting most useful tasks do.
+
+The number that matters here is not success rate on a good run; it is consistency across a bad one. Figure's public framing stressed running the same station repeatedly rather than nailing a single flashy attempt, and that emphasis is the right one. A policy that succeeds 95% of the time looks great in a highlight reel and is a disaster on a line that expects one part every few seconds, because a 5% failure rate is a jam every twenty parts, and a jam stops the line. This is why the deployment bar is so much higher than the benchmark bar from Chapter 15's world. LIBERO does not dock you for the twentieth repetition; a production line does nothing but count it.
+
+## From upper body to whole body: what Helix-02 changed on the floor
+
+Section 14.2 described Helix-02's System 0, the learned whole-body controller that replaced roughly 100,000 lines of hand-written C++ locomotion. For deployment that change is more than an architecture note, because the old hand-coded controller was the part of the stack an engineer could reason about line by line and certify by hand. Swapping it for a learned policy means the balance layer is now as opaque as the manipulation layer, and it moves right up against the certification problem §17.5 takes up: you cannot read a neural whole-body controller's source to prove it will not step wrong, so you are back to measuring behavior over long runs rather than proving properties.
+
+The payoff Figure claims for absorbing locomotion into the learned stack is that the whole body now coordinates under one set of learned objectives, so the robot can lean, shift weight, and use its legs as part of a manipulation rather than treating them as a separate balancing problem bolted underneath. Whether that coordination survives a full shift is precisely the thing a deployment tests and a demo cannot. The May 2026 leaderless demonstration, two robots tidying a bedroom with no central planner and no designated leader, is the clearest public evidence that the whole-body stack runs long enough and stably enough to let two of them negotiate a shared task in real time. It is still a demonstration, not a shift on a line, and the honest reading is that Figure has shown the coordination works and has not yet shown it works for eight hours straight.
+
+## GR00T on many bodies: the reference-hardware bet
+
+NVIDIA's deployment story is shaped differently, and the difference follows from §14.3. Figure builds one robot and one policy and deploys them together. NVIDIA does not build the robot at all; it ships GR00T as a foundation model other people run on their humanoids, which means "deployment" for GR00T means the same weights, adapted, landing on a range of hardware from different manufacturers. Unitree's G1 is the most common target in public examples, and NVIDIA pairs the model with its Isaac simulation stack so that a new robot can be brought up largely in simulation before it touches the physical machine.
+
+By the time N1.7 reached general availability in mid-2026, that portability was the whole pitch. A lab with a humanoid and a modest teleoperation budget could start from N1.7's weights, fine-tune on a few hundred demonstrations of its own task, and get a working policy without training a foundation model from scratch, which no academic lab can afford. The EgoScale corpus from §14.3, on the order of 20,000 hours of first-person human video baked into the low-level controller, is what makes that fine-tuning cheap: most of the manipulation prior is already in the base model, so the lab's teleop data only has to teach the specifics of its embodiment and task. This is a different bet from Figure's. Figure optimizes one stack end to end for one robot; NVIDIA optimizes for a base model that transfers, and accepts that a transferred policy on someone else's robot will rarely match a purpose-built one.
+
+Both bets are defensible, and they answer to different buyers. If you are Figure and you sell a humanoid as a product, the vertically integrated stack is the thing you can guarantee. If you are a research group or a startup that already owns a G1 and cannot spend a year collecting teleoperation data, a transferable foundation model is the only door that opens at all.
+
+## The dexterity entrants: a narrower, harder target
+
+Helix and GR00T aim at whole humanoids doing whole tasks. A second wave of foundation models has picked a narrower and in some ways nastier target: the hands. Genesis AI's GENE line (the 2026 GENE-26.5 release is the current public one) and RLWRLD's RLDX-1 are both foundation models built specifically around dexterous manipulation, the fine finger-level control that even the best humanoid stacks still do worse than a distracted human toddler.
+
+Dexterity is a good case study to close on because it is where the deployment gap is widest and most honest. A humanoid can look impressive walking across a room; a hand folding a shirt or seating a small connector exposes every weakness in the fast loop at once. The contact events are denser, the reaction windows shorter, and the consequences of a millisecond-late correction more visible, so a dexterity-first model is under more pressure on exactly the §14.4 budget than a locomotion-first one. Reported results from these models are improving quickly and are still, by their own creators' framing, below reliable human-level dexterity on open-ended tasks. That honesty is worth taking seriously rather than reading as a failure: it is the field telling you where the frontier actually is, which is not "can a robot walk" but "can a robot's hand recover when the object squirts sideways at the last instant."
+
+A related deployment signal comes from the portability end. LingBot-VLA 2.0, released open-source in mid-2026, is reported to run one policy unmodified across twenty robot morphologies from seventeen manufacturers, trained on 60,000 hours of mostly-teleoperation data. Whatever the eventual verdict on its per-task quality, the fact that a single set of weights can be dropped onto that many different bodies at all is the strongest evidence yet that the cross-embodiment problem from §18.1 is starting to soften, and it is the kind of result that only shows up once a design leaves the lab and gets stress-tested on hardware nobody in the original team owns.
+
+## What the case studies actually teach
+
+Step back from the individual robots and a pattern falls out. Every deployment that has held up shares the shape this chapter argued for: a slow reasoner that ages gracefully, a fast controller that meets a hard deadline, and an asynchronous seam between them that never lets the fast loop block on the slow one. None of the field results contradict the latency accounting from §14.4; if anything they sharpen it, because the failures that show up over a full shift are jitter failures and contact-timing failures, the ones the budget predicts, not reasoning failures. The slow half was rarely the thing that broke. The fast half, run for hours against sensors that drift and objects that misbehave, is where deployment lives or dies.
+
+The other lesson is quieter and it is about honesty. The teams whose claims have aged well are the ones that reported repetition counts and shift lengths rather than best-of-N successes, and that admitted where dexterity still falls short of a human hand. The next section pulls these threads together into the four things you should now be able to do with a dual-system design, from sizing the two clocks to reading a deployment claim for the number that actually matters.
