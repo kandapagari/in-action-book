@@ -222,13 +222,13 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 #### Chapter 14. Dual-system architectures: Helix and GR00T N1
 
-- [ ] 14.1 Why a single forward pass is not always enough
-- [ ] 14.2 Helix: a high-level VLM and a low-level sensorimotor model — through Helix-02's "System 0" whole-body controller (replacing hand-coded locomotion) and leaderless multi-robot coordination
-- [ ] 14.3 GR00T N1 and its N1.5–N1.7 successors: humanoid-flavored dual systems — plus Gemini Robotics-ER as a third family (embodied reasoning + VLA, "Embodied Thinking," Motion Transfer)
-- [ ] 14.4 Latency budgets and real-time control
-- [ ] 14.5 Deployment case studies (Figure Helix-02, GR00T-enabled humanoids, dexterity-focused entrants such as Genesis AI's GENE and RLWRLD's RLDX-1)
-- [ ] 14.6 Summary
-- [ ] 14.x Hands-on exercise + chapter references
+- [x] 14.1 Why a single forward pass is not always enough
+- [x] 14.2 Helix: a high-level VLM and a low-level sensorimotor model — through Helix-02's "System 0" whole-body controller (replacing hand-coded locomotion) and leaderless multi-robot coordination
+- [x] 14.3 GR00T N1 and its N1.5–N1.7 successors: humanoid-flavored dual systems — plus Gemini Robotics-ER as a third family (embodied reasoning + VLA, "Embodied Thinking," Motion Transfer)
+- [x] 14.4 Latency budgets and real-time control
+- [x] 14.5 Deployment case studies (Figure Helix-02, GR00T-enabled humanoids, dexterity-focused entrants such as Genesis AI's GENE and RLWRLD's RLDX-1)
+- [x] 14.6 Summary
+- [x] 14.x Hands-on exercise + chapter references
 
 #### Chapter 15. Datasets, benchmarks, and evaluation
 
@@ -381,3 +381,10 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-27 — drafted §13.5 Open questions in continuous-action foundation models (~1770 words)
 - 2026-07-27 — drafted §13.6 Summary (~1894 words)
 - 2026-07-27 — drafted §13.x Hands-on exercise + chapter references (~1840 words)
+- 2026-07-28 — drafted §14.1 Why a single forward pass is not always enough (~1740 words)
+- 2026-07-28 — drafted §14.2 Helix: a high-level VLM and a low-level sensorimotor model (~1543 words)
+- 2026-07-28 — drafted §14.3 GR00T N1 and its N1.5–N1.7 successors + Gemini Robotics-ER (~1595 words)
+- 2026-07-28 — drafted §14.4 Latency budgets and real-time control (~1791 words)
+- 2026-07-28 — drafted §14.5 Deployment case studies (Figure/BMW, GR00T, GENE/RLDX-1) (~1656 words)
+- 2026-07-28 — drafted §14.6 Summary (~2359 words)
+- 2026-07-28 — drafted §14.x Hands-on exercise + chapter references (~1835 words)
