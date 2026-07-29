@@ -55,6 +55,34 @@ No further configuration is needed. The build reads `../book/` at build
 time, so committing new section markdown is the only thing required to ship
 a new section.
 
+## Connect the MCP server
+
+The build also emits a remote, read-only **MCP** endpoint as a Vercel
+serverless function (`prerender = false`), so any AI agent can read and
+search the whole book from one URL — no install, always current:
+
+```
+https://action-models-book.vercel.app/api/mcp/
+```
+
+It exposes four read-only tools (`get_table_of_contents`, `get_section`,
+`get_chapter`, `search`). To connect Cursor, add the server to
+`~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "action-models-book": {
+      "url": "https://action-models-book.vercel.app/api/mcp/"
+    }
+  }
+}
+```
+
+The `/mcp/` page on the site has copy-paste snippets for Cursor, Claude
+Desktop (via the `mcp-remote` bridge), and other clients. No environment
+variables or storage are needed — the endpoint is stateless and public.
+
 ## Google Search Console
 
 The site is built to be discoverable: each page has a canonical URL, the
