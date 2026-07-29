@@ -27,7 +27,11 @@ import { Redis } from '@upstash/redis';
 
 let _redis: Redis | null = null;
 
-function getRedis(): Redis {
+// Exported so the newsletter store (src/lib/newsletter.ts) reuses the same
+// lazily-created client rather than duplicating the env-var plumbing. Note:
+// the newsletter treats a missing store as a hard error (it lets this throw),
+// whereas the view counter swallows it in `withKv` for graceful degradation.
+export function getRedis(): Redis {
   if (_redis) return _redis;
   const url = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN;

@@ -1,0 +1,45 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
+---
+
+<SiteLayout
+  title="Subscribe — Action Models for Robot Learning"
+  description="Get each complete chapter of the open-access textbook Action Models for Robot Learning by email, as it is drafted."
+  currentPath="other"
+>
+  <main class="toc-page">
+    <h1>Read the book by email</h1>
+
+    <p class="lede">
+      One complete chapter a week, in your inbox, as the book is drafted openly.
+    </p>
+
+    <p>
+      Subscribe and you&rsquo;ll start at Chapter&nbsp;1 and receive the next
+      finished chapter each week until you&rsquo;re caught up. After that, a new
+      email arrives only when a newly drafted chapter is complete &mdash; never
+      more than one a week, and nothing in between. Each email carries a short
+      teaser and links to read the full chapter on the site.
+    </p>
+
+    <NewsletterSignup />
+
+    <p class="nl-privacy">
+      Double opt-in: you&rsquo;ll get a confirmation email first, and you&rsquo;re
+      only added once you click the link inside it. Your address is used for this
+      list and nothing else &mdash; no tracking, no sharing &mdash; and every
+      email has a one-click unsubscribe link in the footer.
+    </p>
+  </main>
+</SiteLayout>
+
+<style>
+  .nl-privacy {
+    font-family: var(--font-sans);
+    font-size: var(--fs-small);
+    color: var(--muted);
+    max-width: 32rem;
+    margin-top: 2rem;
+  }
+</style>
