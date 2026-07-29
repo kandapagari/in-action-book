@@ -76,7 +76,7 @@ Efficiency here is not academic. A single Bridge image is a quarter-megabyte bef
 
 ## Simulation datasets look almost the same
 
-Everything above described real robot data, teleoperated by humans on physical arms. A large share of the benchmarks you will meet in §15.3 are simulated instead, and the reassuring news is that a simulated episode has the identical shape: observations, actions, a language instruction, terminal flags. LIBERO (Liu et al., 2023), the benchmark Chapter 2 already ran OpenVLA against, serves episodes that slot into the same data loader as Bridge with barely a change.
+Everything above described real robot data, teleoperated by humans on physical arms. A large share of the benchmarks you will meet in §15.4 are simulated instead, and the reassuring news is that a simulated episode has the identical shape: observations, actions, a language instruction, terminal flags. LIBERO (Liu et al., 2023), the benchmark Chapter 2 already ran OpenVLA against, serves episodes that slot into the same data loader as Bridge with barely a change.
 
 The differences are two, and they matter for opposite reasons. Simulated data is cheap and clean: no teleoperator fatigue, no camera calibration drift, perfectly consistent labels, and you can generate ten thousand episodes overnight instead of paying humans for a month. Simulated data is also fake in ways that leak: the physics of contact and friction are approximated, the rendered images carry a visual signature no real camera produces, and a policy that only ever saw simulation frames tends to stumble on the sim-to-real gap we first hit in §7.5. The dataset format is portable across the sim-real boundary. The competence a policy learns from it is not.
 
