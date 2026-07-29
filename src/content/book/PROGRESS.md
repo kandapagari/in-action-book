@@ -234,10 +234,11 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 - [x] 15.1 What a robot dataset looks like, by example
 - [x] 15.2 Open X-Embodiment in detail — and what has (and has not) succeeded it: large teleop fleets (AGIBot Genie-1, bimanual YAM, Unitree G1) feeding newer foundation models rather than a single branded dataset
-- [ ] 15.3 Sim benchmarks (LIBERO, CALVIN, RoboCasa, SimplerEnv) and red-team-style suites such as RoboArena
-- [ ] 15.4 Real-robot evaluation: variance, success rate, time-to-completion
-- [ ] 15.5 Building your own evaluation
-- [ ] 15.6 Summary
+- [x] 15.3 LeRobot: Hugging Face's dataset format, hub, and community-contributed robot data
+- [ ] 15.4 Sim benchmarks (LIBERO, CALVIN, RoboCasa, SimplerEnv) and red-team-style suites such as RoboArena
+- [ ] 15.5 Real-robot evaluation: variance, success rate, time-to-completion
+- [ ] 15.6 Building your own evaluation
+- [ ] 15.7 Summary
 - [ ] 15.x Hands-on exercise + chapter references
 
 ### Part 5 — Building with action models
@@ -390,3 +391,4 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-28 — drafted §14.x Hands-on exercise + chapter references (~1835 words)
 - 2026-07-29 — drafted §15.1 What a robot dataset looks like, by example (~1812 words)
 - 2026-07-29 — drafted §15.2 Open X-Embodiment in detail (and its fleet-scale successors) (~1610 words)
+- 2026-07-29 — drafted §15.3 LeRobot: Hugging Face's dataset format, hub, and community data (~1750 words)
