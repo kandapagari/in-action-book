@@ -1,0 +1,53 @@
+---
+chapter: 15
+section: 15.2
+title: "Open X-Embodiment in detail — and what has (and has not) succeeded it"
+target_words: 2000
+status: draft
+prereqs: §15.1 (a single episode's anatomy — this section scales that one pile of dictionaries up to sixty of them and shows what breaks), §12.4 (Open X-Embodiment introduced at a high level, and the RT-X result), §5.5 (the MDP-to-robot translation problem, which is exactly the harmonization problem here). Helpful, §11.3 on action tokenization and §12.2 on OpenVLA, both of which trained on this corpus.
+key_refs:
+  - Open X-Embodiment Collaboration, Padalkar, A. et al. (2023). Open X-Embodiment, Robotic Learning Datasets and RT-X Models. arXiv:2310.08864.
+  - Vision-Language-Action in Robotics, A Survey of Datasets, Benchmarks, and Data Engines (2026). arXiv:2604.23001.
+---
+
+# 15.2  Open X-Embodiment in detail — and what has (and has not) succeeded it
+
+Section 15.1 took one episode apart. This section takes sixty datasets and asks the harder question: what does it take to train a single policy across all of them at once, when each one was collected by a different lab, on a different robot, under a different set of conventions? Open X-Embodiment (OXE, arXiv:2310.08864) is the answer the field converged on, and it is worth understanding in detail, because almost every open VLA you met in Part 4 was pretrained on some slice of it. OpenVLA's 970,000 trajectories came from here. Octo's mixture came from here. When a paper says "we pretrained on the OXE mixture," it is leaning on the plumbing this section describes.
+
+## What is actually in the pool
+
+OXE is not a dataset in the way BridgeData V2 is a dataset. It is an aggregation: roughly sixty pre-existing datasets, contributed by twenty-one institutions, pooled into one place and re-serialized into a common format. The 2023 release covered twenty-two distinct robot embodiments and more than a million real robot trajectories, spanning something like five hundred skills across the whole collection. The embodiments range from the WidowX arm that recorded Bridge, through Google's mobile manipulators, to Franka Pandas, xArms, and a handful of stranger platforms. No single lab could have collected this. The whole point of pooling was that nobody had to.
+
+The reason anyone bothered pooling is the RT-X result, which §12.4 stated and this section can now explain. Train a policy on one robot's data and it learns that robot. Train the same architecture on the pooled data from twenty-two robots and, on several of the contributing platforms, it does *better* on that platform's own tasks than a policy trained only on that platform's data. The RT-1-X and RT-2-X models in the OXE paper showed roughly a 50% improvement in success rate on the evaluated embodiments over models trained in isolation. That is positive transfer across robots, and before OXE it was not obvious it would happen at all. A skill learned on a Franka should not, on the face of it, help a WidowX; the arms have different kinematics, different cameras, different grippers. It helps anyway, because the visual and semantic structure of "pick up the object the instruction names" is shared even when the hardware is not.
+
+## The harmonization problem, concretely
+
+Here is where §15.1's warning about silent disagreements comes due. Sixty datasets meant sixty ways of writing down an action, an observation, and an instruction, and you cannot feed a model contradictions and expect transfer. Someone had to force them into agreement. Three axes of disagreement did most of the damage.
+
+Action spaces first. Some datasets store absolute end-effector poses in the robot's base frame; others, like Bridge, store relative deltas in the end-effector frame. OXE's loader converts these toward a common convention so that the number 0.02 means the same physical thing across datasets. Get this wrong and the policy sees "move right" and "you are here" labeled identically, which teaches it nothing but noise. The gripper dimension is its own small nightmare: some datasets encode open as 1 and closed as 0, others invert it, others use a continuous width in meters. Every one of those has to be mapped to a single scale before training.
+
+Observations second. Bridge gives two cameras; RT-1's data gives one; some datasets carry depth, most do not; a few include multiple wrist views. A model with a fixed input structure cannot consume all of these as-is. OXE's practical answer was to standardize on a primary third-person camera present across most of the pool and treat everything else as optional, which is why models trained on it lean so heavily on a single external view. That decision quietly shaped what the resulting policies can and cannot see.
+
+Control rate and horizon third. A dataset logged at 3 Hz and one logged at 50 Hz describe the same reach with wildly different numbers of timesteps, and the actions at 50 Hz are each a sixteenth the size. The mixture does not fully resolve this; it mostly leaves rates as they are and lets the model average over them, which is one reason OXE-trained policies are smoother on some embodiments than others. Frequency mismatch is the harmonization problem OXE handled least cleanly, and it is worth knowing that going in.
+
+All of this rides on RLDS, the storage format §15.1 introduced. RLDS on top of TensorFlow Datasets is what let sixty piles become one streamable corpus, with per-dataset sampling weights so the loader can decide how often to draw from Bridge versus from a tiny two-hundred-episode contribution. Those weights are not neutral. A naive uniform sample would drown the small datasets, so the OXE mixtures ship with hand-tuned weights that down-weight the giants and up-weight the rare embodiments. When you read that a model used "the OXE magic soup mixture," those weights are the recipe, and they are as much a modeling choice as the architecture.
+
+## A worked slice
+
+Suppose you want to reproduce a smaller version of OpenVLA's pretraining on a laptop-scale budget. You do not pull all sixty datasets; you pull a mixture of maybe eight, chosen for coverage: Bridge and the Google robot data for volume, a Franka dataset or two for a different arm, RT-1's data for the language-conditioned tabletop core. You load them through the RLDS loader with the published sampling weights, and the loader hands you batches where consecutive examples might come from a WidowX in Berkeley and a mobile manipulator in a Google kitchen, already converted into the same action convention and cropped to the same primary camera. Your model never learns that these came from different labs. It sees one distribution. That erasure of provenance, done correctly, is the entire trick.
+
+## What has succeeded OXE, and what has not
+
+Here is the honest state of things as of mid-2026: there is no single branded successor to Open X-Embodiment. People expected an "OXE 2.0" with ten million trajectories to appear and anchor the next generation the way OXE anchored 2023 through 2024. It did not. What happened instead is that the center of gravity moved from *aggregating past academic datasets* to *collecting fresh data at fleet scale*, and that data tends to live with the group that collected it rather than in one shared pool.
+
+The growth now comes from large teleoperation fleets. AGIBot's Genie-1 program collected on the order of a million trajectories from a fleet of humanoid and bimanual robots operated in purpose-built data-collection facilities, not scraped from twenty-one labs but produced on an assembly line of human teleoperators. Bimanual rigs like the low-cost YAM arm and platforms like the Unitree G1 humanoid feed similar pipelines. The shape of a single episode is still exactly what §15.1 showed; the difference is industrial scale and central control of quality, which is precisely what a pooled academic corpus could never guarantee.
+
+One concrete example of where this leads. LingBot-VLA 2.0, released in July 2026 by Ant Group's robotics effort, is a 6-billion-parameter open-source VLA trained on roughly sixty thousand hours of data: about fifty thousand hours of real robot teleoperation plus ten thousand hours distilled from first-person human video. A single policy from that training runs unmodified across twenty robot morphologies from seventeen manufacturers, and its authors report beating π0.5 on a bimanual benchmark. Notice what that is: not a dataset anyone else can download and remix the way they remixed OXE, but a model whose training corpus is the moat. The data did not become a shared resource; it became a competitive asset.
+
+So OXE succeeded in the way influential infrastructure usually succeeds. Its dataset is now one contributor among many rather than the frontier, but its *conventions* won. RLDS serialization, cross-embodiment sampling weights, the action-harmonization discipline, the assumption that a generalist policy trains on many robots at once: all of that is now just how the field works, baked into loaders that newer fleets and models take for granted. The recent datasets-and-benchmarks survey (arXiv:2604.23001) catalogs dozens of these post-OXE corpora and data engines, and the through-line is that they all speak OXE's dialect even when they do not use OXE's data.
+
+For your own purposes this matters in a specific way. If you are pretraining from scratch, OXE plus a few newer public releases (standardized teleop sets like DROID, for instance) is still the most practical open starting mixture, because it is downloadable and the loader is battle-tested. If you only need to fine-tune, §16.2 will make the case that a few hundred episodes of your own robot, collected cleanly, beats any amount of somebody else's data, and OXE's role shrinks to whatever the base checkpoint already absorbed from it.
+
+## What you can do now
+
+You can explain why pooling sixty robot datasets improves performance on each one rather than diluting it, and cite RT-X's roughly 50% transfer gain as the evidence. You can name the three axes on which datasets silently disagree, and say what OXE did about each: convert action frames and gripper encodings, standardize on a primary camera, and mostly punt on control-rate mismatch. You know that RLDS plus tuned sampling weights are the actual mechanism, not a detail. And you can describe the post-OXE landscape accurately: no branded successor, but a shift to fleet-scale teleoperation whose data stays private while OXE's conventions became universal. The next section leaves real datasets for simulated ones and walks through the benchmarks, from LIBERO to SimplerEnv, that you will use to compare two policies without owning a robot.
