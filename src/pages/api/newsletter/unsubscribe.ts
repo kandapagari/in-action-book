@@ -12,6 +12,7 @@ export const GET: APIRoute = async ({ url }) => {
     return redirect('/newsletter/unsubscribed/');
   } catch (err) {
     if (err instanceof InvalidTokenError) return expiredLinkResponse();
+    console.error('[newsletter] unsubscribe failed:', err);
     return serverError();
   }
 };

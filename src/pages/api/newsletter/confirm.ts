@@ -12,6 +12,7 @@ export const GET: APIRoute = async ({ url }) => {
     return redirect('/newsletter/confirmed/');
   } catch (err) {
     if (err instanceof InvalidTokenError) return expiredLinkResponse();
+    console.error('[newsletter] confirm failed:', err);
     return serverError();
   }
 };

@@ -23,7 +23,8 @@ export const POST: APIRoute = async ({ request }) => {
       return jsonResponse({ error: 'invalid_email' }, 400);
     }
     // Missing Redis/Resend config or a delivery failure — a real 500, never a
-    // faked success.
+    // faked success. Log the true cause (never secrets) for Vercel runtime logs.
+    console.error('[newsletter] subscribe failed:', err);
     return jsonResponse({ error: 'subscribe_failed' }, 500);
   }
 };
