@@ -588,6 +588,34 @@
       "voice": "af_heart",
       "word_count": 1873
     },
+    "15.1": {
+      "chapter": 15,
+      "char_count": 10454,
+      "content_hash": "06aa72bdef8d8907d53457d7325e762dab0ead22cf5fd0dd6f1ffd361aad8d3e",
+      "duration_seconds": 654.42,
+      "file": "/audio/chapter-15/section-15_1.mp3",
+      "file_size_bytes": 5236077,
+      "generated_at": "2026-07-29T13:32:32+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-15/section-15_1.mp3",
+      "section": "15.1",
+      "title": "What a robot dataset looks like, by example",
+      "voice": "af_heart",
+      "word_count": 1774
+    },
+    "15.2": {
+      "chapter": 15,
+      "char_count": 9805,
+      "content_hash": "fbfd34088e77bfbf443e6cc133baf1176cb8e2c66c42afae4b56d97f1b737e59",
+      "duration_seconds": 611.2,
+      "file": "/audio/chapter-15/section-15_2.mp3",
+      "file_size_bytes": 4890285,
+      "generated_at": "2026-07-29T13:32:35+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-15/section-15_2.mp3",
+      "section": "15.2",
+      "title": "Open X-Embodiment in detail \u2014 and what has (and has not) succeeded it",
+      "voice": "af_heart",
+      "word_count": 1617
+    },
     "2.1": {
       "chapter": 2,
       "char_count": 9334,
@@ -1359,7 +1387,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-07-28T09:16:46+00:00",
+  "generated_at": "2026-07-29T13:32:35+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
