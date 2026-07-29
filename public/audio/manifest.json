@@ -591,11 +591,11 @@
     "15.1": {
       "chapter": 15,
       "char_count": 10454,
-      "content_hash": "06aa72bdef8d8907d53457d7325e762dab0ead22cf5fd0dd6f1ffd361aad8d3e",
-      "duration_seconds": 654.42,
+      "content_hash": "774b2602e7e42d056b2156d23b83d819b60e0af19784486c604be77c13212ba4",
+      "duration_seconds": 654.45,
       "file": "/audio/chapter-15/section-15_1.mp3",
-      "file_size_bytes": 5236077,
-      "generated_at": "2026-07-29T13:32:32+00:00",
+      "file_size_bytes": 5236269,
+      "generated_at": "2026-07-29T14:28:24+00:00",
       "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-15/section-15_1.mp3",
       "section": "15.1",
       "title": "What a robot dataset looks like, by example",
@@ -604,17 +604,31 @@
     },
     "15.2": {
       "chapter": 15,
-      "char_count": 9805,
-      "content_hash": "fbfd34088e77bfbf443e6cc133baf1176cb8e2c66c42afae4b56d97f1b737e59",
-      "duration_seconds": 611.2,
+      "char_count": 9955,
+      "content_hash": "d29feaaa5cdaf10d247d64593de8962dc2957516a18ccf06116f9738ebb73353",
+      "duration_seconds": 623.38,
       "file": "/audio/chapter-15/section-15_2.mp3",
-      "file_size_bytes": 4890285,
-      "generated_at": "2026-07-29T13:32:35+00:00",
+      "file_size_bytes": 4987821,
+      "generated_at": "2026-07-29T14:28:28+00:00",
       "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-15/section-15_2.mp3",
       "section": "15.2",
       "title": "Open X-Embodiment in detail \u2014 and what has (and has not) succeeded it",
       "voice": "af_heart",
-      "word_count": 1617
+      "word_count": 1642
+    },
+    "15.3": {
+      "chapter": 15,
+      "char_count": 10839,
+      "content_hash": "743a4bb9ef4a8138a156d40a502aa2581241ff59ef5f16726e3c489a5ef21ef2",
+      "duration_seconds": 695.08,
+      "file": "/audio/chapter-15/section-15_3.mp3",
+      "file_size_bytes": 5561325,
+      "generated_at": "2026-07-29T14:28:32+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-15/section-15_3.mp3",
+      "section": "15.3",
+      "title": "LeRobot: Hugging Face's dataset format, hub, and community-contributed robot data",
+      "voice": "af_heart",
+      "word_count": 1759
     },
     "2.1": {
       "chapter": 2,
@@ -1387,7 +1401,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-07-29T13:32:35+00:00",
+  "generated_at": "2026-07-29T14:28:32+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
