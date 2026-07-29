@@ -15,7 +15,8 @@ export const GET: APIRoute = async ({ request }) => {
   }
   try {
     return jsonResponse(await runCron());
-  } catch {
+  } catch (err) {
+    console.error('[newsletter] cron failed:', err);
     return jsonResponse({ error: 'cron_failed' }, 500);
   }
 };
