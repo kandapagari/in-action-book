@@ -142,6 +142,13 @@ response when no Redis credentials are set, and the UI keeps an em-dash
 placeholder. See [`DEPLOY.md`](./DEPLOY.md) → "View counter — Upstash
 Redis setup" for one-time configuration.
 
+## MCP server
+
+A remote, read-only MCP endpoint at `/api/mcp/` lets any AI agent read and
+search the whole book from one URL. The `/mcp/` page has copy-paste configs
+for Cursor, Claude Desktop, and other clients. See [`DEPLOY.md`](./DEPLOY.md)
+→ "Connect the MCP server".
+
 ## Cite this book
 
 A [`CITATION.cff`](./CITATION.cff) at the repo root drives GitHub's

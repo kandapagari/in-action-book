@@ -6,7 +6,7 @@ import SpeedInsights from '@vercel/speed-insights/astro';
 export interface Props {
   title: string;
   description?: string;
-  currentPath?: 'home' | 'contents' | 'about' | 'contact' | 'section' | 'search' | 'other';
+  currentPath?: 'home' | 'contents' | 'about' | 'contact' | 'section' | 'search' | 'mcp' | 'other';
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   noindex?: boolean;
 }
@@ -90,6 +90,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION a
         <a href="/about/" class={currentPath === 'about' ? 'is-current' : ''}>About</a>
         <a href="/contact/" class={currentPath === 'contact' ? 'is-current' : ''}>Contact</a>
         <a href="/search/" class={currentPath === 'search' ? 'is-current' : ''}>Search</a>
+        <a href="/mcp/" class={currentPath === 'mcp' ? 'is-current' : ''}>MCP</a>
         <button
           type="button"
           class="theme-toggle"
@@ -116,7 +117,7 @@ const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION a
       <div>
         <a href="/rss.xml">RSS</a> · <a href="/newsletter/">Subscribe</a> ·
         <a href="/contents/">Contents</a> ·
-        <a href="/about/">About</a> · <a href="/cite/">Cite</a>
+        <a href="/about/">About</a> · <a href="/cite/">Cite</a> · <a href="/mcp/">MCP</a>
       </div>
     </footer>
 

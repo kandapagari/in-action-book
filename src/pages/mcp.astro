@@ -1,0 +1,104 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const endpoint = 'https://action-models-book.vercel.app/api/mcp/';
+
+const cursorConfig = `{
+  "mcpServers": {
+    "action-models-book": {
+      "url": "https://action-models-book.vercel.app/api/mcp/"
+    }
+  }
+}`;
+
+const claudeConfig = `{
+  "mcpServers": {
+    "action-models-book": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://action-models-book.vercel.app/api/mcp/"]
+    }
+  }
+}`;
+---
+
+<SiteLayout
+  title="Use the book in your agent — Action Models for Robot Learning"
+  description="Connect Action Models for Robot Learning to your AI agent over MCP. A remote endpoint that lets Cursor, Claude, and other clients read and search the whole book."
+  currentPath="mcp"
+>
+  <main class="toc-page">
+    <h1>Use the book in your agent</h1>
+    <p class="lede">
+      Wire this book into your own AI agent — one URL, no install, always current.
+    </p>
+
+    <h2>What this is</h2>
+    <p>
+      A remote <abbr title="Model Context Protocol">MCP</abbr> endpoint that lets your AI agent
+      read and search the entire book — every drafted chapter, section, and appendix, plus the
+      table of contents — straight from the live site. Point your client at this URL:
+    </p>
+    <div class="cite-block">
+      <button type="button" class="cite-copy" data-copy-target="mcp-endpoint">Copy</button>
+      <pre><code id="mcp-endpoint">{endpoint}</code></pre>
+    </div>
+
+    <h2>Add it to Cursor</h2>
+    <p>
+      Add the server to <code>~/.cursor/mcp.json</code> (or a project&#8209;local
+      <code>.cursor/mcp.json</code>):
+    </p>
+    <div class="cite-block">
+      <button type="button" class="cite-copy" data-copy-target="mcp-cursor">Copy</button>
+      <pre><code id="mcp-cursor">{cursorConfig}</code></pre>
+    </div>
+
+    <h2>Add it to Claude Desktop / other clients</h2>
+    <p>
+      Clients that speak remote MCP natively can use the same <code>"url"</code> form shown above.
+      For stdio&#8209;only clients — including current Claude Desktop — bridge to the remote endpoint
+      with <a href="https://www.npmjs.com/package/mcp-remote"><code>mcp-remote</code></a>:
+    </p>
+    <div class="cite-block">
+      <button type="button" class="cite-copy" data-copy-target="mcp-claude">Copy</button>
+      <pre><code id="mcp-claude">{claudeConfig}</code></pre>
+    </div>
+
+    <h2>What your agent can do</h2>
+    <p>Once connected, your agent gets four read&#8209;only tools:</p>
+    <ul>
+      <li>
+        <code>get_table_of_contents</code> — the full table of contents (parts, chapters,
+        sections, and appendices A–F) with each section's status and whether it has a
+        readable body yet.
+      </li>
+      <li>
+        <code>get_section</code> — the full text of one section by id (<code>1.1</code>,
+        <code>4.1</code>, <code>1.x</code>) or an appendix by letter (<code>A</code>), along with
+        its title, prerequisites, key references, and public URL.
+      </li>
+      <li>
+        <code>get_chapter</code> — a whole chapter: its title and every readable section's
+        body, in order.
+      </li>
+      <li>
+        <code>search</code> — full&#8209;text search across every section and appendix, ranked by
+        relevance, returning ids, titles, URLs, and an excerpt around the first match.
+      </li>
+    </ul>
+  </main>
+
+  <script is:inline>
+    document.querySelectorAll('.cite-copy').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = document.getElementById(btn.getAttribute('data-copy-target'));
+        if (!target || !navigator.clipboard) return;
+        navigator.clipboard.writeText(target.innerText).then(function () {
+          var prev = btn.textContent;
+          btn.textContent = 'Copied';
+          setTimeout(function () { btn.textContent = prev; }, 1500);
+        }).catch(function () {});
+      });
+    });
+  </script>
+</SiteLayout>
