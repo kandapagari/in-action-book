@@ -1,0 +1,162 @@
+---
+// Email signup form. Posts to /api/newsletter/subscribe and shows inline
+// success/error states without navigating away. Double opt-in: submitting only
+// triggers a confirmation email; nobody is added until they click the link.
+---
+
+<form class="newsletter-signup" novalidate>
+  <label class="nl-label" for="nl-email">Get each new chapter by email</label>
+  <div class="nl-row">
+    <input
+      id="nl-email"
+      class="nl-input"
+      type="email"
+      name="email"
+      required
+      autocomplete="email"
+      inputmode="email"
+      placeholder="you@example.com"
+      aria-describedby="nl-status"
+    />
+    <button class="nl-button" type="submit">Subscribe</button>
+  </div>
+  <p class="nl-status" id="nl-status" role="status" aria-live="polite"></p>
+</form>
+
+<style>
+  .newsletter-signup {
+    font-family: var(--font-sans);
+    margin: 1.5rem 0;
+    max-width: 32rem;
+  }
+  .nl-label {
+    display: block;
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.6rem;
+  }
+  .nl-row {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .nl-input {
+    flex: 1 1 14rem;
+    min-width: 0;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 0.6rem 0.75rem;
+    border-radius: 2px;
+  }
+  .nl-input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .nl-input::placeholder {
+    color: var(--muted-light);
+  }
+  .nl-button {
+    font-family: var(--font-sans);
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 0.6rem 1.1rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .nl-button:hover {
+    opacity: 0.85;
+  }
+  .nl-button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  .nl-status {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--muted);
+    margin: 0.75rem 0 0;
+    min-height: 1.2em;
+  }
+  .nl-status.is-error {
+    color: var(--accent);
+  }
+  .nl-status.is-success {
+    color: var(--status-drafted);
+  }
+</style>
+
+<script>
+  type SubscribeResult = { status?: 'sent' | 'already_confirmed'; error?: string };
+
+  const MESSAGES = {
+    sent: 'Check your inbox — click the link to confirm and chapter 1 arrives right away.',
+    already: 'You\u2019re already subscribed. Watch your inbox for the next chapter.',
+    invalid: 'Please enter a valid email address.',
+    failed: 'Something went wrong on our end. Please try again in a little while.',
+    network: 'Could not reach the server. Check your connection and try again.',
+  } as const;
+
+  function bind(form: HTMLFormElement): void {
+    const input = form.querySelector<HTMLInputElement>('.nl-input');
+    const button = form.querySelector<HTMLButtonElement>('.nl-button');
+    const status = form.querySelector<HTMLParagraphElement>('.nl-status');
+    if (!input || !button || !status) return;
+
+    function setStatus(message: string, kind: 'error' | 'success' | ''): void {
+      status!.textContent = message;
+      status!.classList.toggle('is-error', kind === 'error');
+      status!.classList.toggle('is-success', kind === 'success');
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = input.value.trim();
+      if (!email || !input.checkValidity()) {
+        setStatus(MESSAGES.invalid, 'error');
+        return;
+      }
+
+      button.disabled = true;
+      setStatus('Sending\u2026', '');
+
+      try {
+        const res = await fetch('/api/newsletter/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = (await res.json().catch(() => ({}))) as SubscribeResult;
+
+        if (res.ok && data.status === 'sent') {
+          setStatus(MESSAGES.sent, 'success');
+          form.reset();
+        } else if (res.ok && data.status === 'already_confirmed') {
+          setStatus(MESSAGES.already, 'success');
+          form.reset();
+        } else if (res.status === 400) {
+          setStatus(MESSAGES.invalid, 'error');
+        } else {
+          setStatus(MESSAGES.failed, 'error');
+        }
+      } catch {
+        setStatus(MESSAGES.network, 'error');
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  document
+    .querySelectorAll<HTMLFormElement>('.newsletter-signup')
+    .forEach((form) => bind(form));
+</script>

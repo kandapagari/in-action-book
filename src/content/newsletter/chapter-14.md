@@ -1,0 +1,7 @@
+---
+chapter: 14
+subject: "Dual-system robots: Helix, GR00T N1, and two clocks"
+---
+π₀ pulls a neat asymmetry: run the heavy backbone once per observation, then let a small expert iterate cheaply over that frozen snapshot. It fixes the cost of producing an action, but it leaves the coupling between reasoning and reacting untouched. Commit a full second of motion off one snapshot of the world and a tabletop arm is fine; put that same policy on a humanoid whose balance can go from steady to falling in eighty milliseconds, and a second is an eternity. Chapter 14 is about networks that answer this by running two clocks at once.
+
+The observation underneath is that a general-purpose robot is really holding down two jobs whose natural rates differ by more than a factor of ten. One is working out what to do, slow semantic reasoning a large vision-language model is good at; the other is running the body, fast sensorimotor control that has to reject a slipping grasp or a shove inside tens of milliseconds. Cram both into one forward pass and whatever rate you pick is wrong somewhere. The dual-system answer stops sharing the pass altogether: a slow System 2 emits intent while a fast System 1 closes the control loop against fresh sensing. The chapter grounds all this in Figure's Helix and NVIDIA's GR00T N1, and it's candid that the split only earns its complexity when a task is fast or dynamic or dexterous enough that one clock genuinely can't serve both jobs. Read the chapter on the site.

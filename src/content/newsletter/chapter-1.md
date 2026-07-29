@@ -1,0 +1,7 @@
+---
+chapter: 1
+subject: "Why turning intent into motion is robotics' hardest problem"
+---
+Perception fell to deep learning in the 2010s. Language understanding fell soon after, to a different generation of networks, and the bottleneck of robotics settled back onto what it had probably always been: turning intent into motion. Chapter 1 names this the action problem and asks why it held out when its perceptual and linguistic cousins didn't.
+
+The argument runs through one scene. A robot arm with a parallel-jaw gripper is told, in plain English, to "clean up the spill," and the chapter counts the twenty-odd decisions packed into that one instruction, half of them analog, every one depending on the last. From there it draws out what makes action structurally different. The output isn't a label off a list; it's a vector of real numbers the policy picks fresh every twenty milliseconds, hemmed in by kinematics and contact. Robot data barely exists and skews toward tidy successes, and a wrong gripper command doesn't merely embarrass you, it can break the cup or the hand beside it. Why write the book now? Foundation models turned "make me coffee" into a tractable input, Open X-Embodiment made the data wall climbable, and the methods connecting what a robot sees to what it does have hardened into a teachable recipe. This is the vocabulary chapter; read it on the site to pick up the terms the rest leans on.

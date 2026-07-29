@@ -1,0 +1,7 @@
+---
+chapter: 8
+subject: "The transformer, read as a model of control"
+---
+Strip the robot plumbing off RT-1, RT-2, OpenVLA, Octo, or π₀ and the same thing is left standing: a stack of attention layers reading a sequence of tokens and predicting the next one. Understand that stack and much of the book turns into a single question, what are the tokens? Chapter 8 builds the transformer from the one operation control actually needs, attention, and waves off the parts you can take on faith.
+
+The load-bearing idea fits in a sentence. Each output token is a content-addressed, softmax-weighted average of every input token, so a gripper-contact event forty steps back and the instruction sitting at the very front are one hop away, not forty. The chapter shows the whole thing in five lines of Python, bolts on positional encodings and causal masks, then argues why this suits control so well: reinforcement learning is the study of trajectories, and a decoder transformer was built to model exactly that kind of sequence. It ends on the bill. Because every token attends to every other, cost grows with the square of sequence length, and that collides head-on with a control loop's deadline, a 10 Hz policy gets 100 milliseconds to see the scene and command the next move. That collision is what sends the next chapters toward action chunking, dual-system splits, and the state-space models that scale linearly instead. Read §8.1 on the site to see the five lines.

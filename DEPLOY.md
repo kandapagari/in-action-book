@@ -128,6 +128,122 @@ that populates `.env.local` with the live `KV_REST_API_URL` and
 `KV_REST_API_TOKEN`. Wipe `.env.local` again to go back to the
 unavailable-graceful-degrade path.
 
+## Email newsletter — email transport + Cron setup
+
+The site offers a double-opt-in email list (`/newsletter/`) that drips one
+**complete** chapter a week to each subscriber. Subscriber state lives in the
+**same Upstash Redis** as the view counter (keys prefixed `nl:`); a **weekly
+Vercel Cron** (`vercel.json`, Mondays 14:00 UTC) advances everyone. A chapter
+is only sent once it is both complete *and* has an authored excerpt file at
+`src/content/newsletter/chapter-<N>.md`.
+
+Email delivery goes through one of **two selectable transports**, chosen by the
+`EMAIL_TRANSPORT` env var. Both code paths are kept intentionally so you can
+start sending **today without owning a domain** and switch later with no code
+change:
+
+- **`smtp` (default when unset)** — send via **Brevo SMTP**. Brevo lets you
+  verify a single *sender email address* (no domain purchase or DNS required),
+  so this is the fastest way to start. Free tier: **300 emails/day**.
+- **`resend`** — send via **Resend**, which requires a **verified sending
+  domain**. Better deliverability once you own a domain.
+
+Unlike the view counter, the newsletter does **not** degrade silently: if the
+Redis or the selected transport's configuration is missing, the
+`/api/newsletter/*` endpoints return HTTP 500 rather than pretending a signup
+succeeded. There is **no auto-fallback** between transports — if the transport
+you selected is misconfigured, delivery throws. This is intentional.
+
+`NEWSLETTER_FROM`, `CRON_SECRET`, and `SITE_URL` mean the same thing for both
+transports. Only the transport-specific secrets differ.
+
+### Default path (no domain): Brevo SMTP
+
+1. **Redis** — reuse the Upstash store from the view counter (see above). No
+   extra database is needed; the newsletter uses the same `KV_REST_API_*`
+   (or `UPSTASH_REDIS_REST_*`) credentials.
+2. **Brevo account + verified sender** — create a free account at
+   <https://www.brevo.com>. Under **Senders, Domains & Dedicated IPs →
+   Senders**, add your sender email and **verify it by clicking the link Brevo
+   emails you**. No domain purchase and no DNS records are required for a single
+   verified sender.
+3. **SMTP key** — under **SMTP & API → SMTP**, generate an SMTP key. Note your
+   SMTP **login** (username) and the generated **key** (used as the password —
+   this is not your account password).
+4. **Environment variables** — in Vercel → Project → **Settings →
+   Environment Variables**, add (Production, and Preview if you want to test
+   there):
+   - `EMAIL_TRANSPORT` — `smtp` (or leave unset; `smtp` is the default).
+   - `SMTP_HOST` — `smtp-relay.brevo.com`.
+   - `SMTP_PORT` — `587` (STARTTLS; the code uses implicit TLS only on `465`).
+   - `SMTP_USER` — your Brevo SMTP login.
+   - `SMTP_PASS` — the Brevo SMTP key from step 3.
+   - `NEWSLETTER_FROM` — the verified sender, e.g.
+     `Action Models <your-verified-email>`.
+   - `CRON_SECRET` — any long random string. Vercel automatically sends this
+     as `Authorization: Bearer <CRON_SECRET>` on scheduled cron invocations,
+     and the cron endpoint rejects any request that doesn't match.
+   - `SITE_URL` — set to the production origin (also used for canonical URLs)
+     so the confirm/unsubscribe/read links in emails are absolute and correct.
+5. **Redeploy.** The `crons` entry in `vercel.json` registers the weekly job
+   automatically on deploy (weekly schedules are allowed on the Hobby plan).
+
+> Deliverability note: a personal/verified-sender address (no domain-level
+> SPF/DKIM/DMARC) is more likely to land in **Promotions or spam** than an
+> authenticated sending domain. It works, but for the best inbox placement move
+> to the Resend + domain path below once you have a domain.
+
+### Later path (verified domain): Resend
+
+Switching is **config-only — no code change**:
+
+1. **Resend account + sending domain** — create an account at
+   <https://resend.com>, then **verify a real sending domain** under
+   **Domains** (add the DNS records Resend shows: SPF/DKIM, and DMARC if you
+   want it). A `.vercel.app` subdomain **cannot** send — you must own a real
+   domain for the `From` address.
+2. **API key** — under **API Keys**, create a key with send permission.
+3. **Environment variables** — in Vercel, set:
+   - `RESEND_API_KEY` — the Resend API key from step 2.
+   - `NEWSLETTER_FROM` — a sender on the verified domain, e.g.
+     `Action Models <newsletter@yourdomain.com>`.
+   - `EMAIL_TRANSPORT` — flip to `resend`.
+4. **Redeploy.** `CRON_SECRET` and `SITE_URL` are unchanged; the SMTP vars can
+   be left in place (they're ignored while `EMAIL_TRANSPORT=resend`).
+
+### How the drip works
+
+- A visitor submits their email → `POST /api/newsletter/subscribe` stores a
+  `pending` subscriber and emails a confirmation link (valid 48h).
+- Clicking the link → `GET /api/newsletter/confirm` marks them `confirmed`,
+  adds them to the `nl:confirmed` set, and sends Chapter 1 immediately.
+- Each Monday the cron (`GET /api/newsletter/cron`) iterates confirmed
+  subscribers and sends each the next sendable chapter past their personal
+  cursor, then advances the cursor. Caught-up subscribers are skipped until a
+  newly completed chapter gets its excerpt file.
+- Every email carries a one-click unsubscribe link
+  (`GET /api/newsletter/unsubscribe`).
+
+### Authoring a chapter excerpt
+
+When a chapter becomes complete, author its teaser using the prompt at
+`scripts/newsletter/excerpt-prompt.md` and save the result to
+`src/content/newsletter/chapter-<N>.md`. The chapter is not emailed until that
+file exists. Excerpt files are committed like the rest of the content.
+
+### Local development
+
+`npm run dev` works without any of the newsletter env vars — the
+`/api/newsletter/*` endpoints will error (by design, since delivery is
+unconfigured), but the prerendered `/newsletter/*` pages render normally. To
+exercise real sending locally, run `vercel env pull` after linking the project
+to populate `.env.local`, or set the newsletter vars there by hand
+(`EMAIL_TRANSPORT` + the matching transport group — `SMTP_*` for `smtp` or
+`RESEND_API_KEY` for `resend` — plus `NEWSLETTER_FROM` / `CRON_SECRET`).
+
+Run the pure drip-logic unit tests with `npm test` (`node --test`, no
+framework).
+
 ### Honesty / methodology
 
 The numbers are **page loads**, not unique humans. A refresh inside the

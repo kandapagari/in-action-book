@@ -12,10 +12,12 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "test": "node --test src/lib/*.test.mjs",
     "build:icons": "node scripts/build-icons.mjs",
     "build:audio": "bash scripts/audio/run.sh",
     "build:audio:force": "bash scripts/audio/run.sh --force",
-    "build:audio:section": "bash scripts/audio/run.sh --section"
+    "build:audio:section": "bash scripts/audio/run.sh --section",
+    "newsletter:check-smtp": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/newsletter/check-smtp.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^6.0.1",
@@ -28,11 +30,14 @@
     "astro-pagefind": "^2.0.0",
     "gray-matter": "^4.0.3",
     "katex": "^0.17.0",
+    "nodemailer": "^9.0.3",
     "pagefind": "^1.5.2",
     "rehype-katex": "^7.0.1",
-    "remark-math": "^6.0.0"
+    "remark-math": "^6.0.0",
+    "resend": "^6.18.1"
   },
   "devDependencies": {
+    "@types/nodemailer": "^8.0.1",
     "@types/picomatch": "^4.0.3",
     "opentype.js": "^1.3.4",
     "png-to-ico": "^3.0.2",

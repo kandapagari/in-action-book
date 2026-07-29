@@ -1,0 +1,7 @@
+---
+chapter: 12
+subject: "Scaling VLAs: RT-2, OpenVLA, and Octo"
+---
+RT-1 got most of its competence from a hundred and thirty thousand real demonstrations, not from anything clever in the architecture, and a thirteen-robot fleet teleoperating in kitchens for seventeen months isn't a lever most labs can pull. Chapter 12 covers the response that does scale: if robot data is scarce and web data isn't, stop learning perception and reasoning from teleoperation and inherit them from a model that already read the internet.
+
+The central trick is almost too simple to trust, actions are strings. RT-2 writes each action as a short run of integers and pushes it through a vision-language model's existing text vocabulary, so "predict the next action" and "predict the next word" collapse into one operation. You'll see why co-fine-tuning is non-negotiable if you don't want to lobotomize the backbone, and what the web knowledge pays back: skills nobody demonstrated, like moving a banana to "the sum of two plus one" or reaching for "the extinct animal." Then the chapter tallies the bill, latency, closed weights, and the fact that the fresh skills are mostly about what to manipulate rather than how, and shows OpenVLA making the recipe open and reproducible while Octo swaps in a diffusion-based action head. All three stand on the Open X-Embodiment dataset. Read the chapter on the site.
