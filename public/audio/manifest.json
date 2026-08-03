@@ -630,6 +630,76 @@
       "voice": "af_heart",
       "word_count": 1759
     },
+    "15.4": {
+      "chapter": 15,
+      "char_count": 9489,
+      "content_hash": "20da66ffbf3e2891dc8516f057129ecf43b29d758479167984b340d67bafec8c",
+      "duration_seconds": 590.18,
+      "file": "/audio/chapter-15/section-15_4.mp3",
+      "file_size_bytes": 4722093,
+      "generated_at": "2026-08-03T09:14:40+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-15/section-15_4.mp3",
+      "section": "15.4",
+      "title": "Sim benchmarks (LIBERO, CALVIN, RoboCasa, SimplerEnv) and red-team-style suites such as RoboArena",
+      "voice": "af_heart",
+      "word_count": 1589
+    },
+    "15.5": {
+      "chapter": 15,
+      "char_count": 9728,
+      "content_hash": "b44e2a48811cc6e902a6429350ec0b8df94f7bcad77308e6a1ef964bca2ee6f1",
+      "duration_seconds": 600.81,
+      "file": "/audio/chapter-15/section-15_5.mp3",
+      "file_size_bytes": 4807149,
+      "generated_at": "2026-08-03T09:14:44+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-15/section-15_5.mp3",
+      "section": "15.5",
+      "title": "Real-robot evaluation: variance, success rate, time-to-completion",
+      "voice": "af_heart",
+      "word_count": 1690
+    },
+    "15.6": {
+      "chapter": 15,
+      "char_count": 10129,
+      "content_hash": "9d83995b13dc1b21c037fcaf446906d382f686253607be5fa962854495ce1f56",
+      "duration_seconds": 610.71,
+      "file": "/audio/chapter-15/section-15_6.mp3",
+      "file_size_bytes": 4886445,
+      "generated_at": "2026-08-03T09:14:48+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-15/section-15_6.mp3",
+      "section": "15.6",
+      "title": "Building your own evaluation",
+      "voice": "af_heart",
+      "word_count": 1736
+    },
+    "15.7": {
+      "chapter": 15,
+      "char_count": 12224,
+      "content_hash": "f833fb0f37626929facad92e4b8f7de0f4e4b0ee75d6d195cc4df16f7293b3b1",
+      "duration_seconds": 764.77,
+      "file": "/audio/chapter-15/section-15_7.mp3",
+      "file_size_bytes": 6118893,
+      "generated_at": "2026-08-03T09:14:54+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-15/section-15_7.mp3",
+      "section": "15.7",
+      "title": "Summary",
+      "voice": "af_heart",
+      "word_count": 2052
+    },
+    "15.x": {
+      "chapter": 15,
+      "char_count": 11037,
+      "content_hash": "8f27a74487062f2af20bb65aaf95623cf767955cf8774892877e519c416789c2",
+      "duration_seconds": 736.9,
+      "file": "/audio/chapter-15/section-15_x.mp3",
+      "file_size_bytes": 5895981,
+      "generated_at": "2026-08-03T09:14:59+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-15/section-15_x.mp3",
+      "section": "15.x",
+      "title": "Hands-on exercise + chapter references",
+      "voice": "af_heart",
+      "word_count": 1833
+    },
     "2.1": {
       "chapter": 2,
       "char_count": 9334,
@@ -1401,7 +1471,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-07-29T14:28:32+00:00",
+  "generated_at": "2026-08-03T09:14:59+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
