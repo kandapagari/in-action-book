@@ -259,7 +259,8 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 14.3 GR00T N1 and its N1.5–N1.7 successors: humanoid-flavored dual systems — plus Gemini Robotics-ER as a third family (embodied reasoning + VLA, "Embodied Thinking," Motion Transfer)
 - [x] 14.4 Latency budgets and real-time control
 - [x] 14.5 Deployment case studies (Figure Helix-02, GR00T-enabled humanoids, dexterity-focused entrants such as Genesis AI's GENE and RLWRLD's RLDX-1)
-- [x] 14.6 Summary
+- [x] 14.6 Gemini Robotics 2: unified whole-body loco-manipulation (a fourth dual-system family; first VLA to run legs, torso, arms, and multi-finger hands under one learned policy, demoed on Apptronik Apollo 2)
+- [x] 14.7 Summary
 - [x] 14.x Hands-on exercise + chapter references
 
 #### Chapter 15. Datasets, benchmarks, and evaluation
@@ -419,7 +420,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-28 — drafted §14.3 GR00T N1 and its N1.5–N1.7 successors + Gemini Robotics-ER (~1595 words)
 - 2026-07-28 — drafted §14.4 Latency budgets and real-time control (~1791 words)
 - 2026-07-28 — drafted §14.5 Deployment case studies (Figure/BMW, GR00T, GENE/RLDX-1) (~1656 words)
-- 2026-07-28 — drafted §14.6 Summary (~2359 words)
+- 2026-07-28 — drafted §14.7 Summary (~2359 words)
 - 2026-07-28 — drafted §14.x Hands-on exercise + chapter references (~1835 words)
 - 2026-07-29 — drafted §15.1 What a robot dataset looks like, by example (~1812 words)
 - 2026-07-29 — drafted §15.2 Open X-Embodiment in detail (and its fleet-scale successors) (~1610 words)
@@ -436,3 +437,5 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-08-03 — drafted §16.5 A recipe card for new embodiments (~1315 words)
 - 2026-08-03 — drafted §16.6 Summary (~1329 words)
 - 2026-08-03 — drafted §16.x Hands-on exercise + chapter references (~1764 words)
+- 2026-08-03 — drafted §14.6 Gemini Robotics 2: unified whole-body loco-manipulation (~1640 words)
+- 2026-08-03 — renumbered Chapter 14: Gemini Robotics 2 section moved to §14.6 (was §14.7) so it precedes the Summary; Summary moved to §14.7. Cross-references in §14.1 and §14.x updated.
