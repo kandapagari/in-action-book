@@ -1,0 +1,54 @@
+---
+chapter: 15
+section: 15.4
+title: "Sim benchmarks (LIBERO, CALVIN, RoboCasa, SimplerEnv) and red-team-style suites such as RoboArena"
+target_words: 2000
+status: draft
+prereqs: §15.1 (an episode as a stream of observation-action timesteps, the thing a benchmark replays and scores), §15.3 (LeRobot ships several of these policies loadable in two lines, which is how you run a benchmark without writing the env yourself). Helpful, §2.2 (you already stood up the LIBERO simulator to run OpenVLA in Chapter 2), §12.2 (OpenVLA) and §13.2 (π0), the two policies whose published numbers you will be comparing against.
+key_refs:
+  - Liu, B., Zhu, Y., Gao, C., Feng, Y., Liu, Q., Zhu, Y., Stone, P. (2023). LIBERO, Benchmarking Knowledge Transfer for Lifelong Robot Learning. NeurIPS Datasets and Benchmarks.
+  - Mees, O., Hermann, L., Rosete-Beas, E., Burgard, W. (2022). CALVIN, A Benchmark for Language-Conditioned Policy Learning for Long-Horizon Robot Manipulation. IEEE RA-L.
+  - Nasiriany, S., Maddukuri, A., Zhang, L. et al. (2024). RoboCasa, Large-Scale Simulation of Everyday Tasks for Generalist Robots. RSS.
+  - Li, X., Hsu, K., Fu, J. et al. (2024). Evaluating Real-World Robot Manipulation Policies in Simulation (SimplerEnv). CoRL.
+  - Open X-Embodiment Collaboration, Padalkar, A. et al. (2023). Open X-Embodiment. arXiv:2310.08864.
+---
+
+# 15.4  Sim benchmarks (LIBERO, CALVIN, RoboCasa, SimplerEnv) and red-team-style suites such as RoboArena
+
+You cannot borrow a fleet of real robots to test your policy, and even if you could, you could not afford to run a thousand trials on each one. Simulation is how the field gets around that. A sim benchmark is a fixed set of tasks, a fixed simulator, and a fixed scoring rule, packaged so that two labs on two continents can report numbers that mean the same thing. That last clause is the whole point and also the whole problem, because a benchmark is only as honest as the gap between its simulated world and the messy one your robot actually lives in. This section walks the four benchmarks the VLA literature quotes most, explains what each one measures and what it quietly ignores, and then turns to a newer style of evaluation that tries to close the sim-to-real credibility gap by giving up on sim entirely.
+
+## LIBERO: the fine-tuning yardstick
+
+If you have read an OpenVLA or π0 paper, you have seen LIBERO numbers. It has become the default place to report how well a VLA adapts to a small suite of manipulation tasks, and you already met it in §2.2 when you stood up its simulator to watch OpenVLA run. LIBERO (Liu et al., 2023) was built to study lifelong learning, the question of whether a robot can pick up new skills without forgetting old ones, but the community adopted it for a simpler purpose: it is a clean, fast, tabletop manipulation testbed with a Franka Panda arm and a language instruction attached to every task.
+
+The design worth remembering is how LIBERO factors difficulty. It splits its 130 tasks into four suites, each isolating one kind of generalization. LIBERO-Spatial keeps the objects fixed but moves their arrangement, so the policy has to key on spatial language ("the bowl on the left"). LIBERO-Object holds the layout and swaps the objects. LIBERO-Goal fixes objects and layout and changes only the instruction, testing whether the policy actually reads the goal instead of running one memorized motion. LIBERO-Long, sometimes called LIBERO-100, chains multiple subtasks into long-horizon episodes that punish compounding error of the kind you met in §6.3. Reporting a single LIBERO average hides which of these a policy is good at, so read the per-suite breakdown; a model can post a strong mean while quietly failing every LIBERO-Long episode.
+
+LIBERO is cheap to run, which is most of why it won. A modern VLA fine-tune plus evaluation on all four suites fits on a single GPU in an afternoon, and that low cost is exactly what makes it a fine-tuning benchmark rather than a pretraining one. Its weakness follows from the same fact: the scenes are simple, the assets are a small fixed set, and a policy that tops the LIBERO leaderboard has told you it can adapt to a narrow tabletop distribution, nothing more.
+
+## CALVIN: long horizons and language
+
+CALVIN (Mees et al., 2022) attacks the part LIBERO treats as one suite among four. It is built around long-horizon, language-conditioned manipulation, and its signature metric is chaining: the robot is given a sequence of five instructions in a row ("open the drawer," then "pick up the blue block," then "push it left," and so on), and it only gets credit for task k+1 if it completed tasks 1 through k. The headline number everyone quotes is "average successful sequence length," a value between 0 and 5. A policy that nails single tasks but drifts over a minute of continuous control gets exposed here in a way LIBERO's shorter episodes forgive.
+
+The second thing CALVIN did was formalize environment generalization through its train/test splits, labeled A, B, C, and D, which are four tabletop environments differing in textures and object positions. The hard setting, written ABC→D, trains on three environments and evaluates on a fourth the policy never saw. That single arrow is doing real work: it separates a model that learned the task from one that overfit the training rooms. When a paper reports CALVIN ABC→D, it is claiming its policy transfers across scenes, and that is a stronger claim than a same-environment number.
+
+## RoboCasa: scale and generated assets
+
+LIBERO and CALVIN share a limitation. Their asset libraries are small and hand-authored, so a policy can, in principle, memorize every mug it will ever see. RoboCasa (Nasiriany et al., 2024) was built to break that. It drops the robot into fully modeled kitchens, built on the RoboSuite/MuJoCo stack, with thousands of 3D objects (many generated by text-to-3D models) spread across roughly 100 tasks that range from atomic skills like turning a faucet to composite activities like making coffee.
+
+RoboCasa matters here for two reasons. First, its scale makes memorization a losing strategy, which pushes evaluation closer to the generalization we actually care about. Second, it is designed as a data engine as much as a benchmark: it ships large volumes of machine-generated demonstrations, so you can study how policy performance scales with synthetic data volume, a question that connects directly to the scaling arguments of §11.5. The catch is cost. A kitchen full of articulated objects is heavier to simulate than a LIBERO tabletop, so RoboCasa evaluations run slower and demand more compute, and that friction is why you see it quoted less often than LIBERO despite being the more demanding test.
+
+## SimplerEnv: making sim numbers predict real numbers
+
+The three benchmarks above all share one unexamined assumption: that success in their simulator tells you something about success on hardware. Usually it does not, at least not quantitatively. A policy trained on real Google robot data and evaluated in a generic sim will post numbers that correlate weakly, if at all, with its real-world success rate, because the rendering, the physics, and the camera placement are all subtly wrong. SimplerEnv (Li et al., 2024) is the benchmark built to fix precisely that mismatch, and it is the one the chapter's hands-on exercise uses.
+
+The idea is narrow and clever. Rather than build a new simulated world and hope policies transfer to it, SimplerEnv reconstructs the specific real-world setups that already have published real-robot evaluations, the Google robot (RT-1, RT-2) tabletop and the WidowX/BridgeData setup, matched carefully enough in visuals and dynamics that a policy's success rate in the sim tracks its success rate on the physical rig. The measure of merit for SimplerEnv is not "is this task hard" but "does my sim score predict my real score," and the paper reports the correlation directly. When that correlation is high, you have earned the right to iterate in simulation and trust that improvements will survive contact with the real robot. That is a different and more useful promise than a raw leaderboard, and it is why SimplerEnv became the standard way to compare published VLAs like OpenVLA (arXiv:2406.09246) and Octo (arXiv:2405.12213) without every lab needing to rebuild the original hardware.
+
+Two cautions come with it. SimplerEnv only covers the handful of real setups it was tuned against, so it evaluates your policy on those embodiments and tasks, not yours. And the correlation it reports is a property of the policies tested when it was built; a new architecture that games the visual match without solving the task can, in principle, break it. Treat a strong SimplerEnv number as good evidence, not proof.
+
+## RoboArena: when you stop trusting sim
+
+Every benchmark so far buys reproducibility with a fixed world, and a fixed world is a world you can overfit. If a benchmark's tasks, objects, and initial states are frozen and public, a well-funded team can tune against them until the leaderboard number stops meaning anything, the same treadmill that eventually discredited saturated benchmarks in vision and language. The response taking shape in robotics is to move evaluation back onto real robots but distribute it across many labs, and RoboArena (Atreya, Pertsch et al., 2025) is the clearest example.
+
+RoboArena borrows its structure from the way large language models get ranked in Chatbot Arena. Instead of a fixed task suite with a success threshold, it runs pairwise comparisons: two policies attempt the same free-form, evaluator-chosen task on real hardware at whichever institution is hosting, and a human judges which did better. Aggregate those pairwise verdicts across many tasks, many labs, and many robot instances, and you get a relative ranking that no single team controls or can quietly train against. The tasks are not published in advance because there is no fixed list; each evaluator improvises, which is where the "red-team" flavor comes from. You are not measured on how well you memorized a benchmark. You are measured on whether you hold up when a stranger picks the task.
+
+The price is everything reproducibility gave you. Results depend on which labs participated, which robots they own, and how the human judges felt that day, so RoboArena trades the clean, rerunnable number of a sim benchmark for a noisier signal that is much harder to game. Both kinds of evaluation are load-bearing, and a serious policy report in 2026 tends to carry both: a LIBERO or SimplerEnv table for cheap, repeatable iteration, and a distributed real-robot comparison for the claim that the thing actually works off the bench. §15.5 takes the real-robot side of that pairing seriously and works through how to measure success rate, variance, and time-to-completion when every trial costs you a physical robot and a human minder.
