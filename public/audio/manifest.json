@@ -812,6 +812,104 @@
       "voice": "af_heart",
       "word_count": 1588
     },
+    "17.1": {
+      "chapter": 17,
+      "char_count": 8404,
+      "content_hash": "78b953339f32840f5c0ab7241ee5206d1ec33de8706aabaa55430df16d42746e",
+      "duration_seconds": 501.2,
+      "file": "/audio/chapter-17/section-17_1.mp3",
+      "file_size_bytes": 4010349,
+      "generated_at": "2026-08-03T13:13:41+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-17/section-17_1.mp3",
+      "section": "17.1",
+      "title": "Safety as a layer, not a property",
+      "voice": "af_heart",
+      "word_count": 1443
+    },
+    "17.2": {
+      "chapter": 17,
+      "char_count": 7764,
+      "content_hash": "052cb23942c4f36c4952aeec394a7c3b2b0d7be9155a4ce34a79cc70ba76c679",
+      "duration_seconds": 475.87,
+      "file": "/audio/chapter-17/section-17_2.mp3",
+      "file_size_bytes": 3807597,
+      "generated_at": "2026-08-03T13:13:44+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-17/section-17_2.mp3",
+      "section": "17.2",
+      "title": "Runtime monitors and shielding",
+      "voice": "af_heart",
+      "word_count": 1308
+    },
+    "17.3": {
+      "chapter": 17,
+      "char_count": 7568,
+      "content_hash": "08573495a356e2fc0ead09fbc8320ce9c059fa635c93f50c8e5740a970436b7a",
+      "duration_seconds": 455.82,
+      "file": "/audio/chapter-17/section-17_3.mp3",
+      "file_size_bytes": 3647277,
+      "generated_at": "2026-08-03T13:13:46+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-17/section-17_3.mp3",
+      "section": "17.3",
+      "title": "A/B evaluation on hardware",
+      "voice": "af_heart",
+      "word_count": 1318
+    },
+    "17.4": {
+      "chapter": 17,
+      "char_count": 6719,
+      "content_hash": "ff9423bf6e252095bf576627c5cecd11625b046a0564bc9a0847fa556a4a90f5",
+      "duration_seconds": 408.58,
+      "file": "/audio/chapter-17/section-17_4.mp3",
+      "file_size_bytes": 3269421,
+      "generated_at": "2026-08-03T13:13:49+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-17/section-17_4.mp3",
+      "section": "17.4",
+      "title": "Logging, alerting, and rollback",
+      "voice": "af_heart",
+      "word_count": 1127
+    },
+    "17.5": {
+      "chapter": 17,
+      "char_count": 8447,
+      "content_hash": "6618314e850a0589102ff7ad7e233148765572ad2b34122c876eb6b65bc2d9e7",
+      "duration_seconds": 516.27,
+      "file": "/audio/chapter-17/section-17_5.mp3",
+      "file_size_bytes": 4130925,
+      "generated_at": "2026-08-03T13:13:52+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-17/section-17_5.mp3",
+      "section": "17.5",
+      "title": "What we still cannot certify",
+      "voice": "af_heart",
+      "word_count": 1450
+    },
+    "17.6": {
+      "chapter": 17,
+      "char_count": 10034,
+      "content_hash": "b2e026fbdee4ecdc7ac38d85d4e0c4a1d2f62551e82d22d704563cbea8cdcfc8",
+      "duration_seconds": 635.94,
+      "file": "/audio/chapter-17/section-17_6.mp3",
+      "file_size_bytes": 5088237,
+      "generated_at": "2026-08-03T13:13:56+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-17/section-17_6.mp3",
+      "section": "17.6",
+      "title": "Summary",
+      "voice": "af_heart",
+      "word_count": 1640
+    },
+    "17.x": {
+      "chapter": 17,
+      "char_count": 10489,
+      "content_hash": "7737d625ca39cf3fbab8b1757ed95cf24597480ee8ed10f700b6dfab346633f0",
+      "duration_seconds": 688.17,
+      "file": "/audio/chapter-17/section-17_x.mp3",
+      "file_size_bytes": 5506029,
+      "generated_at": "2026-08-03T13:14:00+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-17/section-17_x.mp3",
+      "section": "17.x",
+      "title": "Hands-on exercise + chapter references",
+      "voice": "af_heart",
+      "word_count": 1736
+    },
     "2.1": {
       "chapter": 2,
       "char_count": 9334,
@@ -1583,7 +1681,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-08-03T12:47:49+00:00",
+  "generated_at": "2026-08-03T13:14:00+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
