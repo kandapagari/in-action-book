@@ -117,7 +117,7 @@ also pending but generic/exercise sections with no specific finding to attach).
 
 #### Chapter 1. The robot learning problem
 
-- [x] 1.1 Why "action" is the hard part of robotics
+- [r] 1.1 Why "action" is the hard part of robotics
 - [x] 1.2 Anatomy of an action model: inputs, outputs, training signal
 - [x] 1.3 A short history, from STRIPS to π0
 - [x] 1.4 The four families of action models
