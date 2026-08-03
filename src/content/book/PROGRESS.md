@@ -79,6 +79,38 @@ Second pass same day — fresh searches turned up items not in the entry above:
   of Datasets, Benchmarks, and Data Engines" (arXiv 2604.23001) — useful framing
   reference for §15.1–§15.3.
 
+## Field-tracking notes (2026-08-01)
+
+Gap review against chapters 16–18 (all still pending as of this date; 15.6–15.x
+also pending but generic/exercise sections with no specific finding to attach).
+
+- Gemini Robotics 2 / Gemini Robotics-ER 2 / Gemini Robotics On-Device 2 (Google
+  DeepMind, announced 2026-07-30): first VLA to drive a full humanoid — legs,
+  torso, arms, and multi-finger hands — under one unified policy, addressing
+  loco-manipulation directly rather than handing off between separate
+  locomotion and manipulation controllers; demonstrated on Apptronik's Apollo 2.
+  The on-device variant reportedly adapts to a new embodiment from only a few
+  hours of data. A fourth major dual-system-style family alongside Helix,
+  GR00T N1, and the earlier Gemini Robotics-ER 1.5/1.6 line already noted above.
+  (deepmind.google/blog, MarkTechPost 2026-07-30, roboticsandautomationnews.com)
+- WholebodyVLA (OpenDriveLab, ICLR 2026): "Towards Unified Latent VLA for
+  Whole-body Loco-manipulation Control" — an open research counterpart to the
+  Gemini Robotics 2 loco-manipulation direction (github.com/OpenDriveLab/WholebodyVLA).
+- ERVLA, "Revisiting Embodied Chain-of-Thought for Generalizable Robot
+  Manipulation" (arXiv 2606.03784, June 2026): trains with CoT reasoning traces
+  via a CoT-dropout strategy but predicts actions directly at inference,
+  sidestepping autoregressive CoT latency; reports 86.9% on LIBERO-Plus and
+  53.2% on VLABench. Adds to the embodied-reasoning family already tracked
+  (LaRA-VLA, HALO, ThinkAct).
+- VLA runtime-monitoring: "Hide-and-Seek in Trajectories: Discovering Failure
+  Signals for VLA Runtime Monitoring" (arXiv 2605.30834, May 2026) — addresses
+  label noise in step-level failure annotation for runtime monitors.
+- VLA adversarial safety: CVPR 2026 AdvML Workshop Challenge on adversarial
+  multimodal attacks against driving VLAs (arXiv 2607.11560, July 2026); "Lost
+  in Fog: Sensor Perturbations Expose Reasoning Fragility in Driving VLAs"
+  (arXiv 2605.21446, May 2026). Both extend the attack-surface list alongside
+  the already-tracked TRAP, VLA-Hijack, and partially-observable patch papers.
+
 ## Status
 
 ### Part 1 — Foundations and a first taste of VLAs
@@ -235,11 +267,11 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 15.1 What a robot dataset looks like, by example
 - [x] 15.2 Open X-Embodiment in detail — and what has (and has not) succeeded it: large teleop fleets (AGIBot Genie-1, bimanual YAM, Unitree G1) feeding newer foundation models rather than a single branded dataset
 - [x] 15.3 LeRobot: Hugging Face's dataset format, hub, and community-contributed robot data
-- [ ] 15.4 Sim benchmarks (LIBERO, CALVIN, RoboCasa, SimplerEnv) and red-team-style suites such as RoboArena
-- [ ] 15.5 Real-robot evaluation: variance, success rate, time-to-completion
-- [ ] 15.6 Building your own evaluation
-- [ ] 15.7 Summary
-- [ ] 15.x Hands-on exercise + chapter references
+- [x] 15.4 Sim benchmarks (LIBERO, CALVIN, RoboCasa, SimplerEnv) and red-team-style suites such as RoboArena
+- [x] 15.5 Real-robot evaluation: variance, success rate, time-to-completion
+- [x] 15.6 Building your own evaluation
+- [x] 15.7 Summary
+- [x] 15.x Hands-on exercise + chapter references
 
 ### Part 5 — Building with action models
 
@@ -256,19 +288,19 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 #### Chapter 17. Evaluation, safety, and deployment
 
 - [ ] 17.1 Safety as a layer, not a property
-- [ ] 17.2 Runtime monitors and shielding — VLM-as-monitor patterns (Code-as-Monitor) and runtime action authorization
+- [ ] 17.2 Runtime monitors and shielding — VLM-as-monitor patterns (Code-as-Monitor), runtime action authorization, and step-level failure-signal detection (arXiv 2605.30834)
 - [ ] 17.3 A/B evaluation on hardware
 - [ ] 17.4 Logging, alerting, and rollback
-- [ ] 17.5 What we still cannot certify — plus emerging attack surfaces (adversarial patches that hijack VLA chain-of-thought reasoning)
+- [ ] 17.5 What we still cannot certify — plus emerging attack surfaces (adversarial patches that hijack VLA chain-of-thought reasoning, sensor-perturbation fragility, and the CVPR 2026 AdvML adversarial-VLA challenge)
 - [ ] 17.6 Summary
 - [ ] 17.x Hands-on exercise + chapter references
 
 #### Chapter 18. Open problems and what comes next
 
-- [ ] 18.1 Generalization across embodiments — including the shift toward whole-body neural control (Helix-02's System 0) blurring the classical/learned locomotion boundary from Chapter 4
+- [ ] 18.1 Generalization across embodiments — including the shift toward whole-body neural control (Helix-02's System 0, and now Gemini Robotics 2's unified loco-manipulation policy) blurring the classical/learned locomotion boundary from Chapter 4
 - [ ] 18.2 Long-horizon and dexterous tasks — dexterity remains below human level even as dedicated foundation models (GENE, RLDX-1) target it directly
 - [ ] 18.3 Video-pretrained action models — now with a concrete result: V-JEPA 2 → V-JEPA 2-AC, zero-shot pick-and-place from under 62 hours of unlabeled robot video
-- [ ] 18.4 Reasoning + action: LLM chains of thought meet control — no longer speculative; an active subfield (embodied CoT, latent-reasoning VLAs, Gemini's Embodied Thinking)
+- [ ] 18.4 Reasoning + action: LLM chains of thought meet control — no longer speculative; an active subfield (embodied CoT, latent-reasoning VLAs, ERVLA's CoT-dropout at inference, Gemini's Embodied Thinking)
 - [ ] 18.5 What to read next, and how to contribute
 - [ ] 18.6 Summary
 - [ ] 18.x Hands-on exercise + chapter references
@@ -392,3 +424,8 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-07-29 — drafted §15.1 What a robot dataset looks like, by example (~1812 words)
 - 2026-07-29 — drafted §15.2 Open X-Embodiment in detail (and its fleet-scale successors) (~1610 words)
 - 2026-07-29 — drafted §15.3 LeRobot: Hugging Face's dataset format, hub, and community data (~1750 words)
+- 2026-07-30 — drafted §15.4 Sim benchmarks (LIBERO, CALVIN, RoboCasa, SimplerEnv) + RoboArena (~1565 words)
+- 2026-07-31 — drafted §15.5 Real-robot evaluation: variance, success rate, time-to-completion (~1694 words)
+- 2026-08-01 — drafted §15.6 Building your own evaluation (~1777 words)
+- 2026-08-02 — drafted §15.7 Summary (~2041 words)
+- 2026-08-03 — drafted §15.x Hands-on exercise + chapter references (~2075 words)
