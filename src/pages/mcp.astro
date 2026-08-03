@@ -29,14 +29,14 @@ const claudeConfig = `{
   <main class="toc-page">
     <h1>Use the book in your agent</h1>
     <p class="lede">
-      Wire this book into your own AI agent — one URL, no install, always current.
+      Wire this book into your own AI agent: one URL, no install, always current.
     </p>
 
     <h2>What this is</h2>
     <p>
       A remote <abbr title="Model Context Protocol">MCP</abbr> endpoint that lets your AI agent
-      read and search the entire book — every drafted chapter, section, and appendix, plus the
-      table of contents — straight from the live site. Point your client at this URL:
+      read and search the entire book, straight from the live site: every drafted chapter,
+      section, and appendix, plus the table of contents. Point your client at this URL:
     </p>
     <div class="cite-block">
       <button type="button" class="cite-copy" data-copy-target="mcp-endpoint">Copy</button>
@@ -56,7 +56,7 @@ const claudeConfig = `{
     <h2>Add it to Claude Desktop / other clients</h2>
     <p>
       Clients that speak remote MCP natively can use the same <code>"url"</code> form shown above.
-      For stdio&#8209;only clients — including current Claude Desktop — bridge to the remote endpoint
+      For stdio&#8209;only clients, current Claude Desktop included, bridge to the remote endpoint
       with <a href="https://www.npmjs.com/package/mcp-remote"><code>mcp-remote</code></a>:
     </p>
     <div class="cite-block">
@@ -65,24 +65,24 @@ const claudeConfig = `{
     </div>
 
     <h2>What your agent can do</h2>
-    <p>Once connected, your agent gets four read&#8209;only tools:</p>
+    <p>Once connected, your agent gets four read&#8209;only tools.</p>
     <ul>
       <li>
-        <code>get_table_of_contents</code> — the full table of contents (parts, chapters,
+        <code>get_table_of_contents</code>: the full table of contents (parts, chapters,
         sections, and appendices A–F) with each section's status and whether it has a
         readable body yet.
       </li>
       <li>
-        <code>get_section</code> — the full text of one section by id (<code>1.1</code>,
+        <code>get_section</code>: the full text of one section by id (<code>1.1</code>,
         <code>4.1</code>, <code>1.x</code>) or an appendix by letter (<code>A</code>), along with
         its title, prerequisites, key references, and public URL.
       </li>
       <li>
-        <code>get_chapter</code> — a whole chapter: its title and every readable section's
-        body, in order.
+        <code>get_chapter</code>: a whole chapter, its title and every readable section's body,
+        in order.
       </li>
       <li>
-        <code>search</code> — full&#8209;text search across every section and appendix, ranked by
+        <code>search</code>: full&#8209;text search across every section and appendix, ranked by
         relevance, returning ids, titles, URLs, and an excerpt around the first match.
       </li>
     </ul>
