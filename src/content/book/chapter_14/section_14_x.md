@@ -209,7 +209,7 @@ many-step sampler does not.
 
 ## Chapter 14 reading list
 
-Cited across §14.1–§14.6, grouped by the job each reference does. Full entries for
+Cited across §14.1–§14.7, grouped by the job each reference does. Full entries for
 everything in the book live in Appendix E.2; this is the chapter-local subset.
 
 ### The two flagship dual-system models
@@ -238,7 +238,7 @@ everything in the book live in Appendix E.2; this is the chapter-local subset.
   breaking it, and the limit it leaves open (one forward pass, one clock) is the
   ceiling this whole chapter answers.
 
-### The third family
+### The third and fourth families
 
 - Google DeepMind (2025). "Gemini Robotics-ER 1.5 and the Embodied Reasoning
   family." arXiv:2510.03342. §14.3's third branch: the two-clock split with a
@@ -246,11 +246,21 @@ everything in the book live in Appendix E.2; this is the chapter-local subset.
   points and trajectories before the fast half moves, and Motion Transfer across
   embodiments. The embodied-chain-of-thought idea here is developed in full in
   §18.4, and Motion Transfer feeds the cross-embodiment discussion in §18.1.
+- Google DeepMind (2026). "Gemini Robotics 2, Gemini Robotics-ER 2, and Gemini
+  Robotics On-Device 2." deepmind.google/blog (announced 2026-07-30). §14.6's
+  fourth branch: the first VLA to drive a full humanoid, legs included, under one
+  learned policy, demonstrated on Apptronik's Apollo 2 and erasing the
+  locomotion-versus-manipulation seam every earlier stack kept. The On-Device 2
+  variant's few-hours re-targeting to a new body feeds §18.1, and putting balance
+  inside the manipulation policy sharpens the certification worry of §17.5.
+- OpenDriveLab (2026). "WholebodyVLA: Towards Unified Latent VLA for Whole-body
+  Loco-manipulation Control." ICLR 2026. §14.6's open research counterpart to
+  Gemini Robotics 2, the readable version of unified whole-body control.
 
 ### The backward thread
 
 - Featherstone, R. (2008). *Rigid Body Dynamics Algorithms.* Springer. §14.1 and
-  §14.6's reminder that the fast-inner-loop, slow-outer-loop structure predates
+  §14.7's reminder that the fast-inner-loop, slow-outer-loop structure predates
   learning by decades. The dual-system VLA is §4.3's layered control with both
   layers now learned, and Helix-02's System 0 is where that rediscovery reaches the
   locomotion layer classical methods used to own.
