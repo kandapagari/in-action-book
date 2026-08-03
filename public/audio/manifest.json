@@ -493,11 +493,11 @@
     "14.1": {
       "chapter": 14,
       "char_count": 9877,
-      "content_hash": "adcbc36df66dcde60e31669ccf871e44e33e355c72fc8583d03221ac15b0708f",
-      "duration_seconds": 590.93,
+      "content_hash": "c83db41cea67e0e28f2d8185b7198cecfd095a110ca8a1649c452f7caa43049e",
+      "duration_seconds": 590.84,
       "file": "/audio/chapter-14/section-14_1.mp3",
-      "file_size_bytes": 4728045,
-      "generated_at": "2026-07-28T09:16:19+00:00",
+      "file_size_bytes": 4727469,
+      "generated_at": "2026-08-03T12:47:31+00:00",
       "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_1.mp3",
       "section": "14.1",
       "title": "Why a single forward pass is not always enough",
@@ -562,31 +562,45 @@
     },
     "14.6": {
       "chapter": 14,
-      "char_count": 14046,
-      "content_hash": "7db82595886487fdd2235d5403855b4d52b5b21cd49b93f1a0451c790a9f622b",
-      "duration_seconds": 866.99,
+      "char_count": 9781,
+      "content_hash": "2b896bffa2d669933d3e4631d230eb27f3700079babbea72199994e9027056f2",
+      "duration_seconds": 612.02,
       "file": "/audio/chapter-14/section-14_6.mp3",
-      "file_size_bytes": 6936621,
-      "generated_at": "2026-07-28T09:16:40+00:00",
+      "file_size_bytes": 4896813,
+      "generated_at": "2026-08-03T12:47:35+00:00",
       "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_6.mp3",
       "section": "14.6",
+      "title": "Gemini Robotics 2: unified whole-body loco-manipulation",
+      "voice": "af_heart",
+      "word_count": 1643
+    },
+    "14.7": {
+      "chapter": 14,
+      "char_count": 15098,
+      "content_hash": "65c64cb56549457398b163c40992c0b069fa36480cfb3cea7d60f381d56c9c84",
+      "duration_seconds": 938.17,
+      "file": "/audio/chapter-14/section-14_7.mp3",
+      "file_size_bytes": 7506093,
+      "generated_at": "2026-08-03T12:47:43+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_7.mp3",
+      "section": "14.7",
       "title": "Summary",
       "voice": "af_heart",
-      "word_count": 2374
+      "word_count": 2544
     },
     "14.x": {
       "chapter": 14,
-      "char_count": 11024,
-      "content_hash": "a7693e9bb574ac1fc88995b19b7b43f990e3c50da536fc01a3420071a1815d56",
-      "duration_seconds": 684.34,
+      "char_count": 11812,
+      "content_hash": "76c7771b658700def9be5349e482f4efe24cc99b7fd90a8f75dc11770be2731b",
+      "duration_seconds": 744.56,
       "file": "/audio/chapter-14/section-14_x.mp3",
-      "file_size_bytes": 5475501,
-      "generated_at": "2026-07-28T09:16:46+00:00",
+      "file_size_bytes": 5957229,
+      "generated_at": "2026-08-03T12:47:49+00:00",
       "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-14/section-14_x.mp3",
       "section": "14.x",
       "title": "Hands-on exercise + chapter references",
       "voice": "af_heart",
-      "word_count": 1873
+      "word_count": 1982
     },
     "15.1": {
       "chapter": 15,
@@ -1569,7 +1583,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-08-03T12:14:06+00:00",
+  "generated_at": "2026-08-03T12:47:49+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
