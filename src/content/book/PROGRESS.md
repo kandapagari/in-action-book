@@ -277,13 +277,13 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 #### Chapter 16. Fine-tuning a VLA for your robot
 
-- [ ] 16.1 Picking a base model
-- [ ] 16.2 Building a teleop dataset that does not waste your time
-- [ ] 16.3 LoRA vs. full fine-tuning vs. action-head-only
-- [ ] 16.4 Sim-to-real fine-tuning loops
-- [ ] 16.5 A recipe card for new embodiments
-- [ ] 16.6 Summary
-- [ ] 16.x Hands-on exercise + chapter references
+- [x] 16.1 Picking a base model
+- [x] 16.2 Building a teleop dataset that does not waste your time
+- [x] 16.3 LoRA vs. full fine-tuning vs. action-head-only
+- [x] 16.4 Sim-to-real fine-tuning loops
+- [x] 16.5 A recipe card for new embodiments
+- [x] 16.6 Summary
+- [x] 16.x Hands-on exercise + chapter references
 
 #### Chapter 17. Evaluation, safety, and deployment
 
@@ -429,3 +429,10 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-08-01 — drafted §15.6 Building your own evaluation (~1777 words)
 - 2026-08-02 — drafted §15.7 Summary (~2041 words)
 - 2026-08-03 — drafted §15.x Hands-on exercise + chapter references (~2075 words)
+- 2026-08-03 — drafted §16.1 Picking a base model (~1470 words)
+- 2026-08-03 — drafted §16.2 Building a teleop dataset that does not waste your time (~1426 words)
+- 2026-08-03 — drafted §16.3 LoRA vs. full fine-tuning vs. action-head-only (~1375 words)
+- 2026-08-03 — drafted §16.4 Sim-to-real fine-tuning loops (~1429 words)
+- 2026-08-03 — drafted §16.5 A recipe card for new embodiments (~1315 words)
+- 2026-08-03 — drafted §16.6 Summary (~1329 words)
+- 2026-08-03 — drafted §16.x Hands-on exercise + chapter references (~1764 words)
