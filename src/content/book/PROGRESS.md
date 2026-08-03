@@ -288,13 +288,13 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 #### Chapter 17. Evaluation, safety, and deployment
 
-- [ ] 17.1 Safety as a layer, not a property
-- [ ] 17.2 Runtime monitors and shielding — VLM-as-monitor patterns (Code-as-Monitor), runtime action authorization, and step-level failure-signal detection (arXiv 2605.30834)
-- [ ] 17.3 A/B evaluation on hardware
-- [ ] 17.4 Logging, alerting, and rollback
-- [ ] 17.5 What we still cannot certify — plus emerging attack surfaces (adversarial patches that hijack VLA chain-of-thought reasoning, sensor-perturbation fragility, and the CVPR 2026 AdvML adversarial-VLA challenge)
-- [ ] 17.6 Summary
-- [ ] 17.x Hands-on exercise + chapter references
+- [x] 17.1 Safety as a layer, not a property
+- [x] 17.2 Runtime monitors and shielding — VLM-as-monitor patterns (Code-as-Monitor), runtime action authorization, and step-level failure-signal detection (arXiv 2605.30834)
+- [x] 17.3 A/B evaluation on hardware
+- [x] 17.4 Logging, alerting, and rollback
+- [x] 17.5 What we still cannot certify — plus emerging attack surfaces (adversarial patches that hijack VLA chain-of-thought reasoning, sensor-perturbation fragility, and the CVPR 2026 AdvML adversarial-VLA challenge)
+- [x] 17.6 Summary
+- [x] 17.x Hands-on exercise + chapter references
 
 #### Chapter 18. Open problems and what comes next
 
@@ -439,3 +439,10 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-08-03 — drafted §16.x Hands-on exercise + chapter references (~1764 words)
 - 2026-08-03 — drafted §14.6 Gemini Robotics 2: unified whole-body loco-manipulation (~1640 words)
 - 2026-08-03 — renumbered Chapter 14: Gemini Robotics 2 section moved to §14.6 (was §14.7) so it precedes the Summary; Summary moved to §14.7. Cross-references in §14.1 and §14.x updated.
+- 2026-08-03 — drafted §17.1 Safety as a layer, not a property (~1446 words)
+- 2026-08-03 — drafted §17.2 Runtime monitors and shielding (~1362 words)
+- 2026-08-03 — drafted §17.3 A/B evaluation on hardware (~1420 words)
+- 2026-08-03 — drafted §17.4 Logging, alerting, and rollback (~1188 words)
+- 2026-08-03 — drafted §17.5 What we still cannot certify (~1436 words)
+- 2026-08-03 — drafted §17.6 Summary (~1628 words)
+- 2026-08-03 — drafted §17.x Hands-on exercise + chapter references (~1951 words)
