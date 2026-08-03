@@ -700,6 +700,104 @@
       "voice": "af_heart",
       "word_count": 1833
     },
+    "16.1": {
+      "chapter": 16,
+      "char_count": 8597,
+      "content_hash": "3c594d2eddb705fdfa03a7580ca1e2eb2349d456b2c496e0d36d953fbcb8bea6",
+      "duration_seconds": 536.25,
+      "file": "/audio/chapter-16/section-16_1.mp3",
+      "file_size_bytes": 4290669,
+      "generated_at": "2026-08-03T12:13:47+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-16/section-16_1.mp3",
+      "section": "16.1",
+      "title": "Picking a base model: OpenVLA, Octo, or a smaller distilled checkpoint",
+      "voice": "af_heart",
+      "word_count": 1512
+    },
+    "16.2": {
+      "chapter": 16,
+      "char_count": 8352,
+      "content_hash": "9c04d346ff2a994bd98933d8bbee60d9ad658a8832defc89789f4ae82d596e8f",
+      "duration_seconds": 496.28,
+      "file": "/audio/chapter-16/section-16_2.mp3",
+      "file_size_bytes": 3970989,
+      "generated_at": "2026-08-03T12:13:50+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-16/section-16_2.mp3",
+      "section": "16.2",
+      "title": "Building a teleop dataset that does not waste your time",
+      "voice": "af_heart",
+      "word_count": 1427
+    },
+    "16.3": {
+      "chapter": 16,
+      "char_count": 7822,
+      "content_hash": "59762dd77f1a6d571f8b3f7b3c926cd668bf1a22af8711fe0c47a539a2369eb2",
+      "duration_seconds": 477.13,
+      "file": "/audio/chapter-16/section-16_3.mp3",
+      "file_size_bytes": 3817773,
+      "generated_at": "2026-08-03T12:13:53+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-16/section-16_3.mp3",
+      "section": "16.3",
+      "title": "LoRA vs. full fine-tuning vs. action-head-only",
+      "voice": "af_heart",
+      "word_count": 1343
+    },
+    "16.4": {
+      "chapter": 16,
+      "char_count": 8524,
+      "content_hash": "efc46508bba8cccf7dad6bafb5bf275e6ee8b4589b4850f3854726a95241785b",
+      "duration_seconds": 519.3,
+      "file": "/audio/chapter-16/section-16_4.mp3",
+      "file_size_bytes": 4155117,
+      "generated_at": "2026-08-03T12:13:56+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-16/section-16_4.mp3",
+      "section": "16.4",
+      "title": "Sim-to-real fine-tuning loops",
+      "voice": "af_heart",
+      "word_count": 1427
+    },
+    "16.5": {
+      "chapter": 16,
+      "char_count": 7883,
+      "content_hash": "3216dd0fd21f8085372ca60df103a3fcdf9c04987ce7ec978ce37703a3c9af8e",
+      "duration_seconds": 500.59,
+      "file": "/audio/chapter-16/section-16_5.mp3",
+      "file_size_bytes": 4005357,
+      "generated_at": "2026-08-03T12:13:59+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-16/section-16_5.mp3",
+      "section": "16.5",
+      "title": "A recipe card for new embodiments",
+      "voice": "af_heart",
+      "word_count": 1318
+    },
+    "16.6": {
+      "chapter": 16,
+      "char_count": 8099,
+      "content_hash": "c4c08693fcde38fd79ffa17abf2a4caff05503d558495d12ccb3c685a0b5316e",
+      "duration_seconds": 510.47,
+      "file": "/audio/chapter-16/section-16_6.mp3",
+      "file_size_bytes": 4084461,
+      "generated_at": "2026-08-03T12:14:02+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-16/section-16_6.mp3",
+      "section": "16.6",
+      "title": "Summary",
+      "voice": "af_heart",
+      "word_count": 1351
+    },
+    "16.x": {
+      "chapter": 16,
+      "char_count": 9554,
+      "content_hash": "37238cec18fee3ec9cad37e3e112d66758db1977d67c3f4132f1930569c9ffae",
+      "duration_seconds": 635.81,
+      "file": "/audio/chapter-16/section-16_x.mp3",
+      "file_size_bytes": 5087277,
+      "generated_at": "2026-08-03T12:14:06+00:00",
+      "path": "/home/pavan.kandapagari/Documents/Github/in-action-book/public/audio/chapter-16/section-16_x.mp3",
+      "section": "16.x",
+      "title": "Hands-on exercise + chapter references",
+      "voice": "af_heart",
+      "word_count": 1588
+    },
     "2.1": {
       "chapter": 2,
       "char_count": 9334,
@@ -1471,7 +1569,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-08-03T09:14:59+00:00",
+  "generated_at": "2026-08-03T12:14:06+00:00",
   "schema_version": 1,
   "voice_default": "af_heart"
 }
