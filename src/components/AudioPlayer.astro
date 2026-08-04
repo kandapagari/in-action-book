@@ -7,13 +7,16 @@
 // listening.
 //
 // Audio source priority:
-//   1. Pre-generated MP3 from Kokoro at /audio/chapter-{N}/section-{N_N}.mp3.
-//      (Listed in /audio/manifest.json, imported below at build time.)
+//   1. Pre-generated MP3 rendition from /audio/manifest.json (imported
+//      below at build time). A section can carry one rendition per TTS
+//      engine; with more than one, a model dropdown appears next to the
+//      speed button and the choice persists across the whole book.
 //   2. If no MP3 exists for this section, OR the MP3 fails to load at
 //      runtime, fall back to the browser's Web Speech API.
 //
-// Disclosure: "AI-narrated by Kokoro" is rendered once, inline, in the
-// player block. It is not a recurring banner.
+// Disclosure: "AI-narrated by <engine>" is rendered once, inline, in the
+// player block, and follows the selected engine. It is not a recurring
+// banner.
 
 import audioManifest from '../../public/audio/manifest.json';
 
@@ -22,19 +25,29 @@ export interface Props {
   section: string;
 }
 
-type ManifestEntry = {
-  section: string;
-  chapter: number;
-  title: string;
+type Rendition = {
   file: string;
   duration_seconds: number;
   file_size_bytes: number;
   voice: string;
   generated_at: string;
+  content_hash: string;
+  label?: string;
+  homepage?: string;
+};
+
+type ManifestEntry = {
+  section: string;
+  chapter: number;
+  title: string;
+  char_count: number;
+  word_count: number;
+  renditions: Record<string, Rendition>;
 };
 
 type AudioManifest = {
   schema_version: number;
+  engine_default: string;
   voice_default: string;
   generated_at: string;
   entries: Record<string, ManifestEntry>;
@@ -59,10 +72,21 @@ const { chapter, section } = Astro.props as Props;
 const manifest = audioManifest as AudioManifest;
 const entry = manifest.entries[section] ?? null;
 
-const hasAudio = Boolean(entry);
-const audioSrc = entry?.file ?? '';
-const durationSec = entry?.duration_seconds ?? 0;
-const voice = entry?.voice ?? manifest.voice_default ?? 'af_heart';
+const renditions = entry?.renditions ?? {};
+const engineDefault = manifest.engine_default ?? 'kokoro';
+// Default engine first, then alphabetical — the dropdown's stable order.
+const engineNames = Object.keys(renditions).sort((a, b) =>
+  a === engineDefault ? -1 : b === engineDefault ? 1 : a.localeCompare(b),
+);
+const initialName = renditions[engineDefault] ? engineDefault : engineNames[0];
+const initial = initialName ? renditions[initialName] : null;
+const labelFor = (name: string): string =>
+  renditions[name]?.label ?? name.charAt(0).toUpperCase() + name.slice(1);
+
+const hasAudio = Boolean(initial);
+const audioSrc = initial?.file ?? '';
+const durationSec = initial?.duration_seconds ?? 0;
+const voice = initial?.voice ?? manifest.voice_default ?? 'af_heart';
 
 const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
 ---
@@ -113,9 +137,30 @@ const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
     aria-label="Playback speed"
   >1×</button>
 
+  {engineNames.length > 1 && (
+    <select
+      class="audio-player__engine"
+      data-role="engine"
+      aria-label="Narration model"
+    >
+      {engineNames.map((name) => (
+        <option
+          value={name}
+          selected={name === initialName}
+          data-file={renditions[name].file}
+          data-duration={String(renditions[name].duration_seconds)}
+          data-label={labelFor(name)}
+          data-homepage={renditions[name].homepage ?? ''}
+        >
+          {labelFor(name)}{name === engineDefault ? ' (default)' : ''}
+        </option>
+      ))}
+    </select>
+  )}
+
   <span class="audio-player__disclosure" data-role="disclosure">
-    {hasAudio ? (
-      <Fragment>AI-narrated by <a href="https://github.com/hexgrad/kokoro" target="_blank" rel="noopener">Kokoro</a></Fragment>
+    {hasAudio && initialName ? (
+      <Fragment>AI-narrated by <a href={initial?.homepage} data-role="engine-link" target="_blank" rel="noopener">{labelFor(initialName)}</a></Fragment>
     ) : (
       <Fragment>Listen (browser TTS — quality varies)</Fragment>
     )}
@@ -143,6 +188,9 @@ const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
   };
 
   const SPEEDS = [1, 1.25, 1.5, 0.85];
+
+  // One key for the whole book: the reader's chosen narration model.
+  const ENGINE_STORAGE_KEY = 'book-tts-engine';
 
   function fmt(sec: number): string {
     if (!Number.isFinite(sec) || sec < 0) return '0:00';
@@ -179,6 +227,7 @@ const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
     const icon = root.querySelector('[data-role="icon"]') as HTMLElement;
     const speedBtn = root.querySelector('[data-role="speed"]') as HTMLButtonElement;
     const disclosure = root.querySelector('[data-role="disclosure"]') as HTMLElement;
+    const engineSelect = root.querySelector('select[data-role="engine"]') as HTMLSelectElement | null;
 
     // When the player goes sticky (position:fixed) it leaves normal flow,
     // which would shift the rest of the section up. Insert an
@@ -299,6 +348,60 @@ const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
         setSticky(false);
         updateIcon();
       }
+    }
+
+    function applyEngine(name: string, persist: boolean): void {
+      if (!engineSelect) return;
+      const opt = Array.from(engineSelect.options).find((o) => o.value === name);
+      if (!opt) return;
+      engineSelect.value = name;
+      if (state.isPlaying) {
+        pause();
+      }
+      if (state.audio) {
+        state.audio.src = opt.dataset.file || '';
+        state.audio.load();
+        scrub.value = '0';
+        cur.textContent = '0:00';
+        tot.textContent = fmt(Number(opt.dataset.duration || 0));
+      }
+      state.mode = 'audio';
+      if (disclosure) {
+        // Rebuild (not textContent) so the engine link survives; the TTS
+        // fallback paths replace the disclosure wholesale anyway.
+        disclosure.textContent = '';
+        disclosure.append('AI-narrated by ');
+        const a = document.createElement('a');
+        a.setAttribute('data-role', 'engine-link');
+        a.textContent = opt.dataset.label || name;
+        const homepage = opt.dataset.homepage || '';
+        if (homepage) {
+          a.href = homepage;
+          a.target = '_blank';
+          a.rel = 'noopener';
+        }
+        disclosure.append(a);
+      }
+      if (persist) {
+        try {
+          localStorage.setItem(ENGINE_STORAGE_KEY, name);
+        } catch {
+          // Storage unavailable (private mode) — selection just won't stick.
+        }
+      }
+    }
+
+    if (engineSelect) {
+      let stored: string | null = null;
+      try {
+        stored = localStorage.getItem(ENGINE_STORAGE_KEY);
+      } catch {
+        // Storage unavailable — fall through to the manifest default.
+      }
+      if (stored && stored !== engineSelect.value) {
+        applyEngine(stored, false);
+      }
+      engineSelect.addEventListener('change', () => applyEngine(engineSelect.value, true));
     }
 
     toggle.addEventListener('click', () => {

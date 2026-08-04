@@ -18,6 +18,7 @@
     "build:audio": "bash scripts/audio/run.sh",
     "build:audio:force": "bash scripts/audio/run.sh --force",
     "build:audio:section": "bash scripts/audio/run.sh --section",
+    "build:audio:samples": "bash scripts/audio/samples/run-samples.sh",
     "newsletter:check-smtp": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/newsletter/check-smtp.mjs"
   },
   "dependencies": {
