@@ -117,7 +117,7 @@ also pending but generic/exercise sections with no specific finding to attach).
 
 #### Chapter 1. The robot learning problem
 
-- [r] 1.1 Why "action" is the hard part of robotics
+- [x] 1.1 Why "action" is the hard part of robotics
 - [x] 1.2 Anatomy of an action model: inputs, outputs, training signal
 - [x] 1.3 A short history, from STRIPS to π0
 - [x] 1.4 The four families of action models
@@ -298,13 +298,13 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 
 #### Chapter 18. Open problems and what comes next
 
-- [ ] 18.1 Generalization across embodiments — including the shift toward whole-body neural control (Helix-02's System 0, and now Gemini Robotics 2's unified loco-manipulation policy) blurring the classical/learned locomotion boundary from Chapter 4
-- [ ] 18.2 Long-horizon and dexterous tasks — dexterity remains below human level even as dedicated foundation models (GENE, RLDX-1) target it directly
-- [ ] 18.3 Video-pretrained action models — now with a concrete result: V-JEPA 2 → V-JEPA 2-AC, zero-shot pick-and-place from under 62 hours of unlabeled robot video
-- [ ] 18.4 Reasoning + action: LLM chains of thought meet control — no longer speculative; an active subfield (embodied CoT, latent-reasoning VLAs, ERVLA's CoT-dropout at inference, Gemini's Embodied Thinking)
-- [ ] 18.5 What to read next, and how to contribute
-- [ ] 18.6 Summary
-- [ ] 18.x Hands-on exercise + chapter references
+- [x] 18.1 Generalization across embodiments — including the shift toward whole-body neural control (Helix-02's System 0, and now Gemini Robotics 2's unified loco-manipulation policy) blurring the classical/learned locomotion boundary from Chapter 4
+- [x] 18.2 Long-horizon and dexterous tasks — dexterity remains below human level even as dedicated foundation models (GENE, RLDX-1) target it directly
+- [x] 18.3 Video-pretrained action models — now with a concrete result: V-JEPA 2 → V-JEPA 2-AC, zero-shot pick-and-place from under 62 hours of unlabeled robot video
+- [x] 18.4 Reasoning + action: LLM chains of thought meet control — no longer speculative; an active subfield (embodied CoT, latent-reasoning VLAs, ERVLA's CoT-dropout at inference, Gemini's Embodied Thinking)
+- [x] 18.5 What to read next, and how to contribute
+- [x] 18.6 Summary
+- [x] 18.x Hands-on exercise + chapter references
 
 ### Appendices
 
@@ -446,3 +446,12 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-08-03 — drafted §17.5 What we still cannot certify (~1436 words)
 - 2026-08-03 — drafted §17.6 Summary (~1628 words)
 - 2026-08-03 — drafted §17.x Hands-on exercise + chapter references (~1951 words)
+- 2026-08-03 — drafted §18.1 Generalization across embodiments (~1598 words)
+- 2026-08-03 — drafted §18.2 Long-horizon and dexterous tasks (~1556 words)
+- 2026-08-03 — drafted §18.3 Video-pretrained action models (~1541 words)
+- 2026-08-03 — drafted §18.4 Reasoning + action: where LLM-style chains of thought meet control (~1630 words)
+- 2026-08-03 — drafted §18.5 What to read next, and how to contribute (~1569 words)
+- 2026-08-03 — drafted §18.6 Summary (~1571 words)
+- 2026-08-03 — drafted §18.x Hands-on exercise + chapter references (~1627 words)
+- 2026-08-03 — Chapter 18 complete. All 18 chapters and appendices A–F now drafted; book is fully drafted at first-draft [x] status. Remaining editorial work is revision ([r]) passes by Pavan.
+- 2026-08-04 — No pending [ ] sections found. Book remains fully drafted (all 108 sections + appendices A–F at [x]). No drafting action taken. Next step is revision ([r]) passes by Pavan; the daily draft task has no remaining first-draft work.
