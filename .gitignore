@@ -18,6 +18,11 @@ scripts/audio/.venv/
 scripts/audio/.audio-manifest.json
 scripts/audio/logs/
 
+# TTS model shootout (Phase 1 samples): generated MP3s/wavs/logs and the
+# vendored CosyVoice clone are local state, recreated by run-samples.sh
+scratch/
+scripts/audio/samples/vendor/
+
 # dependencies
 node_modules/
 

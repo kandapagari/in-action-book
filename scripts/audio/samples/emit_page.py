@@ -1,0 +1,125 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = []
+# ///
+"""Emit scratch/tts-samples/index.html — the self-contained TTS comparison page.
+
+Reads samples.json (written by the engine scripts) and renders one native
+<audio controls> player per engine with duration, file size, generation
+wall-time, voice and license notes. file://-relative paths, no server needed.
+"""
+
+from __future__ import annotations
+
+import argparse
+import html
+import json
+from pathlib import Path
+
+ENGINE_ORDER = ["kokoro", "vibevoice", "chatterbox", "f5tts", "dia", "orpheus", "cosyvoice"]
+ENGINE_LABEL = {
+    "kokoro": "Kokoro 82M (baseline)",
+    "vibevoice": "VibeVoice-1.5B (Microsoft)",
+    "chatterbox": "Chatterbox 0.5B (Resemble)",
+    "f5tts": "F5-TTS (SWivid)",
+    "dia": "Dia 1.6B (Nari Labs)",
+    "orpheus": "Orpheus 3B (Canopy)",
+    "cosyvoice": "CosyVoice 2 0.5B (Alibaba)",
+}
+
+CSS = """
+body{font-family:system-ui,-apple-system,sans-serif;max-width:960px;margin:2rem auto;padding:0 1rem;color:#1a1a1a;line-height:1.5}
+h1{font-size:1.6rem} h2{font-size:1.1rem;margin:0 0 .25rem}
+.card{border:1px solid #ddd;border-radius:10px;padding:1rem 1.25rem;margin:1rem 0}
+.card.failed{opacity:.65;border-color:#e0b4b4;background:#fdf6f6}
+.meta{color:#555;font-size:.85rem;margin:.25rem 0 .6rem}
+.meta span{display:inline-block;margin-right:1.2rem}
+.notes{font-size:.85rem;color:#444;margin:.3rem 0 .6rem}
+audio{width:100%;margin-top:.25rem}
+.err{color:#a33;font-size:.85rem;white-space:pre-wrap}
+footer{color:#888;font-size:.8rem;margin-top:2rem}
+"""
+
+
+def fmt_size(n: int) -> str:
+    return f"{n / (1024 * 1024):.1f} MB" if n >= 1024 * 1024 else f"{n / 1024:.0f} KB"
+
+
+def fmt_dur(s: float) -> str:
+    m, sec = divmod(int(round(s)), 60)
+    return f"{m}:{sec:02d}"
+
+
+def main() -> int:
+    p = argparse.ArgumentParser()
+    p.add_argument("--out", type=Path, default=Path(__file__).resolve().parents[3] / "scratch" / "tts-samples")
+    args = p.parse_args()
+    out_dir: Path = args.out
+
+    data = json.loads((out_dir / "samples.json").read_text(encoding="utf-8"))
+    section_ids = sorted(data.get("sections", {}), key=lambda s: [int(x) for x in s.split(".")])
+
+    cards: list[str] = []
+    for engine in ENGINE_ORDER:
+        eng = data.get("engines", {}).get(engine)
+        label = ENGINE_LABEL.get(engine, engine)
+        if eng is None:
+            cards.append(f'<div class="card failed"><h2>{html.escape(label)}</h2><div class="err">not run yet</div></div>')
+            continue
+        meta = eng.get("meta", {})
+        for section_id in section_ids:
+            entry = eng.get("sections", {}).get(section_id)
+            sec_info = data["sections"].get(section_id, {})
+            title = html.escape(f"§{section_id} {sec_info.get('title', '')}")
+            if entry is None:
+                continue
+            if entry.get("status") != "ok":
+                err = html.escape(entry.get("error", "unknown error"))
+                cards.append(
+                    f'<div class="card failed"><h2>{html.escape(label)}</h2>'
+                    f'<div class="meta"><span>{title}</span></div>'
+                    f'<div class="err">failed: {err}</div></div>'
+                )
+                continue
+            src = html.escape(entry["file"])
+            meta_bits = [f"<span>{title}</span>"]
+            if "duration_seconds" in entry:
+                meta_bits.append(f"<span>duration {fmt_dur(entry['duration_seconds'])}</span>")
+            if "file_size_bytes" in entry:
+                meta_bits.append(f"<span>mp3 {fmt_size(entry['file_size_bytes'])}</span>")
+            if "wall_seconds" in entry:
+                meta_bits.append(f"<span>generated in {fmt_dur(entry['wall_seconds'])}</span>")
+            if meta.get("voice"):
+                meta_bits.append(f"<span>voice: {html.escape(meta['voice'])}</span>")
+            meta_bits.append(f"<span>license: {html.escape(meta.get('license', '?'))}</span>")
+            notes = f'<div class="notes">{html.escape(meta["notes"])}</div>' if meta.get("notes") else ""
+            cards.append(
+                f'<div class="card"><h2>{html.escape(label)}</h2>'
+                f'<div class="meta">{"".join(meta_bits)}</div>{notes}'
+                f'<audio controls preload="none" src="{src}"></audio></div>'
+            )
+
+    page = f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TTS shootout — {", ".join("§" + s for s in section_ids)}</title>
+<style>{CSS}</style>
+</head>
+<body>
+<h1>TTS shootout — {", ".join("§" + s for s in section_ids)}</h1>
+<p>Same preprocessed text (production <code>preprocess.py</code>) rendered by each engine.
+MP3s are 64 kbps mono; generation wall-time is synthesis only (model load/downloads excluded where possible — kokoro is the production baseline).</p>
+{"".join(cards)}
+<footer>Generated by scripts/audio/samples/emit_page.py — engines append to samples.json; re-run run-samples.sh to refresh.</footer>
+</body>
+</html>
+"""
+    (out_dir / "index.html").write_text(page, encoding="utf-8")
+    print(f"wrote {out_dir / 'index.html'}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -11,5 +11,51 @@ dependencies = [
     "pydub>=0.25.1,<1.0",
     "pyyaml>=6.0,<7.0",
     "soundfile>=0.13,<1.0",
-    "torch>=2.4,<3.0",
+    "torch>=2.7,<3.0",
+]
+
+[project.optional-dependencies]
+# Resemble Chatterbox 0.5B (MIT) — production engine adapter in generate.py.
+# setuptools: resemble-perth imports `pkg_resources`, which py3.12 venvs no
+# longer ship; without it PerthImplicitWatermarker is None and the shipped
+# audio would go out unwatermarked.
+chatterbox = [
+    "chatterbox-tts==0.1.7",
+    "setuptools",
+]
+# Canopy Orpheus 3B on vLLM (Apache-2.0) — production engine adapter in
+# generate.py. orpheus-speech pulls snac + vllm itself; listed explicitly
+# because the adapter imports snac's decoder via orpheus_tts.
+orpheus = [
+    "orpheus-speech",
+    "snac",
+    "transformers",
+    "vllm==0.26.0",
+]
+
+[tool.uv]
+# One torch/torchaudio for the whole venv, pinned to 2.11.0: every vllm
+# ≥0.21 hard-pins torch==2.11.0 and ships compiled kernels (vllm_flash_attn,
+# torchvision ops) that fail to load on newer torch (verified: _vllm_fa3_C
+# ImportError on torch 2.13). torch 2.11.0+cu130 is cu128+/sm_120-capable —
+# it is exactly the stack the proven orpheus sample env ran on the RTX 5090.
+# The overrides also replace chatterbox-tts 0.1.7's torch==2.6.0 (cu124, no
+# sm_120 kernels), numpy<2 and transformers==5.2.0 pins (vllm needs
+# transformers>=5.5.3), chatterbox's safetensors==0.5.3 (vllm needs >=0.6.2)
+# and gradio==6.8.0 (vllm needs starlette>=1.0.1; gradio is chatterbox's
+# demo-only dep, never imported by chatterbox.tts).
+override-dependencies = [
+    "gradio>=6.22.0,<7",
+    "numpy>=2.0,<3.0",
+    "safetensors>=0.6.2,<1.0",
+    "torch==2.11.0",
+    "torchaudio==2.11.0",
+    "transformers>=5.5.3,<6",
+    # 0.2.4 shipped without manylinux x86_64 wheels; 0.2.3 is what the
+    # proven orpheus sample env ran with vllm 0.26.
+    "xgrammar==0.2.3",
+    # uv's resolver lands on 0.4.1, whose cute.core.ThrMma usage was removed
+    # in nvidia-cutlass-dsl 4.6 (vllm's pinned cutlass) — engine core dies at
+    # kernel warmup. 0.6.1 is the cutlass-4.6.0-matched, sample-proven build.
+    "quack-kernels==0.6.1",
 ]

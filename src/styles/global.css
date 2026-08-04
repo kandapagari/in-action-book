@@ -1063,6 +1063,20 @@ pre.astro-code > code {
   font-variant-numeric: tabular-nums oldstyle-nums;
 }
 .audio-player__speed:hover { color: var(--accent); border-color: var(--accent); }
+/* Engine picker — only rendered when a section has >1 rendition. */
+.audio-player__engine {
+  flex: 0 0 auto;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  background: var(--paper);
+  color: var(--muted);
+  padding: 2px 4px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: .04em;
+  cursor: pointer;
+}
+.audio-player__engine:hover { color: var(--accent); border-color: var(--accent); }
 .audio-player__disclosure {
   flex: 0 0 auto;
   font-style: italic;

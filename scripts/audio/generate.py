@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
-"""Generate Kokoro audio for every drafted section in the book.
+"""Generate TTS audio for every drafted section in the book.
 
 Reads section markdown from ``site/src/content/book/chapter_NN/section_*.md``
 (the Astro mirror of ``book/`` at the workspace root — kept in sync by
 ``tools/sync-book-to-site.sh``, run automatically by ``npm run dev`` and
 ``npm run build``).
 
-Writes MP3s to ``site/public/audio/chapter-{N}/section-{N_N}.mp3`` and two
-manifests:
+Writes MP3s under ``site/public/audio/`` and two manifests (schema v2 —
+one entry per section, one rendition per engine):
 
   * ``site/scripts/audio/.audio-manifest.json``  (build cache)
   * ``site/public/audio/manifest.json``           (consumed by the Astro UI)
 
-Idempotent: a section whose preprocessed text SHA-256 matches the cached
-hash is skipped. Pass ``--force`` to regenerate everything, or
-``--section 1.1`` to regenerate one.
+Engine: selected with ``--engine`` (default ``orpheus``, the site-wide
+default). Kokoro keeps its legacy paths ``/audio/chapter-{N}/
+section-{N_N}.mp3``; every other engine writes ``/audio/<engine>/
+chapter-{N}/…``. Non-kokoro engines live behind uv extras:
+``uv run --extra chatterbox`` / ``uv run --extra orpheus``.
+
+Idempotent: a (section, engine, voice) whose preprocessed text SHA-256
+matches the cached rendition hash is skipped. Pass ``--force`` to
+regenerate everything, or ``--section 1.1`` to regenerate one.
 
 Voice: defaults to ``af_heart`` (American female, warm, well-paced for
 long-form). Override with ``--voice am_michael`` etc. See the Kokoro voices
@@ -32,8 +38,9 @@ import os
 import sys
 import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional, Protocol
 
 import numpy as np
 import soundfile as sf
@@ -96,12 +103,15 @@ def _configure_espeak() -> None:
         EspeakWrapper.set_data_path(data_path)
 
 
-_configure_espeak()
-
+# NOTE: _configure_espeak() runs inside KokoroEngine.load(), not at import
+# time — --dry-run and non-Kokoro engines must not require espeak-ng or
+# misaki to be installed.
 
 from manifest import (
+    DEFAULT_ENGINE,
     AudioEntry,
     Manifest,
+    Rendition,
     load_manifest,
     save_manifest,
     section_disk_path,
@@ -385,15 +395,237 @@ def encode_mp3(samples: np.ndarray, sample_rate: int, out_path: Path, bitrate: s
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Engines
+# ─────────────────────────────────────────────────────────────────────────────
+
+class Engine(Protocol):
+    """One TTS backend.
+
+    The driver owns discovery, preprocessing, chunking, chunk-joining, MP3
+    encoding, and manifest bookkeeping; an engine only owns model loading
+    and per-chunk synthesis. ``name`` doubles as the manifest rendition key
+    and the /audio/<name>/ URL subtree for every engine except kokoro,
+    which keeps the legacy unprefixed paths.
+    """
+
+    name: str
+    label: str      # Reader-facing display name for the player dropdown.
+    homepage: str   # Project URL for the player's disclosure link.
+    sample_rate: int
+    chunk_chars: int    # Max chars per synthesis call; models drift on longer inputs.
+    default_voice: str  # Used unless --voice overrides.
+
+    def load(self, device: Optional[str]) -> None: ...
+    def synthesize_chunk(self, text: str, voice: str, trim: bool) -> np.ndarray: ...
+
+
+class KokoroEngine:
+    name = "kokoro"
+    label = "Kokoro"
+    homepage = "https://github.com/hexgrad/kokoro"
+    sample_rate = KOKORO_SAMPLE_RATE
+    chunk_chars = 4000
+    default_voice = DEFAULT_VOICE
+
+    def __init__(self) -> None:
+        self._pipeline = None
+
+    def load(self, device: Optional[str]) -> None:
+        if self._pipeline is not None:
+            return
+        _configure_espeak()
+        self._pipeline = get_pipeline(select_device(device))
+
+    def synthesize_chunk(self, text: str, voice: str, trim: bool) -> np.ndarray:
+        if self._pipeline is None:
+            raise RuntimeError("kokoro engine used before load()")
+        return synthesize(text, voice, self._pipeline, trim=trim)
+
+
+class ChatterboxEngine:
+    """Resemble's 0.5B Llama-style TTS (MIT), default built-in voice.
+
+    Invocation quirks proven in samples/chatterbox.py: ~800-char chunks
+    (longer inputs drift in pace/pitch), and the resemble-perth watermarker
+    is stubbed with a passthrough when it fails to import (chatterbox
+    0.1.7 calls it unconditionally).
+    """
+
+    name = "chatterbox"
+    label = "Chatterbox"
+    homepage = "https://github.com/resemble-ai/chatterbox"
+    sample_rate = 24_000  # chatterbox S3Gen outputs 24 kHz; re-read from the model at load.
+    chunk_chars = 800
+    default_voice = "default"  # no voice cloning: the built-in voice; `voice` is ignored.
+
+    def __init__(self) -> None:
+        self._model = None
+
+    def load(self, device: Optional[str]) -> None:
+        if self._model is not None:
+            return
+        try:
+            import perth
+            import torch
+            from chatterbox.tts import ChatterboxTTS
+        except ImportError as exc:
+            raise RuntimeError(
+                "audio: the chatterbox engine needs its uv extra:\n"
+                "audio:   uv run --extra chatterbox python generate.py --engine chatterbox …"
+            ) from exc
+
+        if perth.PerthImplicitWatermarker is None:
+            print("audio: resemble-perth watermarker unavailable — "
+                  "chatterbox audio ships WITHOUT the provenance watermark")
+
+            class _NoWatermark:
+                def apply_watermark(self, wav, sample_rate=None):
+                    return wav
+
+            perth.PerthImplicitWatermarker = _NoWatermark
+
+        dev = select_device(device)
+        print(f"  loading ChatterboxTTS (device={dev}) …")
+        self._model = ChatterboxTTS.from_pretrained(device=dev)
+        self.sample_rate = self._model.sr
+
+    def synthesize_chunk(self, text: str, voice: str, trim: bool) -> np.ndarray:
+        if self._model is None:
+            raise RuntimeError("chatterbox engine used before load()")
+        wav = self._model.generate(text)
+        if hasattr(wav, "cpu"):
+            wav = wav.cpu().numpy()
+        arr = np.asarray(wav, dtype=np.float32).squeeze()
+        if trim:
+            arr = trim_silence(arr, sample_rate=self.sample_rate)
+        if arr.size == 0:
+            raise RuntimeError("chatterbox returned no audio for chunk")
+        return arr
+
+
+class OrpheusEngine:
+    """Canopy's 3B Llama TTS on vLLM (Apache-2.0), default voice tara.
+
+    Invocation quirks proven in samples/orpheus.py: vLLM's SYNC LLM API
+    (orpheus-speech's AsyncLLMEngine wrapper dies silently after the first
+    request on this vllm/sm_120 stack — EngineDeadError, no traceback),
+    weights from the ungated unsloth mirror, ~350-char chunks so a chunk's
+    audio tokens stay well under max_tokens. Prompt format, sampling params
+    and the SNAC decode replicate orpheus_tts.engine_class /
+    orpheus_tts.decoder exactly.
+    """
+
+    name = "orpheus"
+    label = "Orpheus"
+    homepage = "https://github.com/canopyai/Orpheus-TTS"
+    sample_rate = 24_000  # SNAC decoder outputs 24 kHz int16.
+    chunk_chars = 350
+    default_voice = "tara"
+
+    MODEL_ID = "unsloth/orpheus-3b-0.1-ft"  # ungated mirror of canopylabs/orpheus-3b-0.1-ft
+
+    def __init__(self) -> None:
+        self._tok = None
+        self._llm = None
+        self._tokens_decoder_sync = None
+
+    def load(self, device: Optional[str]) -> None:
+        if self._llm is not None:
+            return
+        # vLLM prefers flashinfer kernels on Blackwell, but flashinfer-JIT
+        # needs nvcc (absent) and dies with a misleading "requires sm75"
+        # error. Force vLLM's vendored FlashAttention + native torch sampler.
+        # Must be set before vllm is imported.
+        os.environ.setdefault("VLLM_ATTENTION_BACKEND", "FLASH_ATTN")
+        os.environ.setdefault("VLLM_USE_FLASHINFER_SAMPLER", "0")
+        try:
+            import torch
+            from transformers import AutoTokenizer
+            from vllm import LLM
+
+            print(f"  loading {self.MODEL_ID} via sync vLLM …")
+            self._tok = AutoTokenizer.from_pretrained(self.MODEL_ID)
+            self._llm = LLM(model=self.MODEL_ID, dtype=torch.bfloat16)
+            from orpheus_tts.decoder import tokens_decoder_sync  # SNAC on cuda, loads at import
+        except ImportError as exc:
+            raise RuntimeError(
+                "audio: the orpheus engine needs its uv extra:\n"
+                "audio:   uv run --extra orpheus python generate.py --engine orpheus …"
+            ) from exc
+        self._tokens_decoder_sync = tokens_decoder_sync
+
+    def synthesize_chunk(self, text: str, voice: str, trim: bool) -> np.ndarray:
+        if self._llm is None:
+            raise RuntimeError("orpheus engine used before load()")
+        import torch
+        from vllm import SamplingParams
+
+        try:
+            from vllm.inputs import TokensPrompt
+        except ImportError:
+            from vllm import TokensPrompt
+
+        # exact prompt construction from orpheus_tts.engine_class._format_prompt
+        prompt_ids = self._tok(f"{voice}: {text}", return_tensors="pt").input_ids
+        start = torch.tensor([[128259]], dtype=torch.int64)
+        end = torch.tensor([[128009, 128260, 128261, 128257]], dtype=torch.int64)
+        full = torch.cat([start, prompt_ids, end], dim=1)[0].tolist()
+
+        sp = SamplingParams(
+            temperature=0.6,
+            top_p=0.8,
+            max_tokens=2600,  # engine default 1200 ≈ 14 s of audio; 350-char chunks need ~2x
+            stop_token_ids=[49158],
+            repetition_penalty=1.1,
+        )
+        out = self._llm.generate([TokensPrompt(prompt_token_ids=full)], sp)
+        gen_ids = list(out[0].outputs[0].token_ids)
+
+        # feed the SNAC decoder one token-string at a time, like the async stream
+        token_strings = self._tok.convert_ids_to_tokens(gen_ids)
+        pcm = np.frombuffer(b"".join(self._tokens_decoder_sync(iter(token_strings))), dtype=np.int16)
+        if pcm.size == 0:
+            raise RuntimeError("orpheus returned no audio for chunk")
+        arr = pcm.astype(np.float32) / 32768.0
+        if trim:
+            arr = trim_silence(arr, sample_rate=self.sample_rate)
+        if arr.size == 0:
+            raise RuntimeError("orpheus chunk was silent after trimming")
+        return arr
+
+
+# Registry of available adapters. Only engines the user has selected for
+# shipping get an entry here.
+ENGINES: dict[str, Callable[[], Engine]] = {
+    KokoroEngine.name: KokoroEngine,
+    ChatterboxEngine.name: ChatterboxEngine,
+    OrpheusEngine.name: OrpheusEngine,
+}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Driver
 # ─────────────────────────────────────────────────────────────────────────────
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument(
+        "--engine",
+        default=DEFAULT_ENGINE,
+        choices=sorted(ENGINES),
+        help=(
+            f"TTS engine to render with (default: {DEFAULT_ENGINE}). "
+            "Non-default engines write /audio/<engine>/chapter-N/… and add "
+            "a rendition to each manifest entry."
+        ),
+    )
+    p.add_argument(
         "--voice",
-        default=DEFAULT_VOICE,
-        help=f"Kokoro voice ID (default: {DEFAULT_VOICE}).",
+        default=None,
+        help=(
+            "Engine voice ID (default: per engine — kokoro "
+            f"{DEFAULT_VOICE}, chatterbox built-in, orpheus tara)."
+        ),
     )
     p.add_argument(
         "--force",
@@ -420,11 +652,12 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--chunk-chars",
         type=int,
-        default=4000,
+        default=None,
         help=(
-            "Max chars per Kokoro pipeline invocation (default: 4000). "
-            "Bigger = fewer outer-chunk seams; bigger needs more VRAM. "
-            "Was 1500 in the CPU/MPS era; an RTX 4090 / 5090 handles 6000+."
+            "Max chars per synthesis invocation (default: per engine — "
+            "kokoro 4000, chatterbox 800, orpheus 350). Bigger = fewer "
+            "outer-chunk seams; bigger needs more VRAM, and non-kokoro "
+            "engines drift on long inputs."
         ),
     )
     p.add_argument(
@@ -458,14 +691,23 @@ def main() -> int:
 
     print(f"audio: discovered {len(sections)} section files; {len(eligible)} eligible to render")
 
-    manifest = load_manifest(BUILD_MANIFEST_PATH, default_voice=args.voice)
-    # If the manifest's default voice differs from the requested voice we keep
-    # both — but record what the latest run was using. Per-entry voice still
-    # reflects what the saved MP3 was actually generated with.
-    manifest.voice_default = args.voice
+    engine = ENGINES[args.engine]()
+    voice = args.voice or engine.default_voice
+    max_chars = args.chunk_chars or engine.chunk_chars
+    print(f"audio: engine={engine.name} voice={voice} chunk_chars={max_chars}")
 
-    device = None
-    pipeline = None
+    manifest = load_manifest(BUILD_MANIFEST_PATH, default_voice=voice, audio_dir=AUDIO_DIR)
+    # The reader-facing default engine is a code-level decision
+    # (manifest.DEFAULT_ENGINE). Restamp it on every run so flipping the
+    # constant propagates to both manifests without touching renditions.
+    manifest.engine_default = DEFAULT_ENGINE
+    # If the manifest's default voice differs from the requested voice we keep
+    # both — but record what the latest run was using. Per-rendition voice
+    # still reflects what the saved MP3 was actually generated with.
+    if engine.name == manifest.engine_default:
+        manifest.voice_default = voice
+
+    engine_loaded = False
 
     total = len(eligible)
     generated = 0
@@ -476,13 +718,14 @@ def main() -> int:
     for idx, sec in enumerate(eligible, 1):
         prep = preprocess_markdown(sec.body)
         content_hash = sha256_of_text(prep.text)
-        out_path = section_disk_path(AUDIO_DIR, sec.chapter, sec.section)
+        out_path = section_disk_path(AUDIO_DIR, sec.chapter, sec.section, engine.name)
 
         existing = manifest.entries.get(sec.section)
+        rendition = existing.renditions.get(engine.name) if existing else None
         up_to_date = (
-            existing is not None
-            and existing.content_hash == content_hash
-            and existing.voice == args.voice
+            rendition is not None
+            and rendition.content_hash == content_hash
+            and rendition.voice == voice
             and out_path.exists()
             and not args.force
         )
@@ -502,23 +745,23 @@ def main() -> int:
             generated += 1
             continue
 
-        if pipeline is None:
-            device = select_device(args.device)
-            pipeline = get_pipeline(device)
+        if not engine_loaded:
+            engine.load(args.device)
+            engine_loaded = True
 
         chunk_start = time.time()
         try:
-            chunks = split_into_chunks(prep.text, max_chars=args.chunk_chars)
+            chunks = split_into_chunks(prep.text, max_chars=max_chars)
             audio_chunks: list[np.ndarray] = []
             for ci, chunk in enumerate(chunks, 1):
                 audio_chunks.append(
-                    synthesize(chunk, args.voice, pipeline, trim=not args.no_trim_silence)
+                    engine.synthesize_chunk(chunk, voice, trim=not args.no_trim_silence)
                 )
                 if len(chunks) > 1:
                     print(f"      chunk {ci}/{len(chunks)} ({len(chunk)} chars) done", flush=True)
-            samples = crossfade_concat(audio_chunks)
-            duration = float(len(samples) / KOKORO_SAMPLE_RATE)
-            encode_mp3(samples, KOKORO_SAMPLE_RATE, out_path, bitrate=args.bitrate)
+            samples = crossfade_concat(audio_chunks, sample_rate=engine.sample_rate)
+            duration = float(len(samples) / engine.sample_rate)
+            encode_mp3(samples, engine.sample_rate, out_path, bitrate=args.bitrate)
         except Exception as exc:  # noqa: BLE001 — surface and continue
             print(f"      FAILED: {exc!r}", file=sys.stderr)
             failures.append((sec.section, str(exc)))
@@ -531,21 +774,31 @@ def main() -> int:
             f"{file_size / 1024:0.0f} KB MP3"
         )
 
-        entry = AudioEntry(
-            section=sec.section,
-            chapter=sec.chapter,
-            title=sec.title,
-            file=section_relative_url(sec.chapter, sec.section),
-            path=str(out_path),
-            content_hash=content_hash,
+        if existing is None:
+            existing = AudioEntry(
+                section=sec.section,
+                chapter=sec.chapter,
+                title=sec.title,
+                char_count=prep.char_count,
+                word_count=prep.word_count,
+            )
+        else:
+            # Content changed (that's why we're rendering) — refresh the
+            # engine-independent metadata while keeping other renditions.
+            existing.title = sec.title
+            existing.char_count = prep.char_count
+            existing.word_count = prep.word_count
+        existing.renditions[engine.name] = Rendition(
+            file=section_relative_url(sec.chapter, sec.section, engine.name),
             duration_seconds=round(duration, 2),
             file_size_bytes=file_size,
-            voice=args.voice,
-            generated_at=__import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(timespec="seconds"),
-            char_count=prep.char_count,
-            word_count=prep.word_count,
+            voice=voice,
+            generated_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            content_hash=content_hash,
+            label=engine.label,
+            homepage=engine.homepage,
         )
-        upsert_entry(manifest, entry)
+        upsert_entry(manifest, existing)
         # Persist manifest after every section so a Ctrl-C mid-batch doesn't
         # lose progress.
         save_manifest(manifest, BUILD_MANIFEST_PATH)
