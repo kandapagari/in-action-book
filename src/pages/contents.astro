@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import DownloadButton from '../components/DownloadButton.astro';
 import { getCollection } from 'astro:content';
 import { loadProgress, sectionRouteParams, type SectionStatus } from '../lib/progress';
 
@@ -32,6 +33,8 @@ function statusClass(s: SectionStatus): string {
       All {progress.totalChapters} chapters, drafted openly. Pending sections are visibly pending,
       never hidden behind a fake &ldquo;coming soon.&rdquo;
     </p>
+
+    <DownloadButton />
 
     <div class="progress-meter">
       <div>

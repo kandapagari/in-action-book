@@ -1,0 +1,117 @@
+---
+// Split download button for the ebook builds (public/downloads/, generated
+// by scripts/build-ebook.mjs). Main segment grabs the PDF; the chevron opens
+// a format menu. Zero-JS core via <details>; the script only adds
+// outside-click/Escape dismissal.
+
+export interface Props {
+  label?: string;
+}
+
+const { label = 'Download' } = Astro.props;
+---
+
+<div class="download-split">
+  <a class="dl-main" href="/downloads/action-models.pdf" download>{label}</a>
+  <details class="dl-menu">
+    <summary aria-label="Choose download format">▾</summary>
+    <ul>
+      <li><a href="/downloads/action-models.pdf" download>PDF</a></li>
+      <li><a href="/downloads/action-models.epub" download>EPUB</a></li>
+    </ul>
+  </details>
+</div>
+
+<style>
+  .download-split {
+    display: inline-flex;
+    margin-left: 1rem;
+    font-family: var(--font-sans);
+    font-size: var(--fs-small);
+    letter-spacing: 0.04em;
+  }
+  /* Contents page: own row between the lede and the progress meter. */
+  :global(.toc-page) .download-split {
+    display: flex;
+    margin: 0 0 2.5rem;
+  }
+  .dl-main {
+    display: inline-block;
+    padding: 0.6rem 1.4rem;
+    border: 1px solid var(--ink);
+    border-right: none;
+    color: var(--ink);
+    background: transparent;
+  }
+  .dl-main:hover {
+    background: var(--ink);
+    color: var(--paper);
+    opacity: 1;
+  }
+  .dl-menu {
+    position: relative;
+  }
+  .dl-menu summary {
+    display: block;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  .dl-menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .dl-menu summary:hover,
+  .dl-menu[open] summary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .dl-menu ul {
+    position: absolute;
+    top: calc(100% + 2px);
+    right: 0;
+    z-index: 10;
+    margin: 0;
+    padding: 0.3rem 0;
+    list-style: none;
+    white-space: nowrap;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+  }
+  .dl-menu ul a {
+    display: block;
+    padding: 0.35rem 1rem;
+    font-size: var(--fs-tiny);
+    color: var(--ink);
+    background: none;
+  }
+  .dl-menu ul a:hover {
+    color: var(--accent);
+    opacity: 1;
+  }
+</style>
+
+<script>
+  const openMenus = () =>
+    document.querySelectorAll<HTMLDetailsElement>('details.dl-menu[open]');
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as Node | null;
+    openMenus().forEach((menu) => {
+      if (!target || !menu.contains(target)) menu.open = false;
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    openMenus().forEach((menu) => {
+      menu.open = false;
+      if (menu.contains(document.activeElement)) {
+        menu.querySelector('summary')?.focus();
+      }
+    });
+  });
+</script>
