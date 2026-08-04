@@ -319,7 +319,11 @@ const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
       state.audio.playbackRate = state.speed;
       const p = state.audio.play();
       if (p && typeof p.catch === 'function') {
-        p.catch(() => {
+        p.catch((err) => {
+          // AbortError = an engine switch (audio.load()) interrupted a pending
+          // play — not a real failure, and definitely not a reason to fall
+          // back to browser TTS.
+          if (err && err.name === 'AbortError') return;
           state.mode = 'tts';
           if (disclosure) {
             disclosure.textContent = 'Listen (browser TTS — quality varies)';
@@ -344,10 +348,13 @@ const playerId = `audio-player-${chapter}-${section.replace(/\./g, '_')}`;
         if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
         }
-        state.isPlaying = false;
         setSticky(false);
-        updateIcon();
       }
+      // Update state synchronously: applyEngine() calls audio.load() right
+      // after pause(), which can swallow the async 'pause' event and leave
+      // isPlaying stuck true. The event listener redoes this idempotently.
+      state.isPlaying = false;
+      updateIcon();
     }
 
     function applyEngine(name: string, persist: boolean): void {
