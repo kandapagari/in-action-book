@@ -196,6 +196,9 @@ build/
 develop-eggs/
 dist/
 downloads/
+# Ebook artifacts (PDF/EPUB) under public/downloads/ ARE committed deliberately —
+# same precedent as public/audio/: built files ride along with the deploy.
+!public/downloads/
 eggs/
 .eggs/
 lib/

@@ -1,5 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import DownloadButton from '../components/DownloadButton.astro';
 import { getCollection } from 'astro:content';
 import {
   loadProgress,
@@ -63,6 +64,7 @@ const homeJsonLd = graph(webSiteEntity(), personEntity(), bookEntity());
     </p>
     <a class="cta" href={startReadingHref}>Start reading → Chapter 1</a>
     <a class="cta-secondary" href="/contents/">Browse the table of contents →</a>
+    <DownloadButton />
   </section>
 
   <section class="whats-new">
