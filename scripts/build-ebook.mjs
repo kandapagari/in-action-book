@@ -180,17 +180,19 @@ function main() {
   const graphicxTex = path.join(os.tmpdir(), `action-models-graphicx-${process.pid}.tex`);
   fs.writeFileSync(tmp, assembleBook(buildUnits()));
   fs.copyFileSync(COVER, coverTmp);
-  fs.writeFileSync(graphicxTex, '\\usepackage{graphicx}\n');
+  // Kill pandoc's \maketitle — report + title metadata would otherwise emit an
+  // extra text title page before our cover image.
+  fs.writeFileSync(graphicxTex, '\\usepackage{graphicx}\n\\renewcommand{\\maketitle}{}\n');
   fs.writeFileSync(
     coverTex,
     [
-      '\\begin{titlepage}',
-      '\\centering',
+      '\\thispagestyle{empty}',
       '\\vspace*{\\fill}',
+      '\\begin{center}',
       `\\includegraphics[width=\\textwidth,keepaspectratio]{${coverTmp}}`,
+      '\\end{center}',
       '\\vspace*{\\fill}',
-      '\\end{titlepage}',
-      '\\clearpage',
+      '\\newpage',
       '',
     ].join('\n'),
   );
@@ -209,6 +211,8 @@ function main() {
         ...meta,
         '--variable',
         'documentclass=report',
+        '--variable',
+        'classoption=oneside',
         '--variable',
         'geometry:margin=1in',
         '--variable',
