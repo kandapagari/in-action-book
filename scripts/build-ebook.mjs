@@ -4,6 +4,7 @@
 //
 // Inputs : src/content/book/PROGRESS.md (chapter/appendix titles) and the
 //          section/appendix markdown under src/content/book/.
+//          public/cover.png — portrait cover (PDF title page + EPUB cover).
 // Outputs: public/downloads/action-models.{pdf,epub}
 //
 // Section ordering mirrors sectionSortKey in src/lib/book-content.ts and the
@@ -25,6 +26,8 @@ const OUT_DIR = path.join(ROOT, 'public/downloads');
 
 const TITLE = 'Action Models for Robot Learning';
 const AUTHOR = 'Pavan Kumar Kandapagari';
+// Portrait cover for EPUB + PDF title page (OG image stays landscape-only).
+const COVER = path.join(ROOT, 'public/cover.png');
 
 // ---- Pure helpers (unit-tested) --------------------------------------------
 
@@ -165,9 +168,32 @@ function main() {
   );
   requireBinary('xelatex', 'Install with: sudo apt install texlive-xetex.');
 
+  if (!fs.existsSync(COVER)) {
+    throw new Error(`Cover image missing: ${COVER}`);
+  }
+
   fs.mkdirSync(OUT_DIR, { recursive: true });
   const tmp = path.join(os.tmpdir(), `action-models-book-${process.pid}.md`);
+  // Copy cover into /tmp so xelatex never sees spaces in the workspace path.
+  const coverTmp = path.join(os.tmpdir(), `action-models-cover-${process.pid}.png`);
+  const coverTex = path.join(os.tmpdir(), `action-models-cover-${process.pid}.tex`);
+  const graphicxTex = path.join(os.tmpdir(), `action-models-graphicx-${process.pid}.tex`);
   fs.writeFileSync(tmp, assembleBook(buildUnits()));
+  fs.copyFileSync(COVER, coverTmp);
+  fs.writeFileSync(graphicxTex, '\\usepackage{graphicx}\n');
+  fs.writeFileSync(
+    coverTex,
+    [
+      '\\begin{titlepage}',
+      '\\centering',
+      '\\vspace*{\\fill}',
+      `\\includegraphics[width=\\textwidth,keepaspectratio]{${coverTmp}}`,
+      '\\vspace*{\\fill}',
+      '\\end{titlepage}',
+      '\\clearpage',
+      '',
+    ].join('\n'),
+  );
 
   const meta = ['--metadata', `title=${TITLE}`, '--metadata', `author=${AUTHOR}`];
   try {
@@ -194,6 +220,10 @@ function main() {
         'mainfont=Linux Libertine O',
         '--variable',
         'monofont=DejaVu Sans Mono',
+        '-H',
+        graphicxTex,
+        '--include-before-body',
+        coverTex,
       ],
       { stdio: 'inherit' },
     );
@@ -207,12 +237,12 @@ function main() {
         '--toc',
         '--toc-depth=2',
         ...meta,
-        `--epub-cover-image=${path.join(ROOT, 'public/og-image.png')}`,
+        `--epub-cover-image=${coverTmp}`,
       ],
       { stdio: 'inherit' },
     );
   } finally {
-    fs.rmSync(tmp, { force: true });
+    for (const f of [tmp, coverTmp, coverTex, graphicxTex]) fs.rmSync(f, { force: true });
   }
 
   console.log('Wrote:');
