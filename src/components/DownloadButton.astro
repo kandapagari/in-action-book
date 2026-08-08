@@ -1,8 +1,8 @@
 ---
 // Split download button for the ebook builds (public/downloads/, generated
 // by scripts/build-ebook.mjs). Main segment grabs the PDF; the chevron opens
-// a format menu. Zero-JS core via <details>; the script only adds
-// outside-click/Escape dismissal.
+// a format menu (PDF / EPUB / cover image). Zero-JS core via <details>; the
+// script only adds outside-click/Escape dismissal.
 
 export interface Props {
   label?: string;
@@ -18,6 +18,7 @@ const { label = 'Download' } = Astro.props;
     <ul>
       <li><a href="/downloads/action-models.pdf" download>PDF</a></li>
       <li><a href="/downloads/action-models.epub" download>EPUB</a></li>
+      <li><a href="/cover.png" download="action-models-cover.png">Cover</a></li>
     </ul>
   </details>
 </div>
