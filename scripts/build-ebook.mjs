@@ -180,19 +180,29 @@ function main() {
   const graphicxTex = path.join(os.tmpdir(), `action-models-graphicx-${process.pid}.tex`);
   fs.writeFileSync(tmp, assembleBook(buildUnits()));
   fs.copyFileSync(COVER, coverTmp);
-  // Kill pandoc's \maketitle — report + title metadata would otherwise emit an
-  // extra text title page before our cover image.
-  fs.writeFileSync(graphicxTex, '\\usepackage{graphicx}\n\\renewcommand{\\maketitle}{}\n');
+  // PDF: do not pass title metadata (that triggers \maketitle). Stamp PDF
+  // info via hypersetup instead. Cover is a single titlepage — no \vspace
+  // fills (those overflow into blank pages when the image is tall).
+  fs.writeFileSync(
+    graphicxTex,
+    [
+      '\\usepackage{graphicx}',
+      // hyperref is loaded later by pandoc; defer the PDF info stamp
+      `\\AtBeginDocument{\\hypersetup{pdftitle={${TITLE}},pdfauthor={${AUTHOR}}}}`,
+      '',
+    ].join('\n'),
+  );
   fs.writeFileSync(
     coverTex,
     [
+      // Full-bleed cover: ignore body margins, stretch to the paper box.
+      // (Centered \\textwidth placement left a white frame around the art.)
+      '\\newgeometry{margin=0pt}',
       '\\thispagestyle{empty}',
-      '\\vspace*{\\fill}',
-      '\\begin{center}',
-      `\\includegraphics[width=\\textwidth,keepaspectratio]{${coverTmp}}`,
-      '\\end{center}',
-      '\\vspace*{\\fill}',
-      '\\newpage',
+      '\\noindent',
+      `\\includegraphics[width=\\paperwidth,height=\\paperheight]{${coverTmp}}`,
+      '\\clearpage',
+      '\\restoregeometry',
       '',
     ].join('\n'),
   );
@@ -208,7 +218,7 @@ function main() {
         '--pdf-engine=xelatex',
         '--toc',
         '--toc-depth=2',
-        ...meta,
+        // title/author intentionally omitted — cover replaces \maketitle
         '--variable',
         'documentclass=report',
         '--variable',
