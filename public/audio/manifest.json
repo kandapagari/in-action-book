@@ -2497,6 +2497,25 @@
       "title": "Summary",
       "word_count": 1640
     },
+    "17.7": {
+      "chapter": 17,
+      "char_count": 9561,
+      "renditions": {
+        "orpheus": {
+          "content_hash": "4e9be2d5b3c7546cf3d5c50ef51cbfcfff4d14f2c9cc945981ac6e597be03b30",
+          "duration_seconds": 572.63,
+          "file": "/audio/orpheus/chapter-17/section-17_7.mp3",
+          "file_size_bytes": 4581741,
+          "generated_at": "2026-08-17T12:41:10+00:00",
+          "homepage": "https://github.com/canopyai/Orpheus-TTS",
+          "label": "Orpheus",
+          "voice": "tara"
+        }
+      },
+      "section": "17.7",
+      "title": "Training-time attacks: poisoned data, backdoors, and a defense literature that has not caught up",
+      "word_count": 1543
+    },
     "17.x": {
       "chapter": 17,
       "char_count": 10489,
@@ -2769,6 +2788,44 @@
       "section": "18.6",
       "title": "Summary",
       "word_count": 1580
+    },
+    "18.7": {
+      "chapter": 18,
+      "char_count": 10055,
+      "renditions": {
+        "orpheus": {
+          "content_hash": "6112f339cff4d4bdf3e12d12096ef73d1a35e5b4110497c9942b938301e335ae",
+          "duration_seconds": 610.77,
+          "file": "/audio/orpheus/chapter-18/section-18_7.mp3",
+          "file_size_bytes": 4886829,
+          "generated_at": "2026-08-17T12:46:00+00:00",
+          "homepage": "https://github.com/canopyai/Orpheus-TTS",
+          "label": "Orpheus",
+          "voice": "tara"
+        }
+      },
+      "section": "18.7",
+      "title": "Does embodied reasoning actually reason?",
+      "word_count": 1558
+    },
+    "18.8": {
+      "chapter": 18,
+      "char_count": 9734,
+      "renditions": {
+        "orpheus": {
+          "content_hash": "573fad9fd0e8bc0fdad5c950260a7d9dab2276869d1cc4368a481324e8a1d8bd",
+          "duration_seconds": 581.24,
+          "file": "/audio/orpheus/chapter-18/section-18_8.mp3",
+          "file_size_bytes": 4650669,
+          "generated_at": "2026-08-17T12:50:35+00:00",
+          "homepage": "https://github.com/canopyai/Orpheus-TTS",
+          "label": "Orpheus",
+          "voice": "tara"
+        }
+      },
+      "section": "18.8",
+      "title": "Beyond vision: tactile sensing as a foundation-model modality",
+      "word_count": 1603
     },
     "18.x": {
       "chapter": 18,
@@ -4915,6 +4972,25 @@
       "title": "Summary",
       "word_count": 1971
     },
+    "9.7": {
+      "chapter": 9,
+      "char_count": 10079,
+      "renditions": {
+        "orpheus": {
+          "content_hash": "112be858e612825087aa0083478575842153c302e455efea0e1a5e77042d1d92",
+          "duration_seconds": 610.04,
+          "file": "/audio/orpheus/chapter-9/section-9_7.mp3",
+          "file_size_bytes": 4881069,
+          "generated_at": "2026-08-17T11:50:42+00:00",
+          "homepage": "https://github.com/canopyai/Orpheus-TTS",
+          "label": "Orpheus",
+          "voice": "tara"
+        }
+      },
+      "section": "9.7",
+      "title": "World Action Models: the world model as the policy backbone",
+      "word_count": 1674
+    },
     "9.x": {
       "chapter": 9,
       "char_count": 13307,
@@ -4955,7 +5031,7 @@
       "word_count": 2185
     }
   },
-  "generated_at": "2026-08-05T10:39:54+00:00",
+  "generated_at": "2026-08-17T12:50:35+00:00",
   "schema_version": 2,
   "voice_default": "tara"
 }
