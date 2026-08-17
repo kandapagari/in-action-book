@@ -18,6 +18,8 @@
 // player block, and follows the selected engine. It is not a recurring
 // banner.
 
+import fs from 'node:fs';
+import path from 'node:path';
 import audioManifest from '../../public/audio/manifest.json';
 
 export interface Props {
@@ -69,10 +71,16 @@ const audioEnabled = import.meta.env.PUBLIC_AUDIO_ENABLED === 'true';
 
 const { chapter, section } = Astro.props as Props;
 
+function audioFileOnDisk(urlPath: string): boolean {
+  return fs.existsSync(path.join(process.cwd(), 'public', urlPath.replace(/^\//, '')));
+}
+
 const manifest = audioManifest as AudioManifest;
 const entry = manifest.entries[section] ?? null;
 
-const renditions = entry?.renditions ?? {};
+const renditions = Object.fromEntries(
+  Object.entries(entry?.renditions ?? {}).filter(([, r]) => audioFileOnDisk(r.file)),
+);
 const engineDefault = manifest.engine_default ?? 'kokoro';
 // Default engine first, then alphabetical — the dropdown's stable order.
 const engineNames = Object.keys(renditions).sort((a, b) =>
