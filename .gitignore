@@ -11,14 +11,12 @@ dist/
 # without needing access to ../book/ or ../tools/.
 
 # Audio narration toolchain — venv, build-cache manifest, and batch logs
-# are local state, recreated on demand. Kokoro/orpheus MP3s and
-# manifest.json ARE committed so they ride along with the deploy.
-# Chatterbox stays local-only (GitHub LFS quota); regenerable with
-# `uv run --extra chatterbox python generate.py --engine chatterbox`.
+# are local state, recreated on demand. MP3s under public/audio/ are
+# committed as regular git files (not LFS) so Vercel deploys don't
+# consume GitHub LFS bandwidth.
 scripts/audio/.venv/
 scripts/audio/.audio-manifest.json
 scripts/audio/logs/
-public/audio/chatterbox/
 
 # TTS model shootout (Phase 1 samples): generated MP3s/wavs/logs and the
 # vendored CosyVoice clone are local state, recreated by run-samples.sh
