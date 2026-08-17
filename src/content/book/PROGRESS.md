@@ -111,6 +111,89 @@ also pending but generic/exercise sections with no specific finding to attach).
   (arXiv 2605.21446, May 2026). Both extend the attack-surface list alongside
   the already-tracked TRAP, VLA-Hijack, and partially-observable patch papers.
 
+## Field-tracking notes (2026-08-15)
+
+All 108 sections + appendices are at `[x]`, so there are no pending `[ ]` bullets to
+revise; findings below are logged for the revision (`[r]`) passes, plus one new
+pending section added under the new-section rule.
+
+- **World Action Models (WAMs) — a named architectural paradigm positioned against
+  the VLA recipe.** NVIDIA replaces the VLM backbone with a video world model and
+  post-trains a single network to jointly predict future video *and* actions
+  ("World Action Models are Zero-shot Policies", arXiv 2602.15922; NVIDIA
+  Technical Blog "Beyond VLAs: How World Action Models Reshape Robot
+  Manipulation", 2026-08-04; NVIDIA glossary entry for "world action model").
+  The argument: a VLM backbone learns to *describe* the world, not predict how it
+  evolves, so VLAs generalize semantically but not physically. Substrate is
+  Cosmos 3, a Mixture-of-Transformers omni world foundation model (4B Edge / 16B
+  Nano / 64B Super; ~767M images, 348M videos, 8M action samples), with released
+  policies Cosmos3-Nano-Policy-DROID and Cosmos3-Edge-Policy-DROID (Hugging Face,
+  commercial-use license). Reported ablation: same recipe/data/compute, omni
+  checkpoint vs. base raises RoboLab success 28.1% → 36.8%; Edge 4B runs 15 Hz
+  real-time control with 32-action chunks on Jetson Thor. Jim Fan's framing
+  ("VLAs are dead, long live World Action Models") is the rhetorical version.
+  Third-party WAM work is already appearing: unified 4D world-action modeling with
+  asynchronous denoising (arXiv 2604.26694), HiMem-WAM hierarchical memory-gated
+  WAMs (arXiv 2606.10363), and a world-model-for-robot-learning survey (arXiv
+  2605.00080).
+  → **New section warranted, not a parenthetical:** §9.5 frames "world models vs.
+  VLAs" as a debate between two separate model classes; WAM is a third thing — a
+  world model *as* the policy backbone, with its own pretraining story, deployment
+  tiers, and named model family. Added as pending §9.7 in Chapter 9. Should also
+  be cross-referenced from §18.3 and §14.3 during revision (GR00T's Cosmos-Reason
+  backbone is the same lineage arriving from the other direction).
+- Benchmarks: RoboCasa365 (arXiv 2603.04356, ICLR 2026; Nasiriany et al., UT
+  Austin + NVIDIA Research) — 365 household mobile-manipulation tasks across 2,500
+  kitchen scenes, ~600h human + ~1,600h synthetic demonstrations, explicitly built
+  for multi-task / foundation-model / lifelong-learning evaluation. This is the
+  concrete "successor to RoboCasa" for §15.4. Also LIBERO-Plus, a robustness
+  variant of LIBERO perturbing seven factors (layout, viewpoint, initial state,
+  instruction phrasing, lighting, background texture, sensor noise) — previously
+  referenced here only as a score ERVLA reported against, but it belongs in §15.4
+  as a benchmark in its own right.
+- Policy evaluation via world models: GigaWorld-1 (arXiv 2607.02642), a roadmap for
+  using world models as the evaluation substrate for robot policies — relevant to
+  §15.5/§15.6, where real-robot evaluation variance is the central problem.
+- Embodied-reasoning skepticism (a counterweight the book currently lacks):
+  "Unmasking the Illusion of Embodied Reasoning in Vision-Language-Action Models"
+  (arXiv 2604.18000) reports reasoning deficits in SOTA VLAs traced to
+  representational bottlenecks in VLM→VLA adaptation, persisting on real hardware;
+  "Do Vision-Language-Action Models Mean What They Say? On the Role of Faithfulness
+  in Embodied Reasoning" (arXiv 2607.04681) asks whether verbalized CoT reflects
+  the policy's actual decision process. Both belong in §18.4 alongside the
+  constructive work already tracked (ECoT, LaRA-VLA, ERVLA, HALO, ThinkAct) and in
+  §14.3's Gemini "Embodied Thinking" discussion. Constructive additions: dense
+  embodied-CoT supervision (arXiv 2606.30552), Guide-Think-Act interactive embodied
+  reasoning (arXiv 2605.13632).
+- Safety, **training-time** threats (a category §17.5 does not cover; it treats
+  inference-time patches and sensor perturbation only): AttackVLA (arXiv
+  2511.12149, Li et al.) is a unified attack framework spanning the VLA
+  development lifecycle, and it makes a useful negative observation — existing
+  attacks mostly induce *untargeted* failure or a frozen action state, so
+  precise targeted control was unexplored. Its BackdoorVLA fills that gap: a
+  trigger that compels an attacker-specified long-horizon action sequence,
+  58.4% average targeted success rate, 100% on selected tasks, validated in
+  simulation *and* on real hardware. ATAAT (arXiv 2605.08612, Chen et al.,
+  2026-05-09) is also an **attack**, not a defense, despite the "adversarial
+  tuning" framing — it diagnoses "gradient interference" as why prior VLA
+  backdoors failed and reaches TASR > 80% at a 5% poisoning rate.
+  *Correction to note: an earlier draft of this bullet described ATAAT as a
+  defense. It is not.* The honest state of the field is that the attack
+  literature is well ahead of the defense literature, which is itself worth
+  saying in the book. The Awesome-VLA-Safety list
+  (github.com/LiQiiiii/Awesome-VLA-Safety) accompanying arXiv 2604.23775 is a
+  usable living bibliography for §17.5.
+- Dexterity/tactile: TouchWorld, a predictive-and-reactive tactile foundation model
+  for dexterous manipulation (arXiv 2607.07287) — tactile sensing as a foundation-
+  model modality, orthogonal to the vision-first GENE/RLDX-1 line already tracked;
+  mimic Robotics announced a full-stack dexterous platform (M1 hand, U1 wearable
+  exoskeleton, AI platform) on 2026-07-18 (roboticsandautomationnews.com). Both
+  feed §14.5 and §18.2.
+- Datasets: Open-H-Embodiment (arXiv 2604.21017), a cross-embodiment
+  multi-institution medical-robotics corpus — 119 datasets, ~780h paired video +
+  kinematics, 50+ institutions. Evidence for the §15.2 thesis that OXE's successors
+  are domain-specific consortia rather than one branded aggregate.
+
 ## Status
 
 ### Part 1 — Foundations and a first taste of VLAs
@@ -209,6 +292,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 9.5 World models vs. VLAs: the architecture debate
 - [x] 9.6 Summary
 - [x] 9.x Hands-on exercise + chapter references
+- [x] 9.7 World Action Models: the world model as the policy backbone — jointly predicting future video and actions (DreamZero / Cosmos 3), why a physics prior generalizes where a semantic prior does not, and how this reframes the §9.5 debate. (Added 2026-08-15; placed after 9.x to avoid renumbering the existing Summary/exercise bullets.)
 
 #### Chapter 10. Diffusion and flow models for action generation
 
@@ -295,6 +379,7 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 17.5 What we still cannot certify — plus emerging attack surfaces (adversarial patches that hijack VLA chain-of-thought reasoning, sensor-perturbation fragility, and the CVPR 2026 AdvML adversarial-VLA challenge)
 - [x] 17.6 Summary
 - [x] 17.x Hands-on exercise + chapter references
+- [x] 17.7 Training-time attacks: poisoned data, backdoors, and a defense literature that has not caught up — supply-chain exposure in aggregated datasets and public checkpoints, AttackVLA/BackdoorVLA targeted long-horizon triggers, ATAAT's 5%-poisoning result, and why clean-task evaluation is blind to all of it. (Added 2026-08-15; placed after 17.x to avoid renumbering existing bullets.)
 
 #### Chapter 18. Open problems and what comes next
 
@@ -305,6 +390,8 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - [x] 18.5 What to read next, and how to contribute
 - [x] 18.6 Summary
 - [x] 18.x Hands-on exercise + chapter references
+- [x] 18.7 Does embodied reasoning actually reason? — the BeTTER stress tests (lexical-kinematic shortcuts, composition failure, behavioral inertia), functional vs. faithful reasoning, and the Pinocchio faithfulness critic; answers the question §18.4 left open. (Added 2026-08-15; placed after 18.x to avoid renumbering existing bullets.)
+- [x] 18.8 Beyond vision: tactile sensing as a foundation-model modality — what a camera cannot see about contact, TouchWorld's predicted tactile subgoals plus high-frequency residual refinement, and why touch has no free corpus. (Added 2026-08-15; placed after 18.x to avoid renumbering existing bullets.)
 
 ### Appendices
 
@@ -454,4 +541,10 @@ Sample-chapter draft `Sample_Chapter_02_Your_First_VLA.docx` (7 pages, organized
 - 2026-08-03 — drafted §18.6 Summary (~1571 words)
 - 2026-08-03 — drafted §18.x Hands-on exercise + chapter references (~1627 words)
 - 2026-08-03 — Chapter 18 complete. All 18 chapters and appendices A–F now drafted; book is fully drafted at first-draft [x] status. Remaining editorial work is revision ([r]) passes by Pavan.
+- 2026-08-15 — field check: appended Field-tracking notes (2026-08-15); added pending §9.7 (World Action Models) under the new-section rule. No chapter content touched.
+- 2026-08-15 — drafted §9.7 World Action Models: the world model as the policy backbone (~1665 words)
+- 2026-08-15 — drafted §17.7 Training-time attacks: poisoned data, backdoors, and a defense literature that has not caught up (~1540 words)
+- 2026-08-15 — drafted §18.7 Does embodied reasoning actually reason? (~1555 words)
+- 2026-08-15 — drafted §18.8 Beyond vision: tactile sensing as a foundation-model modality (~1600 words)
+- 2026-08-15 — corrected the 2026-08-15 field-tracking bullet on ATAAT (arXiv 2605.08612): it is an attack framework, not a defense. Section §17.7 is written on the corrected reading. Nothing in a drafted chapter had relied on the wrong version.
 - 2026-08-04 — No pending [ ] sections found. Book remains fully drafted (all 108 sections + appendices A–F at [x]). No drafting action taken. Next step is revision ([r]) passes by Pavan; the daily draft task has no remaining first-draft work.
