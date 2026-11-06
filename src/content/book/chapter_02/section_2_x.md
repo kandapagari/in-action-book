@@ -43,12 +43,17 @@ Run the function four times: once with all defaults (the baseline), then three m
 
 The diagnostic step is the one that matters. Open the `.jsonl` in whatever column-oriented tool you prefer (`jq`, pandas, a spreadsheet) and write three predicates, one per failure mode, that take only the action vector and `img_mean` columns as input and classify a row as belonging to one of the four runs. Concretely:
 
-1. *Bad prompt:* mean over time of `np.linalg.norm(action[:6])` is below
-   roughly 0.05, every step, regardless of `img_mean`. The arm twitches
-   near zero; the language tower never enters action-decoding mode.
-2. *Bad `unnorm_key`:* `np.max(np.abs(action[:3]))` exceeds 0.1 m on a
-   non-trivial fraction of steps. The translation magnitudes are off by
-   the LIBERO-vs-Bridge ratio (roughly 3 to 5×).
+1. *Bad `unnorm_key`:* mean over time of `np.abs(action[:3])` sits about
+   an order of magnitude below the baseline (in our run, 0.014 against
+   0.291, about 21×). The arm barely moves. Note that the LIBERO
+   fine-tunes don't ship `bridge_orig` statistics; copy them in from the
+   base `openvla-7b` config to run this toggle.
+2. *Bad prompt:* harder than it looks. Action magnitudes stay healthy
+   and the arm moves with purpose, but `reward` never goes positive. In
+   our run the arm knocked the can over. From the action and `img_mean`
+   columns alone it looks a lot like the no-flip run below, so expect
+   these two predicates to need trajectory shape against the baseline,
+   and accept that they may not separate cleanly on a single seed.
 3. *No flip:* harder. `img_mean` is unchanged from baseline, and the
    action magnitudes are reasonable. The signature is in the *trajectory
    shape*, not in any per-step statistic. The clearest tell is that the
